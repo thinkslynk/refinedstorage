@@ -7,7 +7,6 @@ import com.refinedmods.refinedstorage.api.storage.disk.IStorageDisk
 import com.refinedmods.refinedstorage.apiimpl.API.Companion.instance
 import com.refinedmods.refinedstorage.apiimpl.network.node.storage.FluidStorageNetworkNode
 import com.refinedmods.refinedstorage.apiimpl.storage.FluidStorageType
-import com.refinedmods.refinedstorage.apiimpl.storageimport.FluidStorageType
 import com.refinedmods.refinedstorage.block.FluidStorageBlock
 import com.refinedmods.refinedstorage.item.FluidStoragePartItem
 import com.refinedmods.refinedstorage.render.Styles
@@ -17,7 +16,6 @@ import net.minecraft.inventory.InventoryHelper
 import net.minecraft.item.ItemStack
 import net.minecraft.item.Items
 import net.minecraft.server.world.ServerWorld
-import net.minecraft.util.ActionResult
 import net.minecraft.util.ActionResult
 import net.minecraft.util.Hand
 import net.minecraft.util.text.Text

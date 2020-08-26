@@ -11,7 +11,6 @@ import com.refinedmods.refinedstorage.api.util.IStackList
 import com.refinedmods.refinedstorage.apiimpl.API
 import com.refinedmods.refinedstorage.apiimpl.autocrafting.task.v6.CraftingPatternInputs
 import com.refinedmods.refinedstorage.apiimpl.autocrafting.task.v6.CraftingTask
-import com.refinedmods.refinedstorage.apiimpl.autocrafting.task.v6.calculatorimport.PossibleInputs
 import com.refinedmods.refinedstorage.apiimpl.autocrafting.task.v6.node.CraftingNode
 import com.refinedmods.refinedstorage.apiimpl.autocrafting.task.v6.node.Node
 import com.refinedmods.refinedstorage.apiimpl.autocrafting.task.v6.node.NodeList
@@ -19,6 +18,9 @@ import com.refinedmods.refinedstorage.apiimpl.autocrafting.task.v6.node.Processi
 import com.refinedmods.refinedstorage.apiimpl.autocrafting.task.v6.preview.CraftingPreviewElementFactory
 import com.refinedmods.refinedstorage.apiimpl.autocrafting.task.v6.preview.CraftingPreviewInfo
 import com.refinedmods.refinedstorage.util.StackUtils
+import io.netty.resolver.NoopAddressResolver
+import net.minecraft.block.entity.BlockEntity
+import net.minecraft.block.entity.BlockEntityType
 import net.minecraft.item.ItemStack
 import reborncore.common.fluid.container.FluidInstance
 
@@ -186,7 +188,7 @@ class CraftingCalculator(
         var ingredientNumber = -1
         for (ingredient in inputs.getFluidIngredients()) {
             ingredientNumber++
-            val possibleInputs: PossibleInputs<FluidInstance> = PossibleInputs<FluidInstance>(ingredient.getInputs())
+            val possibleInputs: PossibleInputs<FluidInstance> = PossibleInputs(ingredient.getInputs())
             possibleInputs.sort(fluidStorageSource, fluidResults)
             var possibleInput: FluidInstance = possibleInputs.get()
             var fromSelf: FluidInstance = fluidResults.get(possibleInput, IComparer.COMPARE_NBT)
@@ -196,14 +198,12 @@ class CraftingCalculator(
                 throw CraftingCalculatorException(CalculationResultType.TOO_COMPLEX)
             }
             while (remaining > 0) {
-                if (fromSelf != null) {
-                    val toTake = Math.min(remaining, fromSelf.getAmount())
-                    node.getRequirements().addFluidRequirement(ingredientNumber, possibleInput, toTake, ingredient.getCount())
-                    fluidResults.remove(possibleInput, toTake)
-                    remaining -= toTake
-                    fromSelf = fluidResults.get(possibleInput, IComparer.COMPARE_NBT)
-                }
-                if (fromNetwork != null && remaining > 0) {
+                val toTake = Math.min(remaining, fromSelf.getAmount())
+                node.getRequirements().addFluidRequirement(ingredientNumber, possibleInput, toTake, ingredient.getCount())
+                fluidResults.remove(possibleInput, toTake)
+                remaining -= toTake
+                fromSelf = fluidResults.get(possibleInput, IComparer.COMPARE_NBT)
+                if (remaining > 0) {
                     val toTake = Math.min(remaining, fromNetwork.getAmount())
                     node.getRequirements().addFluidRequirement(ingredientNumber, possibleInput, toTake, ingredient.getCount())
                     craftingPreviewInfo.getToTakeFluids().add(possibleInput, toTake)
@@ -214,41 +214,26 @@ class CraftingCalculator(
                 }
                 if (remaining > 0) {
                     val subPattern: ICraftingPattern = network.craftingManager.getPattern(possibleInput)
-                    if (subPattern != null) {
-                        val qtyPerCraft = getQuantityPerCraft(null, possibleInput, subPattern)
-                        val subQty = (remaining - 1) / qtyPerCraft + 1
-                        calculateInternal(subQty, storageSource, fluidStorageSource, results, fluidResults, subPattern, false)
-                        fromSelf = fluidResults.get(possibleInput, IComparer.COMPARE_NBT)
-                        checkNotNull(fromSelf) { "Recursive fluid calculation didn't yield anything" }
-                        fromNetwork = fluidStorageSource.get(possibleInput, IComparer.COMPARE_NBT)
+                    val qtyPerCraft = getQuantityPerCraft(null, possibleInput, subPattern)
+                    val subQty = (remaining - 1) / qtyPerCraft + 1
+                    calculateInternal(subQty, storageSource, fluidStorageSource, results, fluidResults, subPattern, false)
+                    fromSelf = fluidResults.get(possibleInput, IComparer.COMPARE_NBT)
+                    checkNotNull(fromSelf) { "Recursive fluid calculation didn't yield anything" }
+                    fromNetwork = fluidStorageSource.get(possibleInput, IComparer.COMPARE_NBT)
 
-                        // fromSelf contains the amount crafted after the loop.
-                        craftingPreviewInfo.getToCraftFluids().add(fromSelf.copy())
-                    } else {
-                        if (!possibleInputs.cycle()) {
-                            // Give up.
-                            possibleInput = possibleInputs.get() // Revert back to 0.
-                            craftingPreviewInfo.getMissingFluids().add(possibleInput, remaining)
-                            fluidsToExtract.add(possibleInput, remaining)
-                            remaining = 0
-                        } else {
-                            // Retry with new input...
-                            possibleInput = possibleInputs.get()
-                            fromSelf = fluidResults.get(possibleInput)
-                            fromNetwork = fluidStorageSource.get(possibleInput)
-                        }
-                    }
+                    // fromSelf contains the amount crafted after the loop.
+                    craftingPreviewInfo.getToCraftFluids().add(fromSelf.copy())
                 }
             }
         }
     }
 
-    private fun getQuantityPerCraft(@Nullable item: ItemStack?, @Nullable fluid: FluidInstance?, pattern: ICraftingPattern): Int {
+    private fun getQuantityPerCraft(item: ItemStack?, fluid: FluidInstance?, pattern: ICraftingPattern): Int {
         var qty = 0
         if (item != null) {
             for (output in pattern.getOutputs()) {
-                if (API.instance().getComparer().isEqualNoQuantity(output, item)) {
-                    qty += output.getCount()
+                if (API.instance().getComparer()!!.isEqualNoQuantity(output, item)) {
+                    qty += output.count
                     if (!pattern.isProcessing()) {
                         break
                     }
@@ -256,8 +241,8 @@ class CraftingCalculator(
             }
         } else if (fluid != null) {
             for (output in pattern.getFluidOutputs()) {
-                if (API.instance().getComparer().isEqual(output, fluid, IComparer.COMPARE_NBT)) {
-                    qty += output.getAmount()
+                if (API.instance().getComparer()!!.isEqual(output, fluid, IComparer.COMPARE_NBT)) {
+                    qty += output.amount.rawValue
                 }
             }
         }

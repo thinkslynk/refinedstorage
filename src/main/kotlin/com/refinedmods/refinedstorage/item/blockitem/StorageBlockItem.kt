@@ -6,7 +6,6 @@ import com.refinedmods.refinedstorage.api.storage.disk.IStorageDisk
 import com.refinedmods.refinedstorage.apiimpl.API.Companion.instance
 import com.refinedmods.refinedstorage.apiimpl.network.node.storage.StorageNetworkNode
 import com.refinedmods.refinedstorage.apiimpl.storage.ItemStorageType
-import com.refinedmods.refinedstorage.apiimpl.storageimport.ItemStorageType
 import com.refinedmods.refinedstorage.block.StorageBlock
 import com.refinedmods.refinedstorage.item.StoragePartItem
 import com.refinedmods.refinedstorage.render.Styles
@@ -14,7 +13,6 @@ import net.minecraft.client.util.ITooltipFlag
 import net.minecraft.entity.player.PlayerEntity
 import net.minecraft.inventory.InventoryHelper
 import net.minecraft.item.ItemStack
-import net.minecraft.util.ActionResult
 import net.minecraft.util.ActionResult
 import net.minecraft.util.Hand
 import net.minecraft.util.text.Text

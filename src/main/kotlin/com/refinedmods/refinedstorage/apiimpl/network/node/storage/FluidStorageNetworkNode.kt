@@ -16,7 +16,6 @@ import com.refinedmods.refinedstorage.apiimpl.network.node.NetworkNode
 import com.refinedmods.refinedstorage.apiimpl.network.nodeimport.ConnectivityStateChangeCause
 import com.refinedmods.refinedstorage.apiimpl.storage.FluidStorageType
 import com.refinedmods.refinedstorage.apiimpl.storage.cache.FluidStorageCache
-import com.refinedmods.refinedstorage.apiimpl.storageimport.FluidStorageType
 import com.refinedmods.refinedstorage.inventory.fluid.FluidInventory
 import com.refinedmods.refinedstorage.inventory.listener.NetworkNodeFluidInventoryListener
 import com.refinedmods.refinedstorage.tile.FluidStorageTile

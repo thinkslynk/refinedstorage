@@ -45,9 +45,9 @@ import reborncore.common.fluid.container.FluidInstance
 import java.util.function.Predicate
 
 class Network(world: World, pos: BlockPos, type: NetworkType) : INetwork, IRedstoneConfigurable {
-    val itemGridHandler: IItemGridHandler = ItemGridHandler(this)
-    val fluidGridHandler: IFluidGridHandler = FluidGridHandler(this)
-    val networkItemManager: INetworkItemManager = NetworkItemManager(this)
+    override val itemGridHandler: IItemGridHandler = ItemGridHandler(this)
+    override val fluidGridHandler: IFluidGridHandler = FluidGridHandler(this)
+    override val networkItemManager: INetworkItemManager = NetworkItemManager(this)
     private val nodeGraph: INetworkNodeGraph = NetworkNodeGraph(this)
     private val craftingManager: ICraftingManager = CraftingManager(this)
     private val securityManager: ISecurityManager = SecurityManager(this)

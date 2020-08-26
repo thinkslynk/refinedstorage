@@ -14,7 +14,7 @@ import com.refinedmods.refinedstorage.apiimpl.network.node.IStorageScreen
 import com.refinedmods.refinedstorage.apiimpl.network.node.NetworkNode
 import com.refinedmods.refinedstorage.apiimpl.network.nodeimport.ConnectivityStateChangeCause
 import com.refinedmods.refinedstorage.apiimpl.storage.cacheimport.ItemStorageCache
-import com.refinedmods.refinedstorage.apiimpl.storageimport.ItemStorageType
+import com.refinedmods.refinedstorage.apiimpl.storage.ItemStorageType
 import com.refinedmods.refinedstorage.inventory.item.BaseItemHandler
 import com.refinedmods.refinedstorage.inventory.listener.NetworkNodeInventoryListener
 import com.refinedmods.refinedstorage.tile.StorageTile

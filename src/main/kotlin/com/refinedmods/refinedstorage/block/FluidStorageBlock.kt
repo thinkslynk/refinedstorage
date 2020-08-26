@@ -2,7 +2,7 @@ package com.refinedmods.refinedstorage.block
 
 import com.refinedmods.refinedstorage.RS
 import com.refinedmods.refinedstorage.apiimpl.network.node.storage.FluidStorageNetworkNode
-import com.refinedmods.refinedstorage.apiimpl.storageimport.FluidStorageType
+import com.refinedmods.refinedstorage.apiimpl.storage.FluidStorageType
 import com.refinedmods.refinedstorage.tile.FluidStorageTile
 import com.refinedmods.refinedstorage.util.BlockUtils
 import com.thinkslynk.fabric.annotations.registry.RegisterBlock

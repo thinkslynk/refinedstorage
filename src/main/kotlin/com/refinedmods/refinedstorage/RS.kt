@@ -14,7 +14,7 @@ object RS: ModInitializer {
     val NETWORK_HANDLER = NetworkHandler()
     val MAIN_GROUP: ItemGroup = FabricItemGroupBuilder
             .create(Identifier(ID, ID))
-            .icon {ItemStack(RSBlocks.CREATIVE_CONTROLLER) }
+            .icon {ItemStack( RSBlocks.CREATIVE_CONTROLLER) }
             .build() // TODO add to item group
     val SERVER_CONFIG = ServerConfig()
     val CLIENT_CONFIG = ClientConfig()
