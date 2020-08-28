@@ -28,10 +28,10 @@ interface INetwork {
      */
     val energyUsage: Int
 
-//    /**
-//     * @return the energy storage
-//     */
-//    val energyStorage: EnergyStorage
+    /**
+     * @return the energy storage
+     */
+    val energyStorage: EnergyStorage
 
     /**
      * @return the network type

@@ -16,12 +16,13 @@ import net.minecraft.world.World
 import java.util.*
 
 class RootNetworkNode(override val network: INetwork, override val world: World, override val pos: BlockPos) : INetworkNode, INetworkNodeVisitor {
-    override val id: Identifier
-        get() = null
 
+    override val id: Identifier?
+        get() = null
     override var owner: UUID?
         get() = null
-        set(_) {}
+        set(value) {}
+
     override val energyUsage: Int
         get() = 0
 
@@ -31,18 +32,19 @@ class RootNetworkNode(override val network: INetwork, override val world: World,
             val item: Item = BlockItem.BLOCK_ITEMS[state.block]!! // TODO Unsafe and probably not the correct method
             return ItemStack(item, 1)
         }
-
     override fun onConnected(network: INetwork) {}
     override fun onDisconnected(network: INetwork) {}
+
     override val isActive: Boolean
         get() = false
-
     override fun update() {}
+
     override fun write(tag: CompoundTag): CompoundTag {
         return tag
     }
-
     override fun markDirty() {}
+
+
     override fun visit(operator: INetworkNodeVisitor.Operator?) {
         for (facing in Direction.values()) {
             operator!!.apply(world, pos.offset(facing), facing.opposite)
@@ -50,7 +52,7 @@ class RootNetworkNode(override val network: INetwork, override val world: World,
     }
 
     override fun equals(other: Any?): Boolean {
-        return API.instance().isNetworkNodeEqual(this, other)
+        return API.instance().isNetworkNodeEqual(this, other!!)
     }
 
     override fun hashCode(): Int {

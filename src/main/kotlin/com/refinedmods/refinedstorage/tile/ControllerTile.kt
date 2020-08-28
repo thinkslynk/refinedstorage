@@ -1,7 +1,6 @@
 package com.refinedmods.refinedstorage.tile
 
 import com.refinedmods.refinedstorage.RS
-import com.refinedmods.refinedstorage.RSTiles
 import com.refinedmods.refinedstorage.api.network.INetwork
 import com.refinedmods.refinedstorage.api.network.NetworkType
 import com.refinedmods.refinedstorage.api.network.node.INetworkNodeProxy
@@ -14,7 +13,7 @@ import com.refinedmods.refinedstorage.block.CreativeControllerBlock
 import com.refinedmods.refinedstorage.tile.config.IRedstoneConfigurable
 import com.refinedmods.refinedstorage.tile.config.RedstoneMode
 import com.refinedmods.refinedstorage.tile.config.RedstoneMode.Companion.createParameter
-import com.refinedmods.refinedstorage.tile.data.RSSerializers
+//import com.refinedmods.refinedstorage.tile.data.RSSerializers
 import com.refinedmods.refinedstorage.tile.data.TileDataParameter
 import com.thinkslynk.fabric.annotations.registry.RegisterBlockEntity
 import com.thinkslynk.fabric.generated.BlockEntityRegistryGenerated
@@ -24,6 +23,7 @@ import net.minecraft.nbt.CompoundTag
 import net.minecraft.server.world.ServerWorld
 import net.minecraft.world.chunk.ChunkManager
 import net.minecraft.world.chunk.WorldChunk
+import team.reborn.energy.EnergyStorage
 import java.util.*
 import java.util.function.Function
 
@@ -32,7 +32,7 @@ open class ControllerTile(type: NetworkType, entity: BlockEntityType<*>?):
         INetworkNodeProxy<RootNetworkNode>,
         IRedstoneConfigurable
 {
-    private val energyProxyCap: IEnergyStorage by lazy { network.energyStorage }
+    private val energyProxyCap: EnergyStorage by lazy { network.energyStorage }
     private val networkNodeProxyCap: INetworkNodeProxy<RootNetworkNode> by lazy { this }
     private val type: NetworkType
     var removedNetwork: INetwork? = null
@@ -45,7 +45,7 @@ open class ControllerTile(type: NetworkType, entity: BlockEntityType<*>?):
     }
 
     override fun readUpdate(tag: CompoundTag) {
-        if (tag!!.contains(NBT_ENERGY_TYPE)) {
+        if (tag.contains(NBT_ENERGY_TYPE)) {
             world!!.setBlockState(pos, world!!.getBlockState(pos).with(ControllerBlock.ENERGY_TYPE, EnergyType.values()[tag.getInt(NBT_ENERGY_TYPE)]))
         }
         super.readUpdate(tag)
@@ -58,39 +58,41 @@ open class ControllerTile(type: NetworkType, entity: BlockEntityType<*>?):
                 dummyNetwork = net
                 return net
             }
-            return instance().getNetworkManager(world as ServerWorld?)!!.getNetwork(pos)
+            return instance().getNetworkManager(world as ServerWorld).getNetwork(pos)
                     ?: throw IllegalStateException("No network present at $pos")
         }
 
-    fun validate() {
-        super.validate()
-        if (!world!!.isClient) {
-            val manager = instance().getNetworkManager(world as ServerWorld?)
-            if (manager!!.getNetwork(pos) == null) {
-                manager.setNetwork(pos, Network(world, pos, type))
-                manager.markForSaving()
-            }
-        }
-    }
 
-    fun remove() {
-        super.remove()
-        if (!world.isClient) {
-            val manager = instance().getNetworkManager(world as ServerWorld?)
-            val network = manager!!.getNetwork(pos)
-            removedNetwork = network
-            manager.removeNetwork(pos)
-            manager.markForSaving()
-            network!!.onRemoved()
-        }
-    }
+
+//    fun validate() {
+//        super.validate()
+//        if (!world!!.isClient) {
+//            val manager = instance().getNetworkManager(world as ServerWorld)
+//            if (manager!!.getNetwork(pos) == null) {
+//                manager.setNetwork(pos, Network(world, pos, type))
+//                manager.markForSaving()
+//            }
+//        }
+//    }
+//
+//    fun remove() {
+//        super.remove()
+//        if (!world.isClient) {
+//            val manager = instance().getNetworkManager(world as ServerWorld?)
+//            val network = manager!!.getNetwork(pos)
+//            removedNetwork = network
+//            manager.removeNetwork(pos)
+//            manager.markForSaving()
+//            network!!.onRemoved()
+//        }
+//    }
 
     override val node: RootNetworkNode
-        get() = (network as Network).getRoot()
+        get() = (network as Network).root
     override var redstoneMode: RedstoneMode
-        get() = (network as Network).getRedstoneMode()
+        get() = (network as Network).redstoneMode
         set(mode) {
-            (network as Network).setRedstoneMode(mode)
+            (network as Network).redstoneMode = mode
         }
 
     // TODO Replace capability
@@ -105,46 +107,46 @@ open class ControllerTile(type: NetworkType, entity: BlockEntityType<*>?):
 
     companion object {
         val REDSTONE_MODE = createParameter<ControllerTile>()
-        val ENERGY_USAGE = TileDataParameter(DataSerializers.VARINT, 0, Function { t: ControllerTile -> t.network.energyUsage })
-        val ENERGY_STORED = TileDataParameter(DataSerializers.VARINT, 0, Function { t: ControllerTile -> t.network.energyStorage.getEnergyStored() })
-        val ENERGY_CAPACITY = TileDataParameter(DataSerializers.VARINT, 0, Function { t: ControllerTile -> t.network.energyStorage.getMaxEnergyStored() })
-        val NODES: TileDataParameter<List<ClientNode>, ControllerTile> = TileDataParameter<T, E>(RSSerializers.CLIENT_NODE_SERIALIZER, ArrayList<Any>(), Function<E, T> { tile: E -> collectClientNodes(tile) })
+//        val ENERGY_USAGE = TileDataParameter(DataSerializers.VARINT, 0, Function { t: ControllerTile -> t.network.energyUsage })
+//        val ENERGY_STORED = TileDataParameter(DataSerializers.VARINT, 0, Function { t: ControllerTile -> t.network.energyStorage.getEnergyStored() })
+//        val ENERGY_CAPACITY = TileDataParameter(DataSerializers.VARINT, 0, Function { t: ControllerTile -> t.network.energyStorage.getMaxEnergyStored() })
+//        val NODES: TileDataParameter<List<ClientNode>, ControllerTile> = TileDataParameter<T, E>(RSSerializers.CLIENT_NODE_SERIALIZER, ArrayList<Any>(), Function<E, T> { tile: E -> collectClientNodes(tile) })
         private const val NBT_ENERGY_TYPE = "EnergyType"
-        private fun collectClientNodes(tile: ControllerTile): List<ClientNode> {
-            val nodes: MutableList<ClientNode> = ArrayList()
-            for (node in tile.network.nodeGraph!!.all()!!) {
-                if (node!!.isActive) {
-                    val stack = node.itemStack
-                    if (stack.isEmpty) {
-                        continue
-                    }
-                    val clientNode = ClientNode(stack, 1, node.energyUsage)
-                    if (nodes.contains(clientNode)) {
-                        val other = nodes[nodes.indexOf(clientNode)]
-                        other.amount = other.amount + 1
-                    } else {
-                        nodes.add(clientNode)
-                    }
-                }
-            }
-
-            nodes.sort(java.util.Comparator { a: ClientNode, b: ClientNode -> b.energyUsage.compareTo(a.energyUsage) })
-            return nodes
-        }
+//        private fun collectClientNodes(tile: ControllerTile): List<ClientNode> {
+//            val nodes: MutableList<ClientNode> = ArrayList()
+//            for (node in tile.network.nodeGraph!!.all()!!) {
+//                if (node!!.isActive) {
+//                    val stack = node.itemStack
+//                    if (stack.isEmpty) {
+//                        continue
+//                    }
+//                    val clientNode = ClientNode(stack, 1, node.energyUsage)
+//                    if (nodes.contains(clientNode)) {
+//                        val other = nodes[nodes.indexOf(clientNode)]
+//                        other.amount = other.amount + 1
+//                    } else {
+//                        nodes.add(clientNode)
+//                    }
+//                }
+//            }
+//
+//            nodes.sort(java.util.Comparator { a: ClientNode, b: ClientNode -> b.energyUsage.compareTo(a.energyUsage) })
+//            return nodes
+//        }
     }
 
     init {
         dataManager.addWatchedParameter(REDSTONE_MODE)
-        dataManager.addWatchedParameter(ENERGY_USAGE)
-        dataManager.addWatchedParameter(ENERGY_STORED)
-        dataManager.addParameter(ENERGY_CAPACITY)
-        dataManager.addParameter(NODES)
+//        dataManager.addWatchedParameter(ENERGY_USAGE)
+//        dataManager.addWatchedParameter(ENERGY_STORED)
+//        dataManager.addParameter(ENERGY_CAPACITY)
+//        dataManager.addParameter(NODES)
         this.type = type
     }
 }
 
 @RegisterBlockEntity(RS.ID, ControllerBlock.ID, ["CONTROLLER_BLOCK"])
-class NormalControllerTile: ControllerTile(NetworkType.NORMAL, BlockEntityRegistryGenerated.CONTROLLER_TILE)
+class NormalControllerTile: ControllerTile(NetworkType.NORMAL, BlockEntityRegistryGenerated.NORMAL_CONTROLLER_TILE)
 
 @RegisterBlockEntity(RS.ID, ControllerBlock.CREATIVE_ID, ["CREATIVE_CONTROLLER_BLOCK"])
 class CreativeControllerTile: ControllerTile(NetworkType.CREATIVE, BlockEntityRegistryGenerated.CREATIVE_CONTROLLER_TILE)

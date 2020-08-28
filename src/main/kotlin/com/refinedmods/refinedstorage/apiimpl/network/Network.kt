@@ -17,7 +17,10 @@ import com.refinedmods.refinedstorage.api.storage.externalstorage.IExternalStora
 import com.refinedmods.refinedstorage.api.storage.tracker.IStorageTracker
 import com.refinedmods.refinedstorage.api.util.Action
 import com.refinedmods.refinedstorage.apiimpl.API
+import com.refinedmods.refinedstorage.apiimpl.network.node.RootNetworkNode
 import com.refinedmods.refinedstorage.block.ControllerBlock
+import com.refinedmods.refinedstorage.config.ServerConfig
+import com.refinedmods.refinedstorage.energy.BaseEnergyStorage
 import com.refinedmods.refinedstorage.tile.config.IRedstoneConfigurable
 import com.refinedmods.refinedstorage.tile.config.RedstoneMode
 import net.minecraft.block.BlockState
@@ -44,7 +47,7 @@ class Network(override val world: World,
 //    private val fluidStorage: IStorageCache<FluidInstance> = FluidStorageCache(this)
 //    private val fluidStorageTracker: FluidStorageTracker = FluidStorageTracker(Runnable { markDirty() })
 //    private val energy: BaseEnergyStorage = BaseEnergyStorage(RS.SERVER_CONFIG.getController().getCapacity(), RS.SERVER_CONFIG.getController().getMaxTransfer(), 0)
-//    private val root: RootNetworkNode
+//              internal var root: RootNetworkNode,
               override val position: BlockPos,
               override val type: NetworkType
 ) : INetwork, IRedstoneConfigurable {
@@ -61,6 +64,10 @@ class Network(override val world: World,
     var couldRun = false
     var ticksSinceUpdateChanged = 0
     var ticks = 0
+
+    val root = RootNetworkNode(this, world, position)
+    val energy = BaseEnergyStorage(ServerConfig.controllerCapacity, ServerConfig.controllerMaxTransfer, 0.0)
+
 //    val energyStorage: EnergyStorage
 
 
@@ -356,7 +363,6 @@ class Network(override val world: World,
     }
 
     init {
-//        this.root = RootNetworkNode(this, world, position)
 //        nodeGraph.addListener(INetworkNodeGraphListener {
 //            val tile: BlockEntity? = world.getBlockEntity(position)
 //            if (tile is ControllerTile) {
