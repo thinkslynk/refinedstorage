@@ -5,7 +5,6 @@ import com.refinedmods.refinedstorage.apiimpl.network.node.CableNetworkNode
 import com.refinedmods.refinedstorage.block.CableBlock
 import com.thinkslynk.fabric.annotations.registry.RegisterBlockEntity
 import com.thinkslynk.fabric.generated.BlockEntityRegistryGenerated
-import net.minecraft.nbt.CompoundTag
 import net.minecraft.util.math.BlockPos
 import net.minecraft.world.World
 
@@ -13,13 +12,5 @@ import net.minecraft.world.World
 class CableTile : NetworkNodeTile<CableNetworkNode>(BlockEntityRegistryGenerated.CABLE_TILE) {
     override fun createNode(world: World, pos: BlockPos): CableNetworkNode {
         return CableNetworkNode(world, pos)
-    }
-
-    override fun writeToNbt(p0: CompoundTag) {
-        TODO("Implement writeToNbt")
-    }
-
-    override fun readFromNbt(p0: CompoundTag) {
-        TODO("Implement readFromNbt")
     }
 }

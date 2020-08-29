@@ -1,7 +1,7 @@
 package com.refinedmods.refinedstorage.api.network.node
 
+import dev.onyxstudios.cca.api.v3.block.BlockComponent
 import dev.onyxstudios.cca.api.v3.block.BlockComponentProvider
-import dev.onyxstudios.cca.api.v3.component.ComponentV3
 import net.minecraft.block.BlockState
 import net.minecraft.nbt.CompoundTag
 import net.minecraft.util.math.BlockPos
@@ -16,7 +16,7 @@ import net.minecraft.world.BlockView
  *
  * @param <T> the network node
 </T> */
-interface INetworkNodeProxy<T : INetworkNode>:ComponentV3 {
+interface INetworkNodeProxy<T : INetworkNode>:BlockComponent {
     companion object {
         const val ID = "network_node_proxy"
     }

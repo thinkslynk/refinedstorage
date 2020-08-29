@@ -16,6 +16,8 @@ import net.minecraft.util.BlockRotation
 class WrenchItem : Item(Settings().group(MyItemGroups.CURED_STORAGE).maxCount(1)) {
 
     override fun useOnBlock(ctx: ItemUsageContext): ActionResult {
+        val player = ctx.player ?: return ActionResult.FAIL // i don't think this is possible in forge?
+
         if (ctx.world.isClient) {
             return ActionResult.CONSUME
         }
@@ -25,8 +27,8 @@ class WrenchItem : Item(Settings().group(MyItemGroups.CURED_STORAGE).maxCount(1)
                 .world
                 .getBlockEntity(ctx.blockPos)
         )?.network
-        val player = ctx.player
-        if (network != null && player != null /*&& !network.getSecurityManager().hasPermission(Permission.BUILD, ctx.getPlayer())*/) {
+
+        if (network != null /*&& !network.getSecurityManager().hasPermission(Permission.BUILD, player)*/) {
             sendNoPermissionMessage(player)
             return ActionResult.FAIL
         }
@@ -35,5 +37,4 @@ class WrenchItem : Item(Settings().group(MyItemGroups.CURED_STORAGE).maxCount(1)
 
         return ActionResult.CONSUME
     }
-
 }

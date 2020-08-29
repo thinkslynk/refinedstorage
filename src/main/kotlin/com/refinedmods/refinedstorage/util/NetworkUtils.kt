@@ -14,21 +14,19 @@ import net.minecraft.util.ActionResult
 import net.minecraft.util.math.BlockPos
 import net.minecraft.util.math.Direction
 import net.minecraft.world.World
-import org.jetbrains.annotations.Nullable
 
 
 object NetworkUtils {
 
     @Deprecated("fabric names", replaceWith = ReplaceWith("getNodeFromBlockEntity(tile)"))
     fun getNodeFromTile(tile: BlockEntity?): INetworkNode? = getNodeFromBlockEntity(tile)
-    fun getNodeFromBlockEntity(blockEntity: BlockEntity?): INetworkNode? {
-        blockEntity?:return null
-        return BlockComponents.get(RSComponents.NETWORK_NODE_PROXY, blockEntity)?.node
-    }
+    @Deprecated(replaceWith = ReplaceWith("blockEntity?.networkNode"), message = "kotlin goes brr")
+    fun getNodeFromBlockEntity(blockEntity: BlockEntity?): INetworkNode? = blockEntity?.networkNode
+    val BlockEntity.networkNode get(): INetworkNode? =
+        BlockComponents.get(RSComponents.NETWORK_NODE_PROXY, this)?.node
 
-    @Nullable
     @Deprecated(replaceWith = ReplaceWith("node?.network"), message = "kotlin goes brr")
-    fun getNetworkFromNode(@Nullable node: INetworkNode?): INetwork? {
+    fun getNetworkFromNode(node: INetworkNode?): INetwork? {
         return node?.network
     }
 
