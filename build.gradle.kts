@@ -75,6 +75,9 @@ dependencies {
     // JEI style mod
     modRuntime("me.shedaniel:RoughlyEnoughItems:$reiVersion")
 
+    // Tech Reborn Testing
+    modRuntime("TechReborn:TechReborn-1.16:+")
+
     // GUI Library
     // https://github.com/CottonMC/LibGui/wiki/Getting-Started-with-GUIs
 //    modImplementation("io.github.cottonmc:LibGui:$libGui")

@@ -49,6 +49,7 @@ import net.minecraft.nbt.CompoundTag
 import net.minecraft.nbt.ListTag
 import net.minecraft.nbt.Tag
 import net.minecraft.server.world.ServerWorld
+import net.minecraft.world.World
 import org.apache.logging.log4j.LogManager
 import reborncore.common.fluid.container.FluidInstance
 import java.util.*
@@ -69,24 +70,19 @@ class API : IRSAPI {
 
 
     override fun getNetworkNodeManager(world: ServerWorld): INetworkNodeManager {
-        // TODO Load from world somehow...
-        return NetworkNodeManager(NetworkNodeManager.NAME, world)
-
-//        return world.getSavedData()
-//                .getOrCreate(
-//                        { NetworkNodeManager(NetworkNodeManager.NAME, world) },
-//                        NetworkNodeManager.NAME
-//                )
+        return world.persistentStateManager
+                .getOrCreate(
+                        { NetworkNodeManager(NetworkNodeManager.NAME, world) },
+                        NetworkNodeManager.NAME
+                )
     }
 
     override fun getNetworkManager(world: ServerWorld): INetworkManager {
-        // TODO Load from world
-        return NetworkManager(NetworkManager.NAME, world)
-//        return world.chunkManager.getSavedData()
-//                .getOrCreate(
-//                        { NetworkManager(NetworkManager.NAME, world) },
-//                        NetworkManager.NAME
-//                )
+        return world.chunkManager.persistentStateManager
+                .getOrCreate(
+                        { NetworkManager(NetworkManager.NAME, world) },
+                        NetworkManager.NAME
+                )
     }
 
 
@@ -107,7 +103,7 @@ class API : IRSAPI {
 //
 //    override fun getStorageDiskManager(anyWorld: ServerWorld): IStorageDiskManager {
 //        val world: ServerWorld = anyWorld.server.overworld
-//        return world.getSavedData()
+//        return world.getSavedData() // TODO persistentStateManager
 //                .getOrCreate(
 //                        { StorageDiskManager(StorageDiskManager.NAME, world) },
 //                        StorageDiskManager.NAME

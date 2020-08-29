@@ -2,6 +2,11 @@ package com.refinedmods.refinedstorage.block
 
 import com.refinedmods.refinedstorage.RS
 import com.refinedmods.refinedstorage.api.network.NetworkType
+import com.refinedmods.refinedstorage.apiimpl.API.Companion.instance
+import com.refinedmods.refinedstorage.apiimpl.network.Network
+import com.refinedmods.refinedstorage.tile.ControllerTile
+import com.refinedmods.refinedstorage.tile.CreativeControllerTile
+import com.refinedmods.refinedstorage.tile.NormalControllerTile
 //import com.refinedmods.refinedstorage.apiimpl.API.Companion.instance
 //import com.refinedmods.refinedstorage.apiimpl.network.Network
 //import com.refinedmods.refinedstorage.tile.ControllerTile
@@ -11,9 +16,11 @@ import com.thinkslynk.fabric.annotations.registry.RegisterBlockItem
 import net.minecraft.block.Block
 import net.minecraft.block.BlockEntityProvider
 import net.minecraft.block.BlockState
+import net.minecraft.block.entity.BlockEntity
 import net.minecraft.entity.LivingEntity
 import net.minecraft.entity.player.PlayerEntity
 import net.minecraft.item.ItemStack
+import net.minecraft.server.world.ServerWorld
 import net.minecraft.state.StateManager
 import net.minecraft.state.property.EnumProperty
 import net.minecraft.util.ActionResult
@@ -21,13 +28,17 @@ import net.minecraft.util.Hand
 import net.minecraft.util.StringIdentifiable
 import net.minecraft.util.hit.BlockHitResult
 import net.minecraft.util.math.BlockPos
+import net.minecraft.world.BlockView
 import net.minecraft.world.World
+import team.reborn.energy.Energy
+import team.reborn.energy.EnergySide
+import java.util.*
 
 @RegisterBlock(RS.ID, ControllerBlock.ID)
 @RegisterBlockItem(RS.ID, ControllerBlock.ID, "CURED_STORAGE")
 open class ControllerBlock(val type: NetworkType = NetworkType.NORMAL):
-        BaseBlock(BlockUtils.DEFAULT_ROCK_PROPERTIES)
-//        BlockEntityProvider
+        BaseBlock(BlockUtils.DEFAULT_ROCK_PROPERTIES),
+        BlockEntityProvider
 {
     enum class EnergyType(val string: String): StringIdentifiable {
         OFF("off"),
@@ -44,38 +55,43 @@ open class ControllerBlock(val type: NetworkType = NetworkType.NORMAL):
         builder.add(ENERGY_TYPE)
     }
 
-//    override fun createBlockEntity(world: BlockView): BlockEntity {
-//        return NoOpBlockEntity()
-//        // TODO BlockEntities
-////        return ControllerTile(type)
-//    }
+    override fun createBlockEntity(world: BlockView): BlockEntity {
+        return when (type){
+            NetworkType.NORMAL -> NormalControllerTile()
+            NetworkType.CREATIVE -> CreativeControllerTile()
+        }
+    }
 
     override fun onPlaced(world: World, pos: BlockPos, state: BlockState, placer: LivingEntity?, itemStack: ItemStack) {
         super.onPlaced(world, pos, state, placer, itemStack)
         if (!world.isClient) {
-            // TODO Register energy
-//            itemStack.getCapability(CapabilityEnergy.ENERGY).ifPresent({ energyFromStack ->
-//                val tile: BlockEntity? = world.getBlockEntity(pos)
-//                if (tile != null) {
-//                    tile.getCapability(CapabilityEnergy.ENERGY).ifPresent({ energyFromTile -> energyFromTile.receiveEnergy(energyFromStack.getEnergyStored(), false) })
-//                }
-//            })
+            if (Energy.valid(itemStack)){
+                val tile: BlockEntity? = world.getBlockEntity(pos)
+                if (tile != null) {
+                    if (Energy.valid(tile)) {
+                        Energy.of(itemStack).into(Energy.of(tile)).move()
+                    }
+                }
+            }
+
+//            RS.log.info("itemStack is a valid energy object:" + Energy.valid(itemStack))
         }
     }
 
-// TODO Network
-//
-//    override fun neighborUpdate(state: BlockState, world: World, pos: BlockPos, block: Block, fromPos: BlockPos, notify: Boolean) {
-//        super.neighborUpdate(state, world, pos, block, fromPos, notify)
-//        if (!world.isClient) {
-//            val network = instance()
-//                    .getNetworkManager(world as ServerWorld)!!
-//                    .getNetwork(pos)
-////            if (network is Network) {
-////                network.setRedstonePowered(world.isReceivingRedstonePower(pos))
-////            }
-//        }
-//    }
+    override fun neighborUpdate(state: BlockState, world: World, pos: BlockPos, block: Block, fromPos: BlockPos, notify: Boolean) {
+        super.neighborUpdate(state, world, pos, block, fromPos, notify)
+        if (!world.isClient) {
+            val network = instance()
+                    .getNetworkManager(world as ServerWorld)!!
+                    .getNetwork(pos)
+
+            if (network is Network) {
+                RS.log.info("power: " + network.energyStorage.getStored(EnergySide.UNKNOWN))
+
+                network.redstonePowered = world.isReceivingRedstonePower(pos)
+            }
+        }
+    }
 
     override fun onUse(state: BlockState, world: World, pos: BlockPos, player: PlayerEntity, hand: Hand, hit: BlockHitResult): ActionResult {
         // TODO Figure out how to port the GUI

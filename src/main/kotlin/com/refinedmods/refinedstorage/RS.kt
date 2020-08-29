@@ -5,6 +5,7 @@ package com.refinedmods.refinedstorage
 //import com.refinedmods.refinedstorage.network.NetworkHandler
 import com.refinedmods.refinedstorage.config.ClientConfig
 import com.refinedmods.refinedstorage.config.ServerConfig
+import com.refinedmods.refinedstorage.extensions.DOUBLE
 import com.thinkslynk.fabric.generated.BlockRegistryGenerated
 import com.refinedmods.refinedstorage.extensions.getCustomLogger
 import com.thinkslynk.fabric.generated.BlockEntityRegistryGenerated
@@ -12,6 +13,7 @@ import com.thinkslynk.fabric.generated.ItemRegistryGenerated
 import com.thinkslynk.fabric.generated.BlockItemRegistryGenerated
 import net.fabricmc.api.ModInitializer
 import net.fabricmc.fabric.api.client.itemgroup.FabricItemGroupBuilder
+import net.minecraft.entity.data.TrackedDataHandlerRegistry
 import net.minecraft.item.ItemGroup
 import net.minecraft.item.ItemStack
 import net.minecraft.util.Identifier
@@ -35,6 +37,7 @@ class RS: ModInitializer {
         BlockRegistryGenerated.register()
         BlockItemRegistryGenerated.register()
         BlockEntityRegistryGenerated.register()
+        TrackedDataHandlerRegistry.register(DOUBLE)
         // TODO Register stuff!
 //        DistExecutor.safeRunWhenOn(Dist.CLIENT, { { ClientSetup() } })
 //        MinecraftForge.EVENT_BUS.register(ServerSetup())

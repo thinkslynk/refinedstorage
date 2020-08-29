@@ -25,7 +25,7 @@ open class BaseEnergyStorage(protected var capacity: Double, protected var maxRe
     }
 
     override fun getTier(): EnergyTier {
-        TODO("Not yet implemented")
+        return EnergyTier.INFINITE
     }
 
     override fun getStored(face: EnergySide): Double {

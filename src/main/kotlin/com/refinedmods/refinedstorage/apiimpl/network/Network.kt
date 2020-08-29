@@ -52,7 +52,7 @@ class Network(override val world: World,
               override val type: NetworkType
 ) : INetwork, IRedstoneConfigurable {
     private var lastEnergyType: ControllerBlock.EnergyType = ControllerBlock.EnergyType.OFF
-    override var energyUsage = 0
+    override var energyUsage = 0.0
     override var redstoneMode: RedstoneMode = RedstoneMode.IGNORE
          set(mode) {
             field = mode
@@ -66,17 +66,15 @@ class Network(override val world: World,
     var ticks = 0
 
     val root = RootNetworkNode(this, world, position)
-    val energy = BaseEnergyStorage(ServerConfig.controllerCapacity, ServerConfig.controllerMaxTransfer, 0.0)
-
-//    val energyStorage: EnergyStorage
+    override val energyStorage = BaseEnergyStorage(ServerConfig.controllerCapacity, ServerConfig.controllerMaxTransfer, 0.0)
 
 
     override fun canRun(): Boolean {
-        return amILoaded && redstoneMode.isEnabled(redstonePowered)
-//        return amILoaded && energy.getEnergyStored() >= energyUsage && redstoneMode.isEnabled(redstonePowered)
+        return amILoaded && energyStorage.energy >= energyUsage && redstoneMode.isEnabled(redstonePowered)
     }
 
     override fun update() {
+        RS.log.info("energy: " + energyStorage.energy)
         if (!world.isClient) {
             if (ticks == 0) {
                 redstonePowered = world.isReceivingRedstonePower(position)
@@ -92,14 +90,14 @@ class Network(override val world: World,
             }
             if (type === NetworkType.NORMAL) {
                 // TODO energy
-//                if (!RS.SERVER_CONFIG.getController().getUseEnergy()) {
-//                    energy.setStored(energy.getMaxEnergyStored())
-//                } else {
-//                    energy.extractEnergyBypassCanExtract(energyUsage, false)
-//                }
+                if (!ServerConfig.controllerUseEnergy) {
+                    energyStorage.setStored(energyStorage.maxStoredPower)
+                } else {
+                    energyStorage.extractEnergyBypassCanExtract(energyUsage, false)
+                }
             } else if (type === NetworkType.CREATIVE) {
-                // TODO energy
-//                energy.setStored(energy.getMaxEnergyStored())
+//                 TODO energy
+                energyStorage.setStored(energyStorage.maxStoredPower)
             }
             val canRun = canRun()
             if (couldRun != canRun) {
@@ -290,9 +288,9 @@ class Network(override val world: World,
     }
 
     override fun readFromNbt(tag: CompoundTag): INetwork {
-//        if (tag.contains(NBT_ENERGY)) {
-//            energy.setStored(tag.getInt(NBT_ENERGY))
-//        }
+        if (tag.contains(NBT_ENERGY)) {
+            energyStorage.setStored(tag.getDouble(NBT_ENERGY))
+        }
         redstoneMode = RedstoneMode.read(tag)
 //        craftingManager.readFromNbt(tag)
 //        if (tag.contains(NBT_ITEM_STORAGE_TRACKER)) {
@@ -305,7 +303,7 @@ class Network(override val world: World,
     }
 
     override fun writeToNbt(tag: CompoundTag): CompoundTag {
-//        tag.putInt(NBT_ENERGY, energy.getEnergyStored())
+        tag.putDouble(NBT_ENERGY, energyStorage.energy)
         redstoneMode.write(tag)
 //        craftingManager.writeToNbt(tag)
 //        tag.put(NBT_ITEM_STORAGE_TRACKER, itemStorageTracker.serializeNbt())
@@ -325,10 +323,10 @@ class Network(override val world: World,
 
     private fun updateEnergyUsage() {
         if (!redstoneMode.isEnabled(redstonePowered)) {
-            energyUsage = 0
+            energyUsage = 0.0
             return
         }
-        var usage: Int = 0 //RS.SERVER_CONFIG.getController().getBaseUsage()
+        var usage: Double = 0.0 //RS.SERVER_CONFIG.getController().getBaseUsage()
 //        for (node in nodeGraph.all()!!) {
 //            if (node!!.isActive) {
 //                usage += node.energyUsage

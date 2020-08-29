@@ -7,18 +7,20 @@ import com.refinedmods.refinedstorage.extensions.LIST_TAG_TYPE
 import net.minecraft.nbt.CompoundTag
 import net.minecraft.nbt.ListTag
 import net.minecraft.util.math.BlockPos
+import net.minecraft.world.PersistentState
 import net.minecraft.world.World
 import org.apache.logging.log4j.LogManager
 import java.util.concurrent.ConcurrentHashMap
 
 class NetworkManager(name: String?, world: World):
-//        WorldSavedData(name), // TODO Figure out save location
+        PersistentState(name),
         INetworkManager
 {
     private val world: World
     private val logger = LogManager.getLogger(javaClass)
     private val networks: ConcurrentHashMap<BlockPos, INetwork> = ConcurrentHashMap<BlockPos, INetwork>()
-    fun read(tag: CompoundTag) {
+
+    override fun fromTag(tag: CompoundTag) {
         if (tag.contains(NBT_NETWORKS)) {
             val networksTag: ListTag = tag.getList(NBT_NETWORKS, LIST_TAG_TYPE)
             networks.clear()
@@ -33,12 +35,12 @@ class NetworkManager(name: String?, world: World):
                 } catch (t: Throwable) {
                     logger.error("Error while reading network", t)
                 }
-                networks.put(pos, network)
+                networks[pos] = network
             }
         }
     }
 
-    fun write(tag: CompoundTag): CompoundTag {
+    override fun toTag(tag: CompoundTag): CompoundTag {
         val list = ListTag()
         for (network in all()) {
             try {
@@ -63,8 +65,8 @@ class NetworkManager(name: String?, world: World):
         networks.remove(pos)
     }
 
-    override fun setNetwork(pos: BlockPos, network: INetwork) {
-        networks[pos] = network
+    override fun setNetwork(pos: BlockPos, node: INetwork) {
+        networks[pos] = node
     }
 
     override fun all(): Collection<INetwork> {
