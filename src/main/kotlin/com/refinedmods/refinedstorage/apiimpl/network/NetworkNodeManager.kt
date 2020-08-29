@@ -9,6 +9,7 @@ import net.minecraft.nbt.CompoundTag
 import net.minecraft.nbt.ListTag
 import net.minecraft.util.Identifier
 import net.minecraft.util.math.BlockPos
+import net.minecraft.world.PersistentState
 import net.minecraft.world.World
 import org.apache.logging.log4j.LogManager
 import java.util.concurrent.ConcurrentHashMap
@@ -17,12 +18,12 @@ class NetworkNodeManager(
         name: String?,
         private val world: World
 ):
-//        WorldSavedData(name),  // TODO Figure out where this is now...
+        PersistentState(name),
         INetworkNodeManager
 {
     private val logger = LogManager.getLogger(javaClass)
     private val nodes: ConcurrentHashMap<BlockPos, INetworkNode> = ConcurrentHashMap<BlockPos, INetworkNode>()
-    fun read(tag: CompoundTag) {
+    override fun fromTag(tag: CompoundTag) {
         if (tag.contains(NBT_NODES)) {
             val nodesTag: ListTag = tag.getList(NBT_NODES, LIST_TAG_TYPE)
             nodes.clear()
@@ -49,7 +50,7 @@ class NetworkNodeManager(
         }
     }
 
-    fun write(tag: CompoundTag): CompoundTag {
+    override fun toTag(tag: CompoundTag): CompoundTag {
         val list = ListTag()
         for (node in all()) {
             try {

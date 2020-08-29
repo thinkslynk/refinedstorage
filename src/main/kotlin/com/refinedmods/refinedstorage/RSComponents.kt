@@ -4,6 +4,7 @@ import com.refinedmods.refinedstorage.api.network.node.INetworkNodeProxy
 import com.refinedmods.refinedstorage.block.CableBlock
 import com.refinedmods.refinedstorage.block.ConstructorBlock
 import com.refinedmods.refinedstorage.block.ControllerBlock
+import com.refinedmods.refinedstorage.block.DestructorBlock
 import dev.onyxstudios.cca.api.v3.block.BlockComponentFactoryRegistry
 import dev.onyxstudios.cca.api.v3.block.BlockComponentInitializer
 import dev.onyxstudios.cca.api.v3.component.ComponentKey
