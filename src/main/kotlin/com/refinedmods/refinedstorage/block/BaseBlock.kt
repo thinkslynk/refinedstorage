@@ -24,8 +24,8 @@ abstract class BaseBlock(settings: Settings): Block(settings) {
     override fun onStateReplaced(state: BlockState, world: World, pos: BlockPos, newState: BlockState, moved: Boolean) {
         super.onStateReplaced(state, world, pos, newState, moved)
         if (direction != BlockDirection.NONE &&
-                state.block === newState.block &&
-                state.get(direction.property) !== newState.get(direction.property)) {
+                state.block == newState.block &&
+                state.get(direction.property) != newState.get(direction.property)) {
             onDirectionChanged(world, pos, newState.get(direction.property))
         }
     }

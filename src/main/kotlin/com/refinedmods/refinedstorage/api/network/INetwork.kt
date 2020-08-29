@@ -26,12 +26,12 @@ interface INetwork {
     /**
      * @return the energy usage per tick of this network
      */
-    val energyUsage: Int
+    val energyUsage: Double
 
-//    /**
-//     * @return the energy storage
-//     */
-//    val energyStorage: EnergyStorage
+    /**
+     * @return the energy storage
+     */
+    val energyStorage: EnergyStorage
 
     /**
      * @return the network type
