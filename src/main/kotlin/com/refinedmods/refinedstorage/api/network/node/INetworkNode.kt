@@ -84,7 +84,7 @@ interface INetworkNode {
     /**
      * @return the id of this node as specified in [INetworkNodeRegistry]
      */
-    val id: Identifier
+    val id: Identifier?
     /**
      * @return the owner
      */

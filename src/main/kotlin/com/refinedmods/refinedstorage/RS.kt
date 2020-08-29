@@ -1,20 +1,21 @@
 package com.refinedmods.refinedstorage
 
-//import com.refinedmods.refinedstorage.config.ClientConfig
-//import com.refinedmods.refinedstorage.config.ServerConfig
-//import com.refinedmods.refinedstorage.network.NetworkHandler
+import com.refinedmods.refinedstorage.apiimpl.network.NetworkListener
 import com.refinedmods.refinedstorage.block.ConstructorBlock
 import com.refinedmods.refinedstorage.config.ClientConfig
 import com.refinedmods.refinedstorage.config.ServerConfig
 import com.refinedmods.refinedstorage.container.ConstructorScreenHandler
 import com.refinedmods.refinedstorage.container.FilterContainer
-import com.thinkslynk.fabric.generated.BlockRegistryGenerated
+import com.refinedmods.refinedstorage.extensions.DOUBLE
 import com.refinedmods.refinedstorage.extensions.getCustomLogger
 import com.thinkslynk.fabric.generated.BlockEntityRegistryGenerated
-import com.thinkslynk.fabric.generated.ItemRegistryGenerated
 import com.thinkslynk.fabric.generated.BlockItemRegistryGenerated
+import com.thinkslynk.fabric.generated.BlockRegistryGenerated
+import com.thinkslynk.fabric.generated.ItemRegistryGenerated
 import net.fabricmc.api.ModInitializer
+import net.fabricmc.fabric.api.event.lifecycle.v1.ServerTickEvents
 import net.fabricmc.fabric.api.screenhandler.v1.ScreenHandlerRegistry
+import net.minecraft.entity.data.TrackedDataHandlerRegistry
 import net.minecraft.item.ItemStack
 import net.minecraft.screen.ScreenHandlerContext
 import net.minecraft.screen.ScreenHandlerType
@@ -49,6 +50,11 @@ class RS: ModInitializer {
         BlockRegistryGenerated.register()
         BlockItemRegistryGenerated.register()
         BlockEntityRegistryGenerated.register()
+
+        TrackedDataHandlerRegistry.register(DOUBLE)
+
+        ServerTickEvents.END_WORLD_TICK.register(NetworkListener())
+        
 
         // TODO Register stuff!
 //        DistExecutor.safeRunWhenOn(Dist.CLIENT, { { ClientSetup() } })

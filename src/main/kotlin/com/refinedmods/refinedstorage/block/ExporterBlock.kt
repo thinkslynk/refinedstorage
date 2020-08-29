@@ -38,12 +38,12 @@ class ExporterBlock:
     private fun getLineShape(state: BlockState): VoxelShape {
         val direction: Direction = state.get(direction.property)
         return when {
-            direction === Direction.NORTH -> LINE_NORTH
-            direction === Direction.EAST -> LINE_EAST
-            direction === Direction.SOUTH -> LINE_SOUTH
-            direction === Direction.WEST -> LINE_WEST
-            direction === Direction.UP -> LINE_UP
-            direction === Direction.DOWN -> LINE_DOWN
+            direction == Direction.NORTH -> LINE_NORTH
+            direction == Direction.EAST -> LINE_EAST
+            direction == Direction.SOUTH -> LINE_SOUTH
+            direction == Direction.WEST -> LINE_WEST
+            direction == Direction.UP -> LINE_UP
+            direction == Direction.DOWN -> LINE_DOWN
             else -> VoxelShapes.empty()
         }
     }

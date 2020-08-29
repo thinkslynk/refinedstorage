@@ -12,11 +12,11 @@ abstract class BaseTile(tileType: BlockEntityType<*>?):
         BlockEntity(tileType)
 {
     val dataManager by lazy { TileDataManager(this) }
-    fun writeUpdate(tag: CompoundTag): CompoundTag {
+    open fun writeUpdate(tag: CompoundTag): CompoundTag {
         return tag
     }
 
-    fun readUpdate(tag: CompoundTag) {}
+    open fun readUpdate(tag: CompoundTag) {}
     val updateTag: CompoundTag
         get() = writeUpdate(super.toUpdatePacket()?.compoundTag ?: CompoundTag())
 
