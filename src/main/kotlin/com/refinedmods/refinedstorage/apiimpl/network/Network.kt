@@ -88,7 +88,6 @@ class Network(override val world: World,
 //                    markDirty()
 //                }
             }
-            RS.log.info(type)
             if (type == NetworkType.NORMAL) {
                 // TODO energy
                 if (!ServerConfig.controllerUseEnergy) {
@@ -329,7 +328,7 @@ class Network(override val world: World,
             energyUsage = 0.0
             return
         }
-        var usage: Double = 0.0 //RS.SERVER_CONFIG.getController().getBaseUsage()
+        var usage: Double = ServerConfig.controllerBaseUsage
 //        for (node in nodeGraph.all()!!) {
 //            if (node!!.isActive) {
 //                usage += node.energyUsage
