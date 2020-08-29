@@ -1,5 +1,6 @@
 package com.refinedmods.refinedstorage.tile
 
+//import com.refinedmods.refinedstorage.tile.data.RSSerializers
 import com.refinedmods.refinedstorage.RS
 import com.refinedmods.refinedstorage.api.network.INetwork
 import com.refinedmods.refinedstorage.api.network.NetworkType
@@ -9,26 +10,19 @@ import com.refinedmods.refinedstorage.apiimpl.network.Network
 import com.refinedmods.refinedstorage.apiimpl.network.node.RootNetworkNode
 import com.refinedmods.refinedstorage.block.ControllerBlock
 import com.refinedmods.refinedstorage.block.ControllerBlock.EnergyType
-import com.refinedmods.refinedstorage.block.CreativeControllerBlock
 import com.refinedmods.refinedstorage.extensions.DOUBLE
 import com.refinedmods.refinedstorage.tile.config.IRedstoneConfigurable
 import com.refinedmods.refinedstorage.tile.config.RedstoneMode
 import com.refinedmods.refinedstorage.tile.config.RedstoneMode.Companion.createParameter
-//import com.refinedmods.refinedstorage.tile.data.RSSerializers
 import com.refinedmods.refinedstorage.tile.data.TileDataParameter
 import com.thinkslynk.fabric.annotations.registry.RegisterBlockEntity
 import com.thinkslynk.fabric.generated.BlockEntityRegistryGenerated
-import net.minecraft.block.entity.BlockEntity
 import net.minecraft.block.entity.BlockEntityType
-import net.minecraft.entity.data.TrackedDataHandlerRegistry
 import net.minecraft.nbt.CompoundTag
 import net.minecraft.server.world.ServerWorld
-import net.minecraft.world.chunk.ChunkManager
-import net.minecraft.world.chunk.WorldChunk
 import team.reborn.energy.EnergySide
 import team.reborn.energy.EnergyStorage
 import team.reborn.energy.EnergyTier
-import java.util.*
 import java.util.function.Function
 
 open class ControllerTile(type: NetworkType, entity: BlockEntityType<*>?):
@@ -163,6 +157,12 @@ open class ControllerTile(type: NetworkType, entity: BlockEntityType<*>?):
 
     override fun getStored(face: EnergySide?): Double {
         return network.energyStorage.getStored(face)
+    }
+
+    @Suppress("UnstableApiUsage")
+    // this is going to be removed in ComponentV3 so that should fix it
+    override fun toTag(tag: CompoundTag): CompoundTag {
+        return super<BaseTile>.toTag(tag)
     }
 }
 

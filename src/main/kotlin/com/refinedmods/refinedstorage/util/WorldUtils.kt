@@ -1,11 +1,9 @@
 package com.refinedmods.refinedstorage.util
 
 //import com.refinedmods.refinedstorage.render.Styles
+import com.refinedmods.refinedstorage.render.Styles
 import net.minecraft.entity.player.PlayerEntity
-import net.minecraft.text.Style
-import net.minecraft.text.TextColor
 import net.minecraft.text.TranslatableText
-import net.minecraft.util.Formatting
 import net.minecraft.util.math.BlockPos
 import net.minecraft.world.World
 
@@ -52,14 +50,11 @@ fun getFakePlayer(world: ServerWorld, @Nullable owner: UUID?): FakePlayer {
     return FakePlayerFactory.getMinecraft(world)
 }
 */
-// TODO is this the best way?
-// ah, supposed to be in import com.refinedmods.refinedstorage.render.Styles
-    private val RED = Style.EMPTY.withColor(TextColor.fromFormatting(Formatting.RED))
 
     fun sendNoPermissionMessage(player: PlayerEntity) {
         player.sendMessage(
             TranslatableText("misc.refinedstorage.security.no_permission")
-                .setStyle(RED), true
+                .setStyle(Styles.RED), true
         )
     }
 /*
