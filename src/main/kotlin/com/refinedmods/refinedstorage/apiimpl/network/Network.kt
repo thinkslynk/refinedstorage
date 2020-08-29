@@ -74,8 +74,8 @@ class Network(override val world: World,
     }
 
     override fun update() {
-        RS.log.info("energy: " + energyStorage.energy)
         if (!world.isClient) {
+            RS.log.info("energy: " + energyStorage.energy)
             if (ticks == 0) {
                 redstonePowered = world.isReceivingRedstonePower(position)
             }
@@ -88,14 +88,15 @@ class Network(override val world: World,
 //                    markDirty()
 //                }
             }
-            if (type === NetworkType.NORMAL) {
+            RS.log.info(type)
+            if (type == NetworkType.NORMAL) {
                 // TODO energy
                 if (!ServerConfig.controllerUseEnergy) {
                     energyStorage.setStored(energyStorage.maxStoredPower)
                 } else {
                     energyStorage.extractEnergyBypassCanExtract(energyUsage, false)
                 }
-            } else if (type === NetworkType.CREATIVE) {
+            } else if (type == NetworkType.CREATIVE) {
 //                 TODO energy
                 energyStorage.setStored(energyStorage.maxStoredPower)
             }
@@ -114,7 +115,8 @@ class Network(override val world: World,
                 ticksSinceUpdateChanged = 0
             }
             val energyType: ControllerBlock.EnergyType = energyType
-            if (lastEnergyType !== energyType) {
+            if (lastEnergyType != energyType) {
+                RS.log.info("energyType replaced to $energyType")
                 lastEnergyType = energyType
                 val state: BlockState = world.getBlockState(position)
                 if (state.block is ControllerBlock) {
@@ -318,8 +320,9 @@ class Network(override val world: World,
 
     val energyType: ControllerBlock.EnergyType
         get() = if (!redstoneMode.isEnabled(redstonePowered)) {
+            RS.log.info("block isn't running because of redstone")
             ControllerBlock.EnergyType.OFF
-        } else ControllerBlock.EnergyType.ON // getEnergyType(energy.getEnergyStored(), energy.getMaxEnergyStored())
+        } else getEnergyType(energyStorage.energy, energyStorage.maxStoredPower)
 
     private fun updateEnergyUsage() {
         if (!redstoneMode.isEnabled(redstonePowered)) {
@@ -342,21 +345,26 @@ class Network(override val world: World,
         private const val NBT_ITEM_STORAGE_TRACKER = "ItemStorageTracker"
         private const val NBT_FLUID_STORAGE_TRACKER = "FluidStorageTracker"
         private val LOGGER = LogManager.getLogger(Network::class.java)
-        @kotlin.jvm.JvmStatic
-        fun getEnergyScaled(stored: Int, capacity: Int, scale: Int): Int {
-            return (stored.toFloat() / capacity.toFloat() * scale.toFloat()).toInt()
+        @JvmStatic
+        fun getEnergyScaled(stored: Double, capacity: Double, scale: Int): Int {
+            return (stored / capacity * scale.toDouble()).toInt()
         }
 
-        fun getEnergyType(stored: Int, capacity: Int): ControllerBlock.EnergyType {
+        fun getEnergyType(stored: Double, capacity: Double): ControllerBlock.EnergyType {
             val energy = getEnergyScaled(stored, capacity, 100)
-            if (energy <= 0) {
-                return ControllerBlock.EnergyType.OFF
-            } else if (energy <= 10) {
-                return ControllerBlock.EnergyType.NEARLY_OFF
-            } else if (energy <= 20) {
-                return ControllerBlock.EnergyType.NEARLY_ON
+            RS.log.info("energy percent: $energy%")
+            return when {
+                energy <= 0 -> {
+                    ControllerBlock.EnergyType.OFF
+                }
+                energy <= 10 -> {
+                    ControllerBlock.EnergyType.NEARLY_OFF
+                }
+                energy <= 20 -> {
+                    ControllerBlock.EnergyType.NEARLY_ON
+                }
+                else -> ControllerBlock.EnergyType.ON
             }
-            return ControllerBlock.EnergyType.ON
         }
     }
 

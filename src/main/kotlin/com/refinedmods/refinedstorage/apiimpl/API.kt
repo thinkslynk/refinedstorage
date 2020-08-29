@@ -203,7 +203,7 @@ class API : IRSAPI {
     override fun isNetworkNodeEqual(left: INetworkNode, right: Any): Boolean {
         return when {
             right !is INetworkNode -> false
-            left === right -> true
+            left == right -> true
             left.world.dimension !== right.world.dimension -> false
             else -> left.pos == right.pos
         }

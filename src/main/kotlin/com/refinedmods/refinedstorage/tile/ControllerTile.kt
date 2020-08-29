@@ -27,16 +27,17 @@ import net.minecraft.world.chunk.ChunkManager
 import net.minecraft.world.chunk.WorldChunk
 import team.reborn.energy.EnergySide
 import team.reborn.energy.EnergyStorage
+import team.reborn.energy.EnergyTier
 import java.util.*
 import java.util.function.Function
 
 open class ControllerTile(type: NetworkType, entity: BlockEntityType<*>?):
         BaseTile(entity),
         INetworkNodeProxy<RootNetworkNode>,
-        IRedstoneConfigurable
+        IRedstoneConfigurable,
+        EnergyStorage
 {
-    private val energyProxyCap: EnergyStorage by lazy { network.energyStorage }
-    private val networkNodeProxyCap: INetworkNodeProxy<RootNetworkNode> by lazy { this }
+
     private val type: NetworkType
     var removedNetwork: INetwork? = null
         private set
@@ -146,6 +147,22 @@ open class ControllerTile(type: NetworkType, entity: BlockEntityType<*>?):
         dataManager.addParameter(ENERGY_CAPACITY)
 //        dataManager.addParameter(NODES)
         this.type = type
+    }
+
+    override fun setStored(amount: Double) {
+        network.energyStorage.setStored(amount)
+    }
+
+    override fun getMaxStoredPower(): Double {
+        return network.energyStorage.maxStoredPower
+    }
+
+    override fun getTier(): EnergyTier {
+        return network.energyStorage.tier
+    }
+
+    override fun getStored(face: EnergySide?): Double {
+        return network.energyStorage.getStored(face)
     }
 }
 

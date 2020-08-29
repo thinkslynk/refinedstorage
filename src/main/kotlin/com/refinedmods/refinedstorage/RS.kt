@@ -3,6 +3,7 @@ package com.refinedmods.refinedstorage
 //import com.refinedmods.refinedstorage.config.ClientConfig
 //import com.refinedmods.refinedstorage.config.ServerConfig
 //import com.refinedmods.refinedstorage.network.NetworkHandler
+import com.refinedmods.refinedstorage.apiimpl.network.NetworkListener
 import com.refinedmods.refinedstorage.config.ClientConfig
 import com.refinedmods.refinedstorage.config.ServerConfig
 import com.refinedmods.refinedstorage.extensions.DOUBLE
@@ -13,6 +14,7 @@ import com.thinkslynk.fabric.generated.ItemRegistryGenerated
 import com.thinkslynk.fabric.generated.BlockItemRegistryGenerated
 import net.fabricmc.api.ModInitializer
 import net.fabricmc.fabric.api.client.itemgroup.FabricItemGroupBuilder
+import net.fabricmc.fabric.api.event.lifecycle.v1.ServerTickEvents
 import net.minecraft.entity.data.TrackedDataHandlerRegistry
 import net.minecraft.item.ItemGroup
 import net.minecraft.item.ItemStack
@@ -38,6 +40,9 @@ class RS: ModInitializer {
         BlockItemRegistryGenerated.register()
         BlockEntityRegistryGenerated.register()
         TrackedDataHandlerRegistry.register(DOUBLE)
+
+        ServerTickEvents.END_WORLD_TICK.register(NetworkListener())
+
         // TODO Register stuff!
 //        DistExecutor.safeRunWhenOn(Dist.CLIENT, { { ClientSetup() } })
 //        MinecraftForge.EVENT_BUS.register(ServerSetup())

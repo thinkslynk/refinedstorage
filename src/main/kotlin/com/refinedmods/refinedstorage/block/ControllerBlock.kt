@@ -74,7 +74,7 @@ open class ControllerBlock(val type: NetworkType = NetworkType.NORMAL):
                 }
             }
 
-//            RS.log.info("itemStack is a valid energy object:" + Energy.valid(itemStack))
+            RS.log.info("blockEntity is a valid energy object:" + Energy.valid(world.getBlockEntity(pos)))
         }
     }
 
