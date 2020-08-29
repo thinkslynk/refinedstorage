@@ -54,7 +54,7 @@ class RS: ModInitializer {
         TrackedDataHandlerRegistry.register(DOUBLE)
 
         ServerTickEvents.END_WORLD_TICK.register(NetworkListener())
-        
+
 
         // TODO Register stuff!
 //        DistExecutor.safeRunWhenOn(Dist.CLIENT, { { ClientSetup() } })

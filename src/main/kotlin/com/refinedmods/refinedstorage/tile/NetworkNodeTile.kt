@@ -34,7 +34,7 @@ abstract class NetworkNodeTile<N : NetworkNode>(tileType: BlockEntityType<*>?):
     private var clientNode: N? = null
     var removedNode: N? = null
         private set
-    private val networkNodeProxy: INetworkNodeProxy<N> by lazy { this }
+    private val networkNodeProxy: INetworkNodeProxy<N> by lazy { this } // why?
     override var redstoneMode: RedstoneMode
         get() {
             return node.redstoneMode
@@ -49,8 +49,7 @@ abstract class NetworkNodeTile<N : NetworkNode>(tileType: BlockEntityType<*>?):
 
             return when (world!!.isClient) {
                 true -> {
-                    clientNode = clientNode ?: createNode(world!!, pos)
-                    clientNode!! // Safe due to above null and set check
+                    clientNode ?: createNode(world!!, pos).also { clientNode = it } // todo use lazy?
                 }
                 false -> {
                     try {
