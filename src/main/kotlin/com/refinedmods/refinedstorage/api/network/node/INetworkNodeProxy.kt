@@ -18,7 +18,7 @@ import net.minecraft.world.BlockView
 </T> */
 interface INetworkNodeProxy<T : INetworkNode>:ComponentV3 {
     companion object {
-        const val ID = "network_node_proxy_component"
+        const val ID = "network_node_proxy"
     }
 
     /**
