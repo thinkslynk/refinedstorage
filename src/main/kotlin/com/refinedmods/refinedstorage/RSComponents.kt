@@ -25,11 +25,5 @@ class RSComponents : BlockComponentInitializer {
             NetworkNodeTile::class.java,
             NETWORK_NODE_PROXY
         ) { it }
-
-        /*
-        ConstructorBlock::class.java,
-            ControllerBlock::class.java,
-            ControllerBlock::class.java
-         */
     }
 }
