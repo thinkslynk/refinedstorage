@@ -3,6 +3,7 @@ package com.refinedmods.refinedstorage.block
 //import com.refinedmods.refinedstorage.api.network.node.INetworkNodeProxy
 //import com.refinedmods.refinedstorage.apiimpl.API
 //import com.refinedmods.refinedstorage.apiimpl.network.node.NetworkNode
+import com.refinedmods.refinedstorage.api.component.INetworkNodeProxyComponent
 import com.refinedmods.refinedstorage.api.network.node.INetworkNodeProxy
 import com.refinedmods.refinedstorage.apiimpl.API
 import com.refinedmods.refinedstorage.apiimpl.network.node.NetworkNode

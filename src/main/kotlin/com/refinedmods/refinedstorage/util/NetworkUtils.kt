@@ -1,6 +1,7 @@
 package com.refinedmods.refinedstorage.util
 
 import com.refinedmods.refinedstorage.RSComponents
+import com.refinedmods.refinedstorage.api.component.INetworkNodeProxyComponent
 import com.refinedmods.refinedstorage.api.network.INetwork
 import com.refinedmods.refinedstorage.api.network.node.INetworkNode
 import com.refinedmods.refinedstorage.api.network.security.Permission
@@ -23,7 +24,11 @@ object NetworkUtils {
     fun getNodeFromTile(tile: BlockEntity?): INetworkNode? = getNodeFromBlockEntity(tile)
     fun getNodeFromBlockEntity(blockEntity: BlockEntity?): INetworkNode? {
         blockEntity?:return null
-        return BlockComponents.get(RSComponents.NETWORK_NODE_PROXY, blockEntity)?.node
+        val proxy: INetworkNodeProxyComponent =
+            BlockComponents.get(RSComponents.NETWORK_NODE_PROXY, blockEntity)?:return null
+        return null
+        //TODO
+        //return proxy.node
     }
 
     @Nullable

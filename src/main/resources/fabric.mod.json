@@ -42,7 +42,7 @@
   },
   "custom": {
     "cardinal-components": [
-      "refinedstorage:network_node_proxy"
+      "refinedstorage:network_node_proxy_component"
     ]
   }
 }
