@@ -3,17 +3,21 @@ package com.refinedmods.refinedstorage
 //import com.refinedmods.refinedstorage.config.ClientConfig
 //import com.refinedmods.refinedstorage.config.ServerConfig
 //import com.refinedmods.refinedstorage.network.NetworkHandler
+import com.refinedmods.refinedstorage.block.ConstructorBlock
 import com.refinedmods.refinedstorage.config.ClientConfig
 import com.refinedmods.refinedstorage.config.ServerConfig
+import com.refinedmods.refinedstorage.container.ConstructorScreenHandler
+import com.refinedmods.refinedstorage.container.FilterContainer
 import com.thinkslynk.fabric.generated.BlockRegistryGenerated
 import com.refinedmods.refinedstorage.extensions.getCustomLogger
 import com.thinkslynk.fabric.generated.BlockEntityRegistryGenerated
 import com.thinkslynk.fabric.generated.ItemRegistryGenerated
 import com.thinkslynk.fabric.generated.BlockItemRegistryGenerated
 import net.fabricmc.api.ModInitializer
-import net.fabricmc.fabric.api.client.itemgroup.FabricItemGroupBuilder
-import net.minecraft.item.ItemGroup
+import net.fabricmc.fabric.api.screenhandler.v1.ScreenHandlerRegistry
 import net.minecraft.item.ItemStack
+import net.minecraft.screen.ScreenHandlerContext
+import net.minecraft.screen.ScreenHandlerType
 import net.minecraft.util.Identifier
 import reborncore.common.config.Configuration
 
@@ -21,6 +25,16 @@ class RS: ModInitializer {
     companion object{
         val log = getCustomLogger(RS::class)
         const val ID = "refinedstorage"
+
+        val FILTER_SCREEN_HANDLER: ScreenHandlerType<FilterContainer> = ScreenHandlerRegistry.registerSimple(Identifier(RS.ID, "filter_screen"))
+        { windowId, playerInventory->
+            FilterContainer(playerInventory.player, ItemStack.EMPTY, windowId)
+        }
+
+        val CONSTRUCTOR_SCREEN_HANDLER: ScreenHandlerType<ConstructorScreenHandler> = ScreenHandlerRegistry.registerSimple(Identifier(ID, ConstructorBlock.ID))
+        { windowId, playerInventory->
+            ConstructorScreenHandler(ScreenHandlerContext.EMPTY, playerInventory.player, windowId)
+        }
     }
 //    val NETWORK_HANDLER = NetworkHandler()
 //    val SERVER_CONFIG = ServerConfig()
@@ -35,6 +49,7 @@ class RS: ModInitializer {
         BlockRegistryGenerated.register()
         BlockItemRegistryGenerated.register()
         BlockEntityRegistryGenerated.register()
+
         // TODO Register stuff!
 //        DistExecutor.safeRunWhenOn(Dist.CLIENT, { { ClientSetup() } })
 //        MinecraftForge.EVENT_BUS.register(ServerSetup())

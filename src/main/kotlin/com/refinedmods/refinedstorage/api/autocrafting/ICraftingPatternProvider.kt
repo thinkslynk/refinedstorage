@@ -17,5 +17,5 @@ interface ICraftingPatternProvider {
      * @param container the [ICraftingPatternContainer] where the pattern is in
      * @return the crafting pattern
      */
-    fun create(world: World, stack: ItemStack, container: ICraftingPatternContainer): ICraftingPattern
+    fun create(world: World, stack: ItemStack, container: ICraftingPatternContainer?): ICraftingPattern
 }

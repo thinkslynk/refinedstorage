@@ -1,6 +1,7 @@
 package com.refinedmods.refinedstorage.tile.config
 
 import com.refinedmods.refinedstorage.api.network.node.INetworkNodeProxy
+import com.refinedmods.refinedstorage.inventory.fluid.FluidInventory
 import com.refinedmods.refinedstorage.tile.data.TileDataParameter
 import com.refinedmods.refinedstorage.tile.data.TileDataParameterClientListener
 import net.minecraft.block.entity.BlockEntity
@@ -14,7 +15,7 @@ import java.util.function.Function
 interface IType {
     var type: Int
     val itemFilters: Inventory?
-    val fluidFilters: Tank?
+    val fluidFilters: FluidInventory?
 
     companion object {
         fun <T> createParameter(clientListener: TileDataParameterClientListener<Int?>?): TileDataParameter<Int, T> where T : BlockEntity?, T : INetworkNodeProxy<*>? {

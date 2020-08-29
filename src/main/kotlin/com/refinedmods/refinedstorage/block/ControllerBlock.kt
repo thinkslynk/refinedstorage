@@ -50,6 +50,7 @@ open class ControllerBlock(val type: NetworkType = NetworkType.NORMAL):
 ////        return ControllerTile(type)
 //    }
 
+
     override fun onPlaced(world: World, pos: BlockPos, state: BlockState, placer: LivingEntity?, itemStack: ItemStack) {
         super.onPlaced(world, pos, state, placer, itemStack)
         if (!world.isClient) {

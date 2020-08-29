@@ -3,19 +3,24 @@
 package com.refinedmods.refinedstorage.util
 
 import com.refinedmods.refinedstorage.api.storage.tracker.StorageTrackerEntry
+import com.refinedmods.refinedstorage.extensions.LIST_TAG_TYPE
+import com.refinedmods.refinedstorage.inventory.item.BaseItemHandler
 import com.refinedmods.refinedstorage.util.PacketBufUtils.readOptional
 import com.refinedmods.refinedstorage.util.PacketBufUtils.readOptionalUuid
 import com.refinedmods.refinedstorage.util.PacketBufUtils.writeOptional
 import com.refinedmods.refinedstorage.util.PacketBufUtils.writeOptionalUuid
 import com.refinedmods.refinedstorage.util.RegistryUtil.getOr
+import net.minecraft.inventory.Inventory
 import net.minecraft.item.Item
 import net.minecraft.item.ItemStack
 import net.minecraft.item.Items
 import net.minecraft.nbt.CompoundTag
+import net.minecraft.nbt.ListTag
 import net.minecraft.network.PacketByteBuf
 import net.minecraft.util.Identifier
 import net.minecraft.util.registry.Registry
 import org.apache.logging.log4j.LogManager
+import reborncore.common.fluid.FluidValue
 import reborncore.common.fluid.container.FluidInstance
 import java.util.*
 
@@ -139,68 +144,68 @@ fun createStorages(world: ServerWorld?, diskStack: ItemStack, slot: Int, itemDis
         }
     }
 }*/
-/*
-    fun writeItems(handler: IItemHandler, id: Int, tag: CompoundTag, serializer: Function<ItemStack, CompoundTag>) {
+
+//    fun writeItems(handler: IItemHandler, id: Int, tag: CompoundTag, serializer: Function<ItemStack, CompoundTag>) {
+//        val tagList = ListTag()
+//        for (i in 0 until handler.getSlots()) {
+//            if (!handler.getStackInSlot(i).isEmpty()) {
+//                val stackTag: CompoundTag = serializer.apply(handler.getStackInSlot(i))
+//                stackTag.putInt(NBT_SLOT, i)
+//                tagList.add(stackTag)
+//            }
+//        }
+//        tag.put(String.format(NBT_INVENTORY, id), tagList)
+//    }
+//
+//    fun writeItems(handler: Inventory, id: Int, tag: CompoundTag) {
+//        writeItems(handler, id, tag, Function<ItemStack, CompoundTag> { stack: ItemStack -> stack.write(CompoundTag()) })
+//    }
+//
+//    fun readItems(handler: IItemHandlerModifiable, id: Int, tag: CompoundTag, deserializer: Function<CompoundTag?, ItemStack?>) {
+//        val name = String.format(NBT_INVENTORY, id)
+//        if (tag.contains(name)) {
+//            val tagList: ListTag = tag.getList(name, Constants.NBT.TAG_COMPOUND)
+//            for (i in 0 until tagList.size()) {
+//                val slot: Int = tagList.getCompound(i).getInt(NBT_SLOT)
+//                if (slot >= 0 && slot < handler.getSlots()) {
+//                    handler.setStackInSlot(slot, deserializer.apply(tagList.getCompound(i)))
+//                }
+//            }
+//        }
+//    }
+
+//    fun readItems(handler: IItemHandlerModifiable, id: Int, tag: CompoundTag) {
+//        readItems(handler, id, tag, ItemStack::read)
+//    }
+//
+//    fun readItems(handler: BaseItemHandler, id: Int, tag: CompoundTag) {
+//        handler.setReading(true)
+//        readItems(handler, id, tag, ItemStack::read)
+//        handler.setReading(false)
+//    }
+
+    fun writeItems(inventory: Inventory, id: Int, tag: CompoundTag) {
         val tagList = ListTag()
-        for (i in 0 until handler.getSlots()) {
-            if (!handler.getStackInSlot(i).isEmpty()) {
-                val stackTag: CompoundTag = serializer.apply(handler.getStackInSlot(i))
-                stackTag.putInt(NBT_SLOT, i)
-                tagList.add(stackTag)
-            }
-        }
-        tag.put(String.format(NBT_INVENTORY, id), tagList)
-    }
-
-    fun writeItems(handler: IItemHandler, id: Int, tag: CompoundTag) {
-        writeItems(handler, id, tag, Function<ItemStack, CompoundTag> { stack: ItemStack -> stack.write(CompoundTag()) })
-    }
-
-    fun readItems(handler: IItemHandlerModifiable, id: Int, tag: CompoundTag, deserializer: Function<CompoundTag?, ItemStack?>) {
-        val name = String.format(NBT_INVENTORY, id)
-        if (tag.contains(name)) {
-            val tagList: ListTag = tag.getList(name, Constants.NBT.TAG_COMPOUND)
-            for (i in 0 until tagList.size()) {
-                val slot: Int = tagList.getCompound(i).getInt(NBT_SLOT)
-                if (slot >= 0 && slot < handler.getSlots()) {
-                    handler.setStackInSlot(slot, deserializer.apply(tagList.getCompound(i)))
-                }
-            }
-        }
-    }
-
-    fun readItems(handler: IItemHandlerModifiable, id: Int, tag: CompoundTag) {
-        readItems(handler, id, tag, ItemStack::read)
-    }
-
-    fun readItems(handler: BaseItemHandler, id: Int, tag: CompoundTag) {
-        handler.setReading(true)
-        readItems(handler, id, tag, ItemStack::read)
-        handler.setReading(false)
-    }
-
-    fun writeItems(inventory: IInventory, id: Int, tag: CompoundTag) {
-        val tagList = ListTag()
-        for (i in 0 until inventory.getSizeInventory()) {
-            if (!inventory.getStackInSlot(i).isEmpty()) {
+        for (i in 0 until inventory.size()) {
+            if (!inventory.getStack(i).isEmpty) {
                 val stackTag = CompoundTag()
                 stackTag.putInt(NBT_SLOT, i)
-                inventory.getStackInSlot(i).write(stackTag)
+                inventory.getStack(i).toTag(stackTag)
                 tagList.add(stackTag)
             }
         }
         tag.put(String.format(NBT_INVENTORY, id), tagList)
     }
 
-    fun readItems(inventory: IInventory, id: Int, tag: CompoundTag) {
+    fun readItems(inventory: Inventory, id: Int, tag: CompoundTag) {
         val name = String.format(NBT_INVENTORY, id)
         if (tag.contains(name)) {
-            val tagList: ListTag = tag.getList(name, Constants.NBT.TAG_COMPOUND)
-            for (i in 0 until tagList.size()) {
+            val tagList: ListTag = tag.getList(name, LIST_TAG_TYPE)
+            for (i in 0 until tagList.size) {
                 val slot: Int = tagList.getCompound(i).getInt(NBT_SLOT)
-                val stack: ItemStack = ItemStack.read(tagList.getCompound(i))
+                val stack: ItemStack = ItemStack.fromTag(tagList.getCompound(i))
                 if (!stack.isEmpty) {
-                    inventory.setInventorySlotContents(slot, stack)
+                    inventory.setStack(slot, stack)
                 }
             }
         }
@@ -208,13 +213,13 @@ fun createStorages(world: ServerWorld?, diskStack: ItemStack, slot: Int, itemDis
 
     fun copy(stack: FluidInstance, size: Int): FluidInstance {
         val copy: FluidInstance = stack.copy()
-        copy.setAmount(size)
+        copy.amount = FluidValue.fromRaw(size)
         return copy
     }
 
-    fun copy(@Nullable stack: FluidInstance?): FluidInstance? {
-        return if (stack == null) null else stack.copy()
-    }*/
+    fun copy(stack: FluidInstance): FluidInstance {
+        return stack.copy()
+    }
 /*
     @JvmStatic
     fun getFluid(stack: ItemStack, simulate: Boolean): Pair<ItemStack, FluidInstance> {

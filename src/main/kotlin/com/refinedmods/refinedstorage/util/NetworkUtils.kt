@@ -43,7 +43,7 @@ object NetworkUtils {
         facing: Direction,
         player: PlayerEntity,
         action: Runnable
-    ): ActionResult? {
+    ): ActionResult {
         return attempt(world, pos, facing, player, action, Permission.MODIFY)
     }
 
