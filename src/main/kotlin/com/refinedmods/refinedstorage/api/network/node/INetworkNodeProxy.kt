@@ -1,11 +1,26 @@
 package com.refinedmods.refinedstorage.api.network.node
 
+import dev.onyxstudios.cca.api.v3.block.BlockComponentProvider
+import dev.onyxstudios.cca.api.v3.component.ComponentV3
+import net.minecraft.block.BlockState
+import net.minecraft.nbt.CompoundTag
+import net.minecraft.util.math.BlockPos
+import net.minecraft.util.math.Direction
+import net.minecraft.world.BlockView
+
+
+
+
 /**
  * Makes a network node accessible from a tile entity. Implement this as a capability.
  *
  * @param <T> the network node
 </T> */
-interface INetworkNodeProxy<T : INetworkNode> {
+interface INetworkNodeProxy<T : INetworkNode>:ComponentV3 {
+    companion object {
+        const val ID = "network_node_proxy_component"
+    }
+
     /**
      * Returns the node.
      * Needs to work on the client and the server.
@@ -14,4 +29,19 @@ interface INetworkNodeProxy<T : INetworkNode> {
      * @return the node
      */
     val node: T
+
+    override fun writeToNbt(p0: CompoundTag) {
+        // NO OP
+    }
+    override fun readFromNbt(p0: CompoundTag) {
+        // NO OP
+    }
+    object Factory: BlockComponentProvider<INetworkNodeProxy<*>> {
+        override fun get(p0: BlockState, p1: BlockView, p2: BlockPos, p3: Direction?): INetworkNodeProxy<*> {
+            return object : INetworkNodeProxy<INetworkNode> {
+                override val node: INetworkNode
+                    get() = throw UnsupportedOperationException("Cannot use default implementation")
+            }
+        }
+    }
 }
