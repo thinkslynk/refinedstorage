@@ -3,11 +3,9 @@ package com.refinedmods.refinedstorage.util
 //import com.refinedmods.refinedstorage.render.Styles
 import com.refinedmods.refinedstorage.render.Styles
 import net.minecraft.entity.player.PlayerEntity
-import net.minecraft.server.world.ServerWorld
 import net.minecraft.text.TranslatableText
 import net.minecraft.util.math.BlockPos
 import net.minecraft.world.World
-import java.util.*
 
 object WorldUtils {
     fun updateBlock(world: World?, pos: BlockPos?) {
@@ -40,21 +38,18 @@ fun getFluidHandler(@Nullable tile: BlockEntity?, side: Direction?): IFluidHandl
         tile.getCapability(CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY, side).orElse(null)
     } else null
 }
-*/
-    fun getFakePlayer(world: ServerWorld, owner: UUID?): PlayerEntity { // TODO: FakePlayer?
-        TODO("how to do fake players?")
-        /*
-        if (owner != null) {
-            val profileCache: PlayerProfileCache = world.getServer().getPlayerProfileCache()
-            val profile: GameProfile = profileCache.getProfileByUUID(owner)
-            if (profile != null) {
-                return FakePlayerFactory.get(world, profile)
-            }
-        }
-        return FakePlayerFactory.getMinecraft(world)
-         */
-    }
 
+fun getFakePlayer(world: ServerWorld, @Nullable owner: UUID?): FakePlayer {
+    if (owner != null) {
+        val profileCache: PlayerProfileCache = world.getServer().getPlayerProfileCache()
+        val profile: GameProfile = profileCache.getProfileByUUID(owner)
+        if (profile != null) {
+            return FakePlayerFactory.get(world, profile)
+        }
+    }
+    return FakePlayerFactory.getMinecraft(world)
+}
+*/
 
     fun sendNoPermissionMessage(player: PlayerEntity) {
         player.sendMessage(
