@@ -22,7 +22,7 @@ class NetworkNodeManager(
         INetworkNodeManager
 {
     private val logger = LogManager.getLogger(javaClass)
-    private val nodes: ConcurrentHashMap<BlockPos, INetworkNode> = ConcurrentHashMap<BlockPos, INetworkNode>()
+    private val nodes: ConcurrentHashMap<BlockPos, INetworkNode> = ConcurrentHashMap()
     override fun fromTag(tag: CompoundTag) {
         if (tag.contains(NBT_NODES)) {
             val nodesTag: ListTag = tag.getList(NBT_NODES, Constants.NBT.LIST_TAG)
@@ -73,18 +73,16 @@ class NetworkNodeManager(
 
     override fun removeNode(pos: BlockPos) {
         nodes.remove(pos)
+        markDirty()
     }
 
     override fun setNode(pos: BlockPos, node: INetworkNode) {
         nodes[pos] = node
+        markDirty()
     }
 
     override fun all(): Collection<INetworkNode> {
         return nodes.values
-    }
-
-    override fun markForSaving() {
-//        markDirty()
     }
 
     companion object {

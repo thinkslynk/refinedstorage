@@ -94,7 +94,7 @@ abstract class NetworkNode(
 
     override fun markDirty() {
         if (!world.isClient) {
-            API.getNetworkNodeManager(world as ServerWorld).markForSaving()
+            API.getNetworkNodeManager(world as ServerWorld).markDirty()
         }
     }
 
@@ -179,11 +179,11 @@ abstract class NetworkNode(
         return true
     }
 
-    override fun visit(operator: INetworkNodeVisitor.Operator?) {
-        operator?.let {
+    override fun visit(operator: INetworkNodeVisitor.Operator) {
+        operator.let {
             for (facing in Direction.values()) {
                 if (canConduct(facing)) {
-                    it.apply(world, pos.offset(facing), facing.getOpposite())
+                    it.apply(world, pos.offset(facing), facing.opposite)
                 }
             }
         }

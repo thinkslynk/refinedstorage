@@ -213,6 +213,9 @@ object API : IRSAPI {
         }
     }
 
+    override fun markDirty() {
+        // TODO Anything to do here?
+    }
 
     private val LOGGER = getCustomLogger(API::class)
     @Deprecated("kotlin goes brrr", replaceWith = ReplaceWith("API", "com.refinedmods.refinedstorage.apiimpl.API"))

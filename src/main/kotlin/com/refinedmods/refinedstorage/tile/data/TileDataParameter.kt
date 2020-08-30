@@ -4,7 +4,7 @@ import net.minecraft.block.entity.BlockEntity
 import net.minecraft.entity.data.TrackedDataHandler
 import java.util.function.BiConsumer
 
-class TileDataParameter<T: Any?, E : BlockEntity?>(
+class TileDataParameter<T: Any, E : BlockEntity>(
         var value: T,
         val serializer: TrackedDataHandler<T>,
         val valueProducer: java.util.function.Function<E, T>,

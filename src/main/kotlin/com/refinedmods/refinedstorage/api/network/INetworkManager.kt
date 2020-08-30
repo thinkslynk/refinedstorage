@@ -35,7 +35,8 @@ interface INetworkManager {
     fun all(): Collection<INetwork>
 
     /**
-     * Marks the network manager for saving.
+     * Let the system know that we need to save.
      */
-    fun markForSaving()
+    fun markDirty()
+
 }

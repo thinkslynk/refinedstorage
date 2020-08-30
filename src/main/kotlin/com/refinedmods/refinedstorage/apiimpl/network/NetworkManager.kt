@@ -12,13 +12,15 @@ import net.minecraft.world.World
 import org.apache.logging.log4j.LogManager
 import java.util.concurrent.ConcurrentHashMap
 
-class NetworkManager(name: String?, world: World):
+class NetworkManager(
+        name: String?,
+        private val world: World
+):
         PersistentState(name),
         INetworkManager
 {
-    private val world: World
     private val logger = LogManager.getLogger(javaClass)
-    private val networks: ConcurrentHashMap<BlockPos, INetwork> = ConcurrentHashMap<BlockPos, INetwork>()
+    private val networks: ConcurrentHashMap<BlockPos, INetwork> = ConcurrentHashMap()
 
     override fun fromTag(tag: CompoundTag) {
         if (tag.contains(NBT_NETWORKS)) {
@@ -63,18 +65,20 @@ class NetworkManager(name: String?, world: World):
 
     override fun removeNetwork(pos: BlockPos) {
         networks.remove(pos)
+        markDirty()
     }
 
     override fun setNetwork(pos: BlockPos, node: INetwork) {
         networks[pos] = node
+        markDirty()
     }
 
     override fun all(): Collection<INetwork> {
         return networks.values
     }
 
-    override fun markForSaving() {
-//        markDirty() // TODO mark dirty
+    override fun markDirty() {
+        super.markDirty()
     }
 
     companion object {
@@ -85,7 +89,4 @@ class NetworkManager(name: String?, world: World):
         private const val NBT_POS = "Pos"
     }
 
-    init {
-        this.world = world
-    }
 }

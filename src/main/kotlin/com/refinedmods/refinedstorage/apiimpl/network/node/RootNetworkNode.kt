@@ -45,9 +45,9 @@ class RootNetworkNode(override val network: INetwork, override val world: World,
     override fun markDirty() {}
 
 
-    override fun visit(operator: INetworkNodeVisitor.Operator?) {
+    override fun visit(operator: INetworkNodeVisitor.Operator) {
         for (facing in Direction.values()) {
-            operator!!.apply(world, pos.offset(facing), facing.opposite)
+            operator.apply(world, pos.offset(facing), facing.opposite)
         }
     }
 

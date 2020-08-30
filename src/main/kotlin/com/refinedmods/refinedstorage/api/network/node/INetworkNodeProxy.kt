@@ -23,4 +23,6 @@ interface INetworkNodeProxy<T : INetworkNode>:BlockComponent {
      * @return the node
      */
     val node: T
+
+    var markedForRemoval: Boolean
 }

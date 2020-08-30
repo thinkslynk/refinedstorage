@@ -1,12 +1,5 @@
 package com.refinedmods.refinedstorage.apiimpl.network.node
 
-/*
-import com.refinedmods.refinedstorage.inventory.fluid.FluidInventory
-import com.refinedmods.refinedstorage.inventory.item.BaseItemHandler
-import com.refinedmods.refinedstorage.inventory.item.UpgradeItemHandler
-import com.refinedmods.refinedstorage.inventory.listener.NetworkNodeFluidInventoryListener
-import com.refinedmods.refinedstorage.inventory.listener.NetworkNodeInventoryListener
-//import com.refinedmods.refinedstorage.item.UpgradeItem*/
 import com.refinedmods.refinedstorage.RS
 import com.refinedmods.refinedstorage.api.util.Action
 import com.refinedmods.refinedstorage.api.util.IComparer
@@ -49,7 +42,7 @@ class ConstructorNetworkNode(world: World?, pos: BlockPos?) : NetworkNode(world!
         }
     override var type = IType.ITEMS
         get() {
-            return if (world.isRemote) ConstructorTile.TYPE.value else field
+            return if (world.isClient) ConstructorTile.TYPE.value else field
         }
         set(value) {
             field = value
