@@ -207,4 +207,9 @@ interface IRSAPI {
      * @return true if the two network nodes are equal, false otherwise
      */
     fun isNetworkNodeEqual(left: INetworkNode, right: Any): Boolean
+
+    /**
+     * Let the system know that we need to save.
+     */
+    fun markDirty()
 }

@@ -29,7 +29,7 @@ interface INetworkNodeVisitor {
          * @param pos   the position
          * @param side  the side
          */
-        fun apply(world: World?, pos: BlockPos?, side: Direction?)
+        fun apply(world: World, pos: BlockPos, side: Direction)
 
         /**
          * Returns whether the network graph is scanning in simulation mode.

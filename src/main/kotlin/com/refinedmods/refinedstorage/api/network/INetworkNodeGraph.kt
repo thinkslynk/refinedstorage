@@ -18,7 +18,7 @@ interface INetworkNodeGraph {
      * @param world  the origin world
      * @param origin the origin, usually the network position
      */
-    fun invalidate(action: Action?, world: World?, origin: BlockPos?)
+    fun invalidate(action: Action, world: World, origin: BlockPos)
 
     /**
      * Runs an action on the network.
@@ -26,17 +26,17 @@ interface INetworkNodeGraph {
      *
      * @param handler the action to run
      */
-    fun runActionWhenPossible(handler: Consumer<INetwork?>?)
+    fun runActionWhenPossible(handler: Consumer<INetwork>)
 
     /**
      * @return a collection of all connected nodes
      */
-    fun all(): Collection<INetworkNode?>?
+    fun all(): Collection<INetworkNode>
 
     /**
      * @param listener the listener
      */
-    fun addListener(listener: INetworkNodeGraphListener?)
+    fun addListener(listener: INetworkNodeGraphListener)
 
     /**
      * Disconnects and notifies all connected nodes.

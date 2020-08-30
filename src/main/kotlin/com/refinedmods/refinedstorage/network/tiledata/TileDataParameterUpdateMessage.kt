@@ -5,12 +5,12 @@ import com.refinedmods.refinedstorage.tile.data.TileDataParameter
 import net.minecraft.block.entity.BlockEntity
 import net.minecraft.network.PacketByteBuf
 
-class TileDataParameterUpdateMessage<T, E: BlockEntity?>(
-        private val parameter: TileDataParameter<T?, E?>?,
+class TileDataParameterUpdateMessage<T: Any, E: BlockEntity?>(
+        private val parameter: TileDataParameter<T, E?>?,
         private val value: T?
 ) {
     companion object {
-        fun <T: Any?, E: BlockEntity?> decode(buf: PacketByteBuf): TileDataParameterUpdateMessage<T, E> {
+        fun <T: Any, E: BlockEntity?> decode(buf: PacketByteBuf): TileDataParameterUpdateMessage<T, E> {
             val id: Int = buf.readInt()
             val parameter = TileDataManager.getParameter<T, E>(id)
             var value: T? = null
@@ -24,7 +24,7 @@ class TileDataParameterUpdateMessage<T, E: BlockEntity?>(
             return TileDataParameterUpdateMessage<T, E>(parameter, value)
         }
 
-        fun <T, E: BlockEntity> encode(message: TileDataParameterUpdateMessage<T, E>, buf: PacketByteBuf) {
+        fun <T: Any, E: BlockEntity> encode(message: TileDataParameterUpdateMessage<T, E>, buf: PacketByteBuf) {
             message.parameter?.let {
                 buf.writeInt(it.id)
                 it.serializer.write(buf, message.value)

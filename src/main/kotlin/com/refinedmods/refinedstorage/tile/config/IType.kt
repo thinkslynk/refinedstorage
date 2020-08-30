@@ -17,7 +17,7 @@ interface IType {
     val fluidFilters: Tank?
 
     companion object {
-        fun <T> createParameter(clientListener: TileDataParameterClientListener<Int?>?): TileDataParameter<Int, T> where T : BlockEntity?, T : INetworkNodeProxy<*>? {
+        fun <T> createParameter(clientListener: TileDataParameterClientListener<Int>?): TileDataParameter<Int, T> where T : BlockEntity?, T : INetworkNodeProxy<*>? {
             return TileDataParameter<Int, T>(
                     ITEMS,
                     TrackedDataHandlerRegistry.INTEGER,

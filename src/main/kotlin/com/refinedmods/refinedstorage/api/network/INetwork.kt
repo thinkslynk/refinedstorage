@@ -53,16 +53,16 @@ interface INetwork {
      */
     fun onRemoved()
 
-//    /**
-//     * @return a graph of connected nodes to this network
-//     */
-//    val nodeGraph: INetworkNodeGraph
-//
-//    /**
-//     * @return the [ISecurityManager] of this network
-//     */
-//    val securityManager: ISecurityManager
-//
+    /**
+     * @return a graph of connected nodes to this network
+     */
+    val nodeGraph: INetworkNodeGraph
+
+    /**
+     * @return the [ISecurityManager] of this network
+     */
+    val securityManager: ISecurityManager
+
 //    /**
 //     * @return the [ICraftingManager] of this network
 //     */

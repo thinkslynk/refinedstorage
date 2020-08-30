@@ -1,24 +1,16 @@
 package com.refinedmods.refinedstorage
 
-//import com.refinedmods.refinedstorage.config.ClientConfig
-//import com.refinedmods.refinedstorage.config.ServerConfig
-//import com.refinedmods.refinedstorage.network.NetworkHandler
 import com.refinedmods.refinedstorage.apiimpl.network.NetworkListener
 import com.refinedmods.refinedstorage.config.ClientConfig
 import com.refinedmods.refinedstorage.config.ServerConfig
-import com.refinedmods.refinedstorage.extensions.DOUBLE
-import com.thinkslynk.fabric.generated.BlockRegistryGenerated
 import com.refinedmods.refinedstorage.extensions.getCustomLogger
+import com.refinedmods.refinedstorage.tile.data.RSSerializers
 import com.thinkslynk.fabric.generated.BlockEntityRegistryGenerated
-import com.thinkslynk.fabric.generated.ItemRegistryGenerated
 import com.thinkslynk.fabric.generated.BlockItemRegistryGenerated
+import com.thinkslynk.fabric.generated.BlockRegistryGenerated
+import com.thinkslynk.fabric.generated.ItemRegistryGenerated
 import net.fabricmc.api.ModInitializer
-import net.fabricmc.fabric.api.client.itemgroup.FabricItemGroupBuilder
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerTickEvents
-import net.minecraft.entity.data.TrackedDataHandlerRegistry
-import net.minecraft.item.ItemGroup
-import net.minecraft.item.ItemStack
-import net.minecraft.util.Identifier
 import reborncore.common.config.Configuration
 
 class RS: ModInitializer {
@@ -27,19 +19,16 @@ class RS: ModInitializer {
         const val ID = "refinedstorage"
     }
 //    val NETWORK_HANDLER = NetworkHandler()
-//    val SERVER_CONFIG = ServerConfig()
-//    val CLIENT_CONFIG = ClientConfig()
 
     override fun onInitialize() {
         Configuration(ServerConfig::class.java, ID)
         Configuration(ClientConfig::class.java, ID)
 
-//        BlockRegistryGenerated.register()
         ItemRegistryGenerated.register()
         BlockRegistryGenerated.register()
         BlockItemRegistryGenerated.register()
         BlockEntityRegistryGenerated.register()
-        TrackedDataHandlerRegistry.register(DOUBLE)
+        RSSerializers.registerAll()
 
         ServerTickEvents.END_WORLD_TICK.register(NetworkListener())
 

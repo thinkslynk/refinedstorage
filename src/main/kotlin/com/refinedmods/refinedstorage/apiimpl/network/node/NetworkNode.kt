@@ -95,7 +95,7 @@ abstract class NetworkNode(
 
     override fun markDirty() {
         if (!world.isClient) {
-            instance().getNetworkNodeManager(world as ServerWorld).markForSaving()
+            instance().getNetworkNodeManager(world as ServerWorld).markDirty()
         }
     }
 

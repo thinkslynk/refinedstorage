@@ -209,6 +209,10 @@ class API : IRSAPI {
         }
     }
 
+    override fun markDirty() {
+        // TODO Anything to do here?
+    }
+
     companion object {
 //        private val LOGGER = LogManager.getLogger(API::class.java)
         private val INSTANCE: IRSAPI = API()

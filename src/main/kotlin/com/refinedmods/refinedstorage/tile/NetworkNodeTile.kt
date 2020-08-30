@@ -1,6 +1,7 @@
 package com.refinedmods.refinedstorage.tile
 
 import com.refinedmods.refinedstorage.api.network.node.INetworkNodeProxy
+import com.refinedmods.refinedstorage.api.util.Action
 import com.refinedmods.refinedstorage.apiimpl.API.Companion.instance
 import com.refinedmods.refinedstorage.apiimpl.network.node.NetworkNode
 import com.refinedmods.refinedstorage.extensions.getCustomLogger
@@ -20,21 +21,10 @@ abstract class NetworkNodeTile<N : NetworkNode>(tileType: BlockEntityType<*>?):
         INetworkNodeProxy<N>,
         IRedstoneConfigurable
 {
-
-    companion object {
-        @JvmField
-        val REDSTONE_MODE: TileDataParameter<Int, NetworkNodeTile<*>> = createParameter()
-        val log = getCustomLogger(NetworkNodeTile::class)
+    override val node: N by lazy {
+        createNode(world!!, pos)
     }
-
-    init {
-        dataManager.addWatchedParameter(REDSTONE_MODE)
-    }
-
-    private var clientNode: N? = null
-    var removedNode: N? = null
-        private set
-    private val networkNodeProxy: INetworkNodeProxy<N> by lazy { this } // why?
+    override var markedForRemoval: Boolean = false
     override var redstoneMode: RedstoneMode
         get() {
             return node.redstoneMode
@@ -43,59 +33,42 @@ abstract class NetworkNodeTile<N : NetworkNode>(tileType: BlockEntityType<*>?):
             node.redstoneMode = value
         }
 
-    @Suppress("UNCHECKED_CAST")
-    override val node: N
-        get() {
-
-            return when (world!!.isClient) {
-                true -> {
-                    clientNode ?: createNode(world!!, pos).also { clientNode = it } // todo use lazy?
-                }
-                false -> {
-                    try {
-                        instance()
-                                .getNetworkNodeManager(world as ServerWorld)
-                                .getNode(pos)!! as N
-                    } catch (e: Exception) {
-                        log.warn("No valid network node present at $pos, consider removing the block at this position!")
-                        throw e
-
-                        // TODO Use markInvalid() instead rather than crashing
-                    }
-                }
-            }
-        }
-
     override fun markRemoved() {
         super.markRemoved()
         if (!world!!.isClient) {
-            val manager = instance().getNetworkNodeManager(world as ServerWorld)
-            val node = manager.getNode(pos)
-            if (node != null) {
-                removedNode = node as N
+            markedForRemoval = true
+            instance().getNetworkNodeManager(world as ServerWorld).removeNode(pos)
+
+            node.network?.let {
+                it.nodeGraph.invalidate(Action.PERFORM, it.world, it.position)
             }
-            manager.removeNode(pos)
-            manager.markForSaving()
-//            if (node?.network?.nodeGraph != null) {
-//                node.network!!.nodeGraph.invalidate(Action.PERFORM, node.network!!.world, node.network!!.position)
-//            }
         }
     }
 
-    // TODO Not sure the replacement for validate
-//    fun validate() {
-//        super.validate()
-//        if (!world!!.isClient) {
-//            val manager = instance().getNetworkNodeManager(world as ServerWorld?)
-//            if (manager.getNode(pos) == null) {
-//                manager.setNode(pos, createNode(world, pos))
-//                manager.markForSaving()
-//            }
-//        }
-//    }
+    override fun setLocation(world: World, pos: BlockPos) {
+        super.setLocation(world, pos)
+        register()
+    }
+
+    fun register() {
+        if (!world!!.isClient) {
+            instance()
+                    .getNetworkNodeManager(world as ServerWorld)
+                    .setNode(pos, node)
+        }
+    }
 
     abstract fun createNode(world: World, pos: BlockPos): N
-    override fun toTag(tag: CompoundTag): CompoundTag {
-        return CompoundTag()
+    override fun toTag(tag: CompoundTag): CompoundTag = CompoundTag()
+
+    companion object {
+        val log = getCustomLogger(NetworkNodeTile::class)
+
+        @JvmField
+        val REDSTONE_MODE: TileDataParameter<Int, NetworkNodeTile<*>> = createParameter()
+    }
+
+    init {
+        dataManager.addWatchedParameter(REDSTONE_MODE)
     }
 }
