@@ -7,7 +7,6 @@ import com.refinedmods.refinedstorage.tile.data.TileDataParameterClientListener
 import net.minecraft.block.entity.BlockEntity
 import net.minecraft.entity.data.TrackedDataHandlerRegistry
 import net.minecraft.inventory.Inventory
-import reborncore.common.util.Tank
 import java.util.function.BiConsumer
 import java.util.function.Function
 

@@ -1,6 +1,5 @@
 package com.refinedmods.refinedstorage.container.transfer
 
-import net.minecraft.entity.player.PlayerInventory
 import net.minecraft.inventory.Inventory
 import net.minecraft.item.ItemStack
 import reborncore.api.items.InventoryUtils

@@ -1,7 +1,7 @@
 package com.refinedmods.refinedstorage.tile.config
 
 import com.refinedmods.refinedstorage.api.network.node.INetworkNodeProxy
-import com.refinedmods.refinedstorage.apiimpl.API.Companion.instance
+import com.refinedmods.refinedstorage.apiimpl.API
 import com.refinedmods.refinedstorage.tile.data.TileDataParameter
 import net.minecraft.block.entity.BlockEntity
 import net.minecraft.entity.data.TrackedDataHandlerRegistry
@@ -16,12 +16,12 @@ interface IWhitelistBlacklist {
     var whitelistBlacklistMode: Int
 
     companion object {
-        fun <T> createParameter(): TileDataParameter<Int, T> where T : BlockEntity?, T : INetworkNodeProxy<*>? {
+        fun <T> createParameter(): TileDataParameter<Int, T> where T : BlockEntity, T : INetworkNodeProxy<*>? {
             return TileDataParameter<Int, T>(0, TrackedDataHandlerRegistry.INTEGER,
-                    Function { t: T? -> (t!!.node as IWhitelistBlacklist).whitelistBlacklistMode },
-                    BiConsumer { t: T?, v: Int? ->
+                    Function { t: T -> (t.node as IWhitelistBlacklist).whitelistBlacklistMode },
+                    BiConsumer { t: T, v: Int ->
                         if (v == WHITELIST || v == BLACKLIST) {
-                            (t!!.node as IWhitelistBlacklist).whitelistBlacklistMode = v
+                            (t.node as IWhitelistBlacklist).whitelistBlacklistMode = v
                         }
                     }
             )
@@ -31,7 +31,7 @@ interface IWhitelistBlacklist {
             if (mode == WHITELIST) {
                 for (i in 0 until filters.size()) {
                     val slot: ItemStack = filters.getStack(i)
-                    if (instance().comparer.isEqual(slot, stack!!, compare)) {
+                    if (API.comparer.isEqual(slot, stack!!, compare)) {
                         return true
                     }
                 }
@@ -39,7 +39,7 @@ interface IWhitelistBlacklist {
             } else if (mode == BLACKLIST) {
                 for (i in 0 until filters.size()) {
                     val slot: ItemStack = filters.getStack(i)
-                    if (instance().comparer.isEqual(slot, stack!!, compare)) {
+                    if (API.comparer.isEqual(slot, stack!!, compare)) {
                         return false
                     }
                 }

@@ -10,14 +10,14 @@ import net.minecraft.util.Formatting
 
 class ConstructorDropSideButton(screen: BaseScreen<ConstructorScreenHandler>) : SideButton(screen) {
     override fun renderButtonIcon(matrixStack: MatrixStack?, x: Int, y: Int) {
-        screen.drawTexture(matrixStack, x, y, 64 + if (ConstructorTile.DROP.value!!) 16 else 0, 16, 16, 16)
+        screen.drawTexture(matrixStack, x, y, 64 + if (ConstructorTile.DROP.value) 16 else 0, 16, 16, 16)
     }
 
     override fun getTooltip(): String {
-        return I18n.translate("sidebutton.refinedstorage.constructor.drop").toString() + "\n" + Formatting.GRAY + I18n.translate(if (ConstructorTile.DROP.value!!) "gui.yes" else "gui.no")
+        return I18n.translate("sidebutton.refinedstorage.constructor.drop").toString() + "\n" + Formatting.GRAY + I18n.translate(if (ConstructorTile.DROP.value) "gui.yes" else "gui.no")
     }
 
     override fun onPress() {
-        TileDataManager.setParameter(ConstructorTile.DROP, !ConstructorTile.DROP.value!!)
+        TileDataManager.setParameter(ConstructorTile.DROP, !ConstructorTile.DROP.value)
     }
 }

@@ -3,6 +3,7 @@ package com.refinedmods.refinedstorage.apiimpl.network.node
 import com.refinedmods.refinedstorage.RS
 import com.refinedmods.refinedstorage.api.util.Action
 import com.refinedmods.refinedstorage.api.util.IComparer
+import com.refinedmods.refinedstorage.config.ServerConfig
 import com.refinedmods.refinedstorage.inventory.fluid.FluidInventory
 import com.refinedmods.refinedstorage.inventory.item.BaseItemHandler
 import com.refinedmods.refinedstorage.inventory.item.UpgradeItemHandler
@@ -51,16 +52,16 @@ class DestructorNetworkNode(world: World, pos: BlockPos) : NetworkNode(world, po
     private var mode: Int = IWhitelistBlacklist.BLACKLIST
     override var type: Int = IType.ITEMS
         get(): Int {
-            return if (world.isClient) DestructorTile.TYPE.value!! else field
+            return if (world.isClient) DestructorTile.TYPE.value else field
         }
-        set(type: Int) {
+        set(type) {
             field = type
             markDirty()
         }
     var isPickupItem = false
     private var tool: ItemStack = createTool()
-    override val energyUsage: Int
-        get() = 0 //RS.SERVER_CONFIG.getDestructor().getUsage() + upgrades.getEnergyUsage() // TODO After server config merge
+    override val energyUsage: Double
+        get() = ServerConfig.destructorUsage + upgrades.energyUsage
 
     override fun update() {
         super.update()
@@ -110,7 +111,7 @@ class DestructorNetworkNode(world: World, pos: BlockPos) : NetworkNode(world, po
                     world as ServerWorld,
                     front,
                     world.getBlockEntity(front),
-                    WorldUtils.getFakePlayer(world as ServerWorld, owner),
+                    WorldUtils.getFakePlayer(world, owner),
                     tool
             )
             for (drop in drops) {

@@ -15,7 +15,7 @@ class TypeSideButton<T: NetworkNodeTile<*>>(screen: BaseScreen<*>, private val t
     }
 
     override fun renderButtonIcon(matrixStack: MatrixStack?, x: Int, y: Int) {
-        screen.drawTexture(matrixStack, x, y, 16 * type.value!!, 128, 16, 16)
+        screen.drawTexture(matrixStack, x, y, 16 * type.value, 128, 16, 16)
     }
 
     override fun onPress() {

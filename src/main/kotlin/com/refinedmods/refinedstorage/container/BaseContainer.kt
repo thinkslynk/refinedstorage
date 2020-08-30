@@ -1,7 +1,5 @@
 package com.refinedmods.refinedstorage.container
 
-import com.refinedmods.refinedstorage.api.util.IComparer
-import com.refinedmods.refinedstorage.apiimpl.API.Companion.instance
 import com.refinedmods.refinedstorage.container.slot.filter.FilterSlot
 import com.refinedmods.refinedstorage.container.slot.legacy.LegacyDisabledSlot
 import com.refinedmods.refinedstorage.container.slot.legacy.LegacyFilterSlot

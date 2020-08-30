@@ -2,8 +2,6 @@ package com.refinedmods.refinedstorage.extensions
 
 import net.minecraft.inventory.Inventory
 import net.minecraft.item.ItemStack
-import net.minecraft.nbt.ListTag
-import net.minecraft.network.PacketByteBuf
 import net.minecraft.util.math.BlockPos
 import net.minecraft.world.World
 

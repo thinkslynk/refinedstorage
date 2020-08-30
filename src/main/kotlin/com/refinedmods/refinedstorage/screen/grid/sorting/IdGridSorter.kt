@@ -2,10 +2,6 @@ package com.refinedmods.refinedstorage.screen.grid.sorting
 
 import com.refinedmods.refinedstorage.api.network.grid.IGrid
 import com.refinedmods.refinedstorage.screen.grid.stack.IGridStack
-import net.minecraft.item.Item
-import net.minecraft.item.ItemStack
-import net.minecraft.util.registry.Registry
-import reborncore.common.fluid.container.FluidInstance
 
 class IdGridSorter : IGridSorter {
     override fun isApplicable(grid: IGrid?): Boolean {

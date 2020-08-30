@@ -1,13 +1,11 @@
 package com.refinedmods.refinedstorage.screen
 
-import com.refinedmods.refinedstorage.RS
 import com.refinedmods.refinedstorage.container.AmountContainer
 import net.minecraft.client.MinecraftClient
 import net.minecraft.client.gui.screen.Screen
 import net.minecraft.client.gui.widget.ButtonWidget
 import net.minecraft.entity.player.PlayerEntity
 import net.minecraft.item.ItemStack
-import net.minecraft.screen.ScreenHandler
 import net.minecraft.text.Text
 import net.minecraft.text.TranslatableText
 import org.apache.commons.lang3.tuple.Pair

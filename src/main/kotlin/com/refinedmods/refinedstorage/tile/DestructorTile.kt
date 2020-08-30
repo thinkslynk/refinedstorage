@@ -24,13 +24,13 @@ class DestructorTile : NetworkNodeTile<DestructorNetworkNode>(BlockEntityRegistr
         val COMPARE: TileDataParameter<Int, DestructorTile> = IComparable.createParameter()
         val WHITELIST_BLACKLIST: TileDataParameter<Int, DestructorTile> = IWhitelistBlacklist.createParameter()
         val TYPE: TileDataParameter<Int, DestructorTile> = IType.createParameter()
-        val PICKUP = TileDataParameter<Boolean?, DestructorTile?>(
+        val PICKUP = TileDataParameter<Boolean, DestructorTile>(
                 false,
                 TrackedDataHandlerRegistry.BOOLEAN,
-                Function { t: DestructorTile? -> t!!.node.isPickupItem },
-                BiConsumer<DestructorTile?, Boolean?> { t: DestructorTile?, v: Boolean? ->
-                    t?.node?.isPickupItem = v!!
-                    t?.node?.markDirty()
+                Function { t: DestructorTile -> t.node.isPickupItem },
+                BiConsumer { t: DestructorTile, v: Boolean ->
+                    t.node.isPickupItem = v
+                    t.node.markDirty()
                 }
         )
     }

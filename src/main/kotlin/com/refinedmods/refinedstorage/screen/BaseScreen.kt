@@ -2,7 +2,7 @@ package com.refinedmods.refinedstorage.screen
 
 import com.mojang.blaze3d.systems.RenderSystem
 import com.refinedmods.refinedstorage.RS
-import com.refinedmods.refinedstorage.apiimpl.API.Companion.instance
+import com.refinedmods.refinedstorage.config.ClientConfig
 import com.refinedmods.refinedstorage.container.AmountContainer
 import com.refinedmods.refinedstorage.container.slot.filter.FilterSlot
 import com.refinedmods.refinedstorage.container.slot.filter.FluidFilterSlot
@@ -12,18 +12,11 @@ import com.refinedmods.refinedstorage.screen.widget.CheckboxWidget
 import com.refinedmods.refinedstorage.screen.widget.sidebutton.SideButton
 import com.refinedmods.refinedstorage.util.RenderUtils
 import net.fabricmc.fabric.api.client.keybinding.v1.KeyBindingHelper
-import net.fabricmc.fabric.api.event.lifecycle.v1.ServerTickEvents
 import net.minecraft.client.MinecraftClient
-import net.minecraft.client.font.Font
-import net.minecraft.client.font.FontManager
-import net.minecraft.client.font.TextRenderer
-import net.minecraft.client.gui.screen.GameModeSelectionScreen
 import net.minecraft.client.gui.screen.Screen
 import net.minecraft.client.gui.screen.ingame.HandledScreen
-import net.minecraft.client.gui.widget.AbstractButtonWidget
 import net.minecraft.client.gui.widget.ButtonWidget
 import net.minecraft.client.options.KeyBinding
-import net.minecraft.client.render.block.FluidRenderer
 import net.minecraft.client.util.InputUtil
 import net.minecraft.client.util.math.MatrixStack
 import net.minecraft.entity.data.TrackedDataHandlerRegistry
@@ -32,21 +25,15 @@ import net.minecraft.item.ItemStack
 import net.minecraft.screen.ScreenHandler
 import net.minecraft.screen.slot.Slot
 import net.minecraft.screen.slot.SlotActionType
-import net.minecraft.server.world.ServerWorld
 import net.minecraft.text.Text
 import net.minecraft.text.TranslatableText
 import net.minecraft.util.Identifier
 import org.apache.logging.log4j.LogManager
-import org.lwjgl.opengl.GL11
-import reborncore.client.RenderUtil
-import reborncore.client.gui.slots.SlotFake
 import reborncore.common.fluid.FluidUtil
 import reborncore.common.fluid.container.FluidInstance
-import java.awt.font.FontRenderContext
 import java.util.*
 import java.util.function.Consumer
 import java.util.function.Function
-import java.util.stream.Collectors
 
 abstract class BaseScreen<T : ScreenHandler>(
         container: T,
@@ -247,9 +234,9 @@ abstract class BaseScreen<T : ScreenHandler>(
     }
 
     fun addSideButton(button: SideButton) {
-        button.x = guiLeft + -SideButton.Companion.WIDTH - 2
+        button.x = guiLeft + -SideButton.WIDTH - 2
         button.y = guiTop + sideButtonY
-        sideButtonY += SideButton.Companion.HEIGHT + 2
+        sideButtonY += SideButton.HEIGHT + 2
         addButton(button)
     }
 
@@ -284,7 +271,7 @@ abstract class BaseScreen<T : ScreenHandler>(
     }
 
     fun renderQuantity(matrixStack: MatrixStack, x: Int, y: Int, qty: String, color: Int) {
-        val large = MinecraftClient.getInstance().forcesUnicodeFont() // || RS.CLIENT_CONFIG.grid.getLargeFont() // TODO hookup client config
+        val large = MinecraftClient.getInstance().forcesUnicodeFont() || ClientConfig.gridLargeFont
         RenderSystem.pushMatrix()
         RenderSystem.translatef(x.toFloat(), y.toFloat(), Z_LEVEL_QTY.toFloat())
         if (!large) {

@@ -1,11 +1,7 @@
 package com.refinedmods.refinedstorage.screen.grid.filtering
 
 import com.refinedmods.refinedstorage.api.util.IFilter
-import com.refinedmods.refinedstorage.apiimpl.API.Companion.instance
 import com.refinedmods.refinedstorage.screen.grid.stack.IGridStack
-import net.minecraft.item.ItemStack
-import net.minecraft.util.Identifier
-import reborncore.common.fluid.container.FluidInstance
 import java.util.function.Predicate
 
 class FilterGridFilter(private val filters: List<IFilter<*>?>?) : Predicate<IGridStack> {

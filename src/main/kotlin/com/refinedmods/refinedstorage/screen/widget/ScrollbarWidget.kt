@@ -10,7 +10,13 @@ import java.util.*
 import java.util.function.Consumer
 import kotlin.math.floor
 
-class ScrollbarWidget(private val screen: BaseScreen<*>, private val x: Int, private val y: Int, private val width: Int, private val height: Int) : Element {
+class ScrollbarWidget(
+        val screen: BaseScreen<*>,
+        val x: Int,
+        val y: Int,
+        val width: Int,
+        val height: Int
+) : Element {
     private var enabled = false
     private var offset = 0
     private var maxOffset = 0
@@ -18,14 +24,6 @@ class ScrollbarWidget(private val screen: BaseScreen<*>, private val x: Int, pri
     private val listeners: MutableList<ScrollbarWidgetListener> = LinkedList()
     fun addListener(listener: ScrollbarWidgetListener) {
         listeners.add(listener)
-    }
-
-    fun getWidth(): Int {
-        return width
-    }
-
-    fun getHeight(): Int {
-        return height
     }
 
     fun setEnabled(enabled: Boolean) {

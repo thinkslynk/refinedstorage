@@ -1,11 +1,7 @@
 package com.refinedmods.refinedstorage.container.transfer
 
-import com.refinedmods.refinedstorage.api.util.IComparer
-import com.refinedmods.refinedstorage.apiimpl.API.Companion.instance
 import com.refinedmods.refinedstorage.inventory.fluid.FluidInventory
-import com.refinedmods.refinedstorage.util.StackUtils.copy
 import net.minecraft.item.ItemStack
-import reborncore.common.fluid.container.FluidInstance
 
 internal class FluidFilterInventoryWrapper(private val filterInv: FluidInventory) : IInventoryWrapper {
     override fun insert(stack: ItemStack): InsertionResult {

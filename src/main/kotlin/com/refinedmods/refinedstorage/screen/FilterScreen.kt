@@ -104,7 +104,7 @@ class FilterScreen(container: FilterContainer, inventory: PlayerInventory, title
 
     fun sendUpdate() {
         // TODO messages
-//        RS.NETWORK_HANDLER.sendToServer(FilterUpdateMessage(compare, mode, modFilter, nameField!!.text, type))
+        //RS.NETWORK_HANDLER.sendToServer(FilterUpdateMessage(compare, mode, modFilter, nameField!!.text, type)
     }
 
     init {

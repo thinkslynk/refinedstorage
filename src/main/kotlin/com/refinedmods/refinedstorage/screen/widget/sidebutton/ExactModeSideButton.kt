@@ -12,7 +12,7 @@ import net.minecraft.util.Formatting
 class ExactModeSideButton<T: NetworkNodeTile<*>>(screen: BaseScreen<*>, private val parameter: TileDataParameter<Int, T>) : SideButton(screen) {
     override fun getTooltip(): String {
         var tooltip: String = I18n.translate("sidebutton.refinedstorage.exact_mode").toString() + "\n" + Formatting.GRAY
-        if (parameter.value!! and MASK == MASK) {
+        if (parameter.value and MASK == MASK) {
             tooltip += I18n.translate("sidebutton.refinedstorage.exact_mode.on")
         } else {
             tooltip += I18n.translate("sidebutton.refinedstorage.exact_mode.off")
@@ -22,12 +22,12 @@ class ExactModeSideButton<T: NetworkNodeTile<*>>(screen: BaseScreen<*>, private 
 
     override fun renderButtonIcon(matrixStack: MatrixStack?, x: Int, y: Int) {
         val ty = 16 * 12
-        val tx = if (parameter.value!! and MASK == MASK) 0 else 16
+        val tx = if (parameter.value and MASK == MASK) 0 else 16
         screen.drawTexture(matrixStack, x, y, tx, ty, 16, 16)
     }
 
     override fun onPress() {
-        TileDataManager.setParameter(parameter, parameter.value!! xor MASK)
+        TileDataManager.setParameter(parameter, parameter.value xor MASK)
     }
 
     companion object {

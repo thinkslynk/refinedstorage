@@ -9,16 +9,16 @@ import net.minecraft.client.resource.language.I18n
 import net.minecraft.client.util.math.MatrixStack
 import net.minecraft.util.Formatting
 
-class AccessTypeSideButton(screen: BaseScreen<*>, private val parameter: TileDataParameter<AccessType?, *>) : SideButton(screen) {
+class AccessTypeSideButton(screen: BaseScreen<*>, private val parameter: TileDataParameter<AccessType, *>) : SideButton(screen) {
     override fun renderButtonIcon(matrixStack: MatrixStack?, x: Int, y: Int) {
-        screen.drawTexture(matrixStack, x, y, 16 * parameter.value!!.getId(), 240, 16, 16)
+        screen.drawTexture(matrixStack, x, y, 16 * parameter.value.getId(), 240, 16, 16)
     }
 
     override fun getTooltip(): String {
-        return I18n.translate("sidebutton.refinedstorage.access_type").toString() + "\n" + Formatting.GRAY + I18n.translate("sidebutton.refinedstorage.access_type." + parameter.value!!.getId())
+        return I18n.translate("sidebutton.refinedstorage.access_type").toString() + "\n" + Formatting.GRAY + I18n.translate("sidebutton.refinedstorage.access_type." + parameter.value.getId())
     }
 
     override fun onPress() {
-        TileDataManager.setParameter(parameter, AccessTypeUtils.getAccessType(parameter.value!!.getId() + 1))
+        TileDataManager.setParameter(parameter, AccessTypeUtils.getAccessType(parameter.value.getId() + 1))
     }
 }

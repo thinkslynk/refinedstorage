@@ -1,7 +1,6 @@
 package com.refinedmods.refinedstorage.util
 
 import com.refinedmods.refinedstorage.api.network.grid.GridType
-import net.minecraft.block.entity.BlockEntityType
 import net.minecraft.util.Identifier
 
 object GridUtils {

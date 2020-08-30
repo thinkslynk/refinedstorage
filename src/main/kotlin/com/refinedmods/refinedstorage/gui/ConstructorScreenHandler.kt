@@ -2,10 +2,8 @@ package com.refinedmods.refinedstorage.gui
 
 import com.refinedmods.refinedstorage.RS
 import com.refinedmods.refinedstorage.apiimpl.network.node.ConstructorNetworkNode
-import com.refinedmods.refinedstorage.extensions.getCustomLogger
 import io.github.cottonmc.cotton.gui.SyncedGuiDescription
 import io.github.cottonmc.cotton.gui.widget.WBox
-import io.github.cottonmc.cotton.gui.widget.WGridPanel
 import io.github.cottonmc.cotton.gui.widget.WItemSlot
 import io.github.cottonmc.cotton.gui.widget.data.Axis
 import io.github.cottonmc.cotton.gui.widget.data.HorizontalAlignment

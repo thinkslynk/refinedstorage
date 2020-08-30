@@ -1,7 +1,6 @@
 package com.refinedmods.refinedstorage.tile.data
 
 import net.minecraft.block.entity.BlockEntity
-import java.lang.ClassCastException
 import java.util.*
 import java.util.concurrent.CopyOnWriteArrayList
 

@@ -14,10 +14,10 @@ class RedstoneModeSideButton<T: NetworkNodeTile<*>>(screen: BaseScreen<*>, priva
     }
 
     override fun renderButtonIcon(matrixStack: MatrixStack?, x: Int, y: Int) {
-        screen.drawTexture(matrixStack, x, y, parameter.value!! * 16, 0, 16, 16)
+        screen.drawTexture(matrixStack, x, y, parameter.value * 16, 0, 16, 16)
     }
 
     override fun onPress() {
-        TileDataManager.setParameter(parameter, parameter.value!! + 1)
+        TileDataManager.setParameter(parameter, parameter.value + 1)
     }
 }

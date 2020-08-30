@@ -31,8 +31,8 @@ abstract class NetworkNode(
         // new instances of network nodes will be created when the world refreshes (causing this field to be different too).
         // However, network nodes in the network graph *AREN'T* recreated when the world refreshes, causing the graph to have the incorrect instance, and even worse,
         // having multiple different instances of the same network node.
-        @JvmField override val world: World,
-        @JvmField override val pos: BlockPos
+        override val world: World,
+        override val pos: BlockPos
 ) : INetworkNode, INetworkNodeVisitor {
     companion object {
         private const val NBT_OWNER = "Owner"
