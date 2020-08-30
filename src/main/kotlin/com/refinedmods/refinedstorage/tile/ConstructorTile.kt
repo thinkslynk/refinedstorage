@@ -28,22 +28,29 @@ class ConstructorTile:
         NetworkNodeTile<ConstructorNetworkNode>(BlockEntityRegistryGenerated.CONSTRUCTOR_TILE),
         NamedScreenHandlerFactory
 {
-
     override fun createNode(world: World, pos: BlockPos): ConstructorNetworkNode {
         return ConstructorNetworkNode(world, pos)
+    }
+
+    override fun createMenu(syncId: Int, inv: PlayerInventory, player: PlayerEntity): ScreenHandler {
+        return ConstructorScreenHandler(ScreenHandlerContext.create(world, pos), player, syncId)
+    }
+
+    override fun getDisplayName(): Text {
+        return TranslatableText("gui.refinedstorage.constructor")
     }
 
     companion object {
         val log = getCustomLogger(ConstructorTile::class)
         val COMPARE: TileDataParameter<Int, ConstructorTile> = IComparable.createParameter()
         val TYPE: TileDataParameter<Int, ConstructorTile> = IType.createParameter()
-        val DROP = TileDataParameter<Boolean, ConstructorTile?>(
+        val DROP = TileDataParameter<Boolean, ConstructorTile>(
                 false,
                 TrackedDataHandlerRegistry.BOOLEAN,
-                Function { t: ConstructorTile? -> t?.node?.isDrop ?: false },
-                BiConsumer { t: ConstructorTile?, v: Boolean? ->
-                    t?.node?.isDrop = v!!
-                    t?.node?.markDirty()
+                Function { t: ConstructorTile -> t.node.isDrop },
+                BiConsumer { t: ConstructorTile, v: Boolean ->
+                    t.node.isDrop = v
+                    t.node.markDirty()
                 }
         )
     }
@@ -54,13 +61,4 @@ class ConstructorTile:
         dataManager.addWatchedParameter(DROP)
     }
 
-    override fun createMenu(syncId: Int, inv: PlayerInventory, player: PlayerEntity): ScreenHandler {
-        log.info("Constructor entity is creating a menu....")
-        return ConstructorScreenHandler(ScreenHandlerContext.create(world, pos), player, syncId)
-    }
-
-    override fun getDisplayName(): Text {
-        log.info("Constructor entity getDisplayName()")
-        return TranslatableText("gui.refinedstorage.constructor")
-    }
 }

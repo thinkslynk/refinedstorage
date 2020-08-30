@@ -3,6 +3,7 @@ package com.refinedmods.refinedstorage.apiimpl.network.node
 import com.refinedmods.refinedstorage.RS
 import com.refinedmods.refinedstorage.api.util.Action
 import com.refinedmods.refinedstorage.api.util.IComparer
+import com.refinedmods.refinedstorage.config.ServerConfig
 import com.refinedmods.refinedstorage.inventory.fluid.FluidInventory
 import com.refinedmods.refinedstorage.inventory.item.BaseItemHandler
 import com.refinedmods.refinedstorage.inventory.item.UpgradeItemHandler
@@ -43,7 +44,7 @@ class ConstructorNetworkNode(world: World, pos: BlockPos):
     override val fluidFilters: FluidInventory = FluidInventory(1)
             .addListener(NetworkNodeFluidInventoryListener(this))
     val upgrades: UpgradeItemHandler = UpgradeItemHandler(4)
-    // TODO private val upgrades: UpgradeItemHandler = UpgradeItemHandler(4, UpgradeItem.Type.SPEED, UpgradeItem.Type.CRAFTING, UpgradeItem.Type.STACK)
+            // TODO private val upgrades: UpgradeItemHandler = UpgradeItemHandler(4, UpgradeItem.Type.SPEED, UpgradeItem.Type.CRAFTING, UpgradeItem.Type.STACK)
             .addListener(NetworkNodeInventoryListener(this)) as UpgradeItemHandler
     override var compare: Int = IComparer.COMPARE_NBT
         set(compare) {
@@ -51,18 +52,17 @@ class ConstructorNetworkNode(world: World, pos: BlockPos):
             markDirty()
         }
     override var type: Int = IType.ITEMS
-         get(): Int{
-            return if (world.isClient) ConstructorTile.TYPE.value!! else field
-         }
+        get(): Int{
+            return if (world.isClient) ConstructorTile.TYPE.value else field
+        }
         set(v) {
             field = v
             markDirty()
         }
 
     var isDrop = false
-    override val energyUsage: Int
-//        get() = RS.SERVER_CONFIG.getConstructor().getUsage() + upgrades.getEnergyUsage() // TODO add once server config is merged in
-        get() = 0
+    override val energyUsage: Double
+        get() = ServerConfig.constructorUsage + upgrades.energyUsage
 
     override fun update() {
         super.update()

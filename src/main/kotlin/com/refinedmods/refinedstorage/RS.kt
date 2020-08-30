@@ -6,8 +6,9 @@ import com.refinedmods.refinedstorage.config.ClientConfig
 import com.refinedmods.refinedstorage.config.ServerConfig
 import com.refinedmods.refinedstorage.container.ConstructorScreenHandler
 import com.refinedmods.refinedstorage.container.FilterContainer
-import com.refinedmods.refinedstorage.extensions.DOUBLE
 import com.refinedmods.refinedstorage.extensions.getCustomLogger
+import com.refinedmods.refinedstorage.tile.data.RSSerializers
+import com.refinedmods.refinedstorage.network.NetworkHandler
 import com.thinkslynk.fabric.generated.BlockEntityRegistryGenerated
 import com.thinkslynk.fabric.generated.BlockItemRegistryGenerated
 import com.thinkslynk.fabric.generated.BlockRegistryGenerated
@@ -36,22 +37,18 @@ class RS: ModInitializer {
         { windowId, playerInventory->
             ConstructorScreenHandler(ScreenHandlerContext.EMPTY, playerInventory.player, windowId)
         }
+        val NETWORK_HANDLER = NetworkHandler()
     }
-//    val NETWORK_HANDLER = NetworkHandler()
-//    val SERVER_CONFIG = ServerConfig()
-//    val CLIENT_CONFIG = ClientConfig()
 
     override fun onInitialize() {
         Configuration(ServerConfig::class.java, ID)
         Configuration(ClientConfig::class.java, ID)
 
-//        BlockRegistryGenerated.register()
         ItemRegistryGenerated.register()
         BlockRegistryGenerated.register()
         BlockItemRegistryGenerated.register()
         BlockEntityRegistryGenerated.register()
-
-        TrackedDataHandlerRegistry.register(DOUBLE)
+        RSSerializers.registerAll()
 
         ServerTickEvents.END_WORLD_TICK.register(NetworkListener())
 

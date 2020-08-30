@@ -1,19 +1,19 @@
 package com.refinedmods.refinedstorage.tile
 
-//import com.refinedmods.refinedstorage.tile.data.RSSerializers
 import com.refinedmods.refinedstorage.RS
 import com.refinedmods.refinedstorage.api.network.INetwork
 import com.refinedmods.refinedstorage.api.network.NetworkType
 import com.refinedmods.refinedstorage.api.network.node.INetworkNodeProxy
-import com.refinedmods.refinedstorage.apiimpl.API.Companion.instance
+import com.refinedmods.refinedstorage.apiimpl.API
 import com.refinedmods.refinedstorage.apiimpl.network.Network
 import com.refinedmods.refinedstorage.apiimpl.network.node.RootNetworkNode
 import com.refinedmods.refinedstorage.block.ControllerBlock
 import com.refinedmods.refinedstorage.block.ControllerBlock.EnergyType
-import com.refinedmods.refinedstorage.extensions.DOUBLE
 import com.refinedmods.refinedstorage.tile.config.IRedstoneConfigurable
 import com.refinedmods.refinedstorage.tile.config.RedstoneMode
 import com.refinedmods.refinedstorage.tile.config.RedstoneMode.Companion.createParameter
+import com.refinedmods.refinedstorage.tile.data.RSSerializers
+import com.refinedmods.refinedstorage.tile.data.RSSerializers.DOUBLE_SERIALIZER
 import com.refinedmods.refinedstorage.tile.data.TileDataParameter
 import com.thinkslynk.fabric.annotations.registry.RegisterBlockEntity
 import com.thinkslynk.fabric.generated.BlockEntityRegistryGenerated
@@ -36,6 +36,8 @@ open class ControllerTile(type: NetworkType, entity: BlockEntityType<*>?):
     var removedNetwork: INetwork? = null
         private set
     private var dummyNetwork: Network? = null
+    override var markedForRemoval: Boolean = false
+
     override fun writeUpdate(tag: CompoundTag): CompoundTag {
         super.writeUpdate(tag)
         tag.putInt(NBT_ENERGY_TYPE, (network as Network).energyType.ordinal)
@@ -56,7 +58,7 @@ open class ControllerTile(type: NetworkType, entity: BlockEntityType<*>?):
                 dummyNetwork = net
                 return net
             }
-            return instance().getNetworkManager(world as ServerWorld).getNetwork(pos)
+            return API.getNetworkManager(world as ServerWorld).getNetwork(pos)
                     ?: throw IllegalStateException("No network present at $pos")
         }
 
@@ -66,10 +68,9 @@ open class ControllerTile(type: NetworkType, entity: BlockEntityType<*>?):
         super.cancelRemoval()
 
         if (!world!!.isClient) {
-            val manager = instance().getNetworkManager(world as ServerWorld)
+            val manager = API.getNetworkManager(world as ServerWorld)
             if (manager.getNetwork(pos) == null) {
                 manager.setNetwork(pos, Network(world!!, pos, type))
-                manager.markForSaving()
             }
         }
     }
@@ -77,11 +78,10 @@ open class ControllerTile(type: NetworkType, entity: BlockEntityType<*>?):
     override fun markRemoved() {
         super.markRemoved()
         if (!world!!.isClient) {
-            val manager = instance().getNetworkManager(world as ServerWorld)
+            val manager = API.getNetworkManager(world as ServerWorld)
             val network = manager.getNetwork(pos)
             removedNetwork = network
             manager.removeNetwork(pos)
-            manager.markForSaving()
             network!!.onRemoved()
         }
     }
@@ -106,32 +106,39 @@ open class ControllerTile(type: NetworkType, entity: BlockEntityType<*>?):
 
     companion object {
         val REDSTONE_MODE = createParameter<ControllerTile>()
-        val ENERGY_USAGE = TileDataParameter<Double?, ControllerTile?>(0.0, DOUBLE, Function { t: ControllerTile? -> t!!.network.energyUsage })
-        val ENERGY_STORED = TileDataParameter<Double?, ControllerTile?>(0.0, DOUBLE, Function { t: ControllerTile? -> t!!.network.energyStorage.getStored(EnergySide.UNKNOWN) })
-        val ENERGY_CAPACITY = TileDataParameter<Double?, ControllerTile?>(0.0, DOUBLE, Function { t: ControllerTile? -> t!!.network.energyStorage.maxStoredPower })
-//        val NODES: TileDataParameter<List<ClientNode>, ControllerTile> = TileDataParameter<T, E>(RSSerializers.CLIENT_NODE_SERIALIZER, ArrayList<Any>(), Function<E, T> { tile: E -> collectClientNodes(tile) })
+        val ENERGY_USAGE = TileDataParameter<Double, ControllerTile>(0.0, DOUBLE_SERIALIZER, Function { t: ControllerTile? -> t!!.network.energyUsage })
+        val ENERGY_STORED = TileDataParameter<Double, ControllerTile>(0.0, DOUBLE_SERIALIZER, Function { t: ControllerTile? -> t!!.network.energyStorage.getStored(EnergySide.UNKNOWN) })
+        val ENERGY_CAPACITY = TileDataParameter<Double, ControllerTile>(0.0, DOUBLE_SERIALIZER, Function { t: ControllerTile? -> t!!.network.energyStorage.maxStoredPower })
+        val NODES: TileDataParameter<List<ClientNode>, ControllerTile> = TileDataParameter(
+                emptyList(),
+                RSSerializers.CLIENT_NODE_SERIALIZER,
+                Function {
+                    tile: ControllerTile ->
+                    collectClientNodes(tile)
+                }
+        )
         private const val NBT_ENERGY_TYPE = "EnergyType"
-//        private fun collectClientNodes(tile: ControllerTile): List<ClientNode> {
-//            val nodes: MutableList<ClientNode> = ArrayList()
-//            for (node in tile.network.nodeGraph!!.all()!!) {
-//                if (node!!.isActive) {
-//                    val stack = node.itemStack
-//                    if (stack.isEmpty) {
-//                        continue
-//                    }
-//                    val clientNode = ClientNode(stack, 1, node.energyUsage)
-//                    if (nodes.contains(clientNode)) {
-//                        val other = nodes[nodes.indexOf(clientNode)]
-//                        other.amount = other.amount + 1
-//                    } else {
-//                        nodes.add(clientNode)
-//                    }
-//                }
-//            }
-//
-//            nodes.sort(java.util.Comparator { a: ClientNode, b: ClientNode -> b.energyUsage.compareTo(a.energyUsage) })
-//            return nodes
-//        }
+        private fun collectClientNodes(tile: ControllerTile): List<ClientNode> {
+            val nodes: MutableList<ClientNode> = ArrayList()
+            for (node in tile.network.nodeGraph.all()) {
+                if (node.isActive) {
+                    val stack = node.itemStack
+                    if (stack.isEmpty) {
+                        continue
+                    }
+                    val clientNode = ClientNode(stack, 1, node.energyUsage)
+                    if (nodes.contains(clientNode)) {
+                        val other = nodes[nodes.indexOf(clientNode)]
+                        other.amount = other.amount + 1
+                    } else {
+                        nodes.add(clientNode)
+                    }
+                }
+            }
+
+            nodes.sortWith(Comparator { a: ClientNode, b: ClientNode -> b.energyUsage.compareTo(a.energyUsage) })
+            return nodes
+        }
     }
 
     init {

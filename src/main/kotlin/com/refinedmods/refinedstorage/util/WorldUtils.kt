@@ -51,6 +51,7 @@ object WorldUtils {
         return ServerPlayerEntity(world.server, world, fakeProfile, ServerPlayerInteractionManager(world))
     }
 
+
     fun sendNoPermissionMessage(player: PlayerEntity) {
         player.sendMessage(
             TranslatableText("misc.refinedstorage.security.no_permission")

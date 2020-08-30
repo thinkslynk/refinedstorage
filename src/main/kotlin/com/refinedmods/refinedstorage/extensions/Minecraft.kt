@@ -1,6 +1,5 @@
 package com.refinedmods.refinedstorage.extensions
 
-import net.minecraft.entity.data.TrackedDataHandler
 import net.minecraft.inventory.Inventory
 import net.minecraft.item.ItemStack
 import net.minecraft.nbt.ListTag
@@ -27,19 +26,9 @@ fun Inventory.drop(world: World, pos: BlockPos) {
     // TODO figure out how to drop an inventory at a position...
 }
 
-val DOUBLE: TrackedDataHandler<Double?> = object : TrackedDataHandler<Double?> {
-    override fun write(packetByteBuf: PacketByteBuf, double: Double?) {
-        packetByteBuf.writeDouble(double!!)
-    }
+@Deprecated("migration", ReplaceWith("Constants.NBT.LIST_TAG", "com.refinedmods.refinedstorage.extensions.Constants"))
+const val LIST_TAG_TYPE = Constants.NBT.LIST_TAG
+@Deprecated("migration", ReplaceWith("Constants.NBT.COMPOUND_TAG", "com.refinedmods.refinedstorage.extensions.Constants"))
+const val COMPOUND_TAG_TYPE = Constants.NBT.COMPOUND_TAG
 
-    override fun read(packetByteBuf: PacketByteBuf): Double? {
-        return packetByteBuf.readDouble()
-    }
-
-    override fun copy(double: Double?): Double? {
-        return double
-    }
-}
-
-val LIST_TAG_TYPE by lazy { ListTag().type.toInt() }
 

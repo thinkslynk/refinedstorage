@@ -5,7 +5,7 @@ import com.refinedmods.refinedstorage.api.network.INetwork
 import com.refinedmods.refinedstorage.api.network.node.INetworkNode
 import com.refinedmods.refinedstorage.api.network.security.Permission
 import com.refinedmods.refinedstorage.api.util.Action
-import com.refinedmods.refinedstorage.apiimpl.API.Companion.instance
+import com.refinedmods.refinedstorage.apiimpl.API
 import dev.onyxstudios.cca.api.v3.block.BlockComponents
 import net.minecraft.block.entity.BlockEntity
 import net.minecraft.entity.player.PlayerEntity
@@ -19,7 +19,7 @@ import net.minecraft.world.World
 object NetworkUtils {
 
     @Deprecated("fabric names", replaceWith = ReplaceWith("getNodeFromBlockEntity(tile)"))
-    fun getNodeFromTile(tile: BlockEntity?): INetworkNode? = getNodeFromBlockEntity(tile)
+    fun getNodeFromTile(tile: BlockEntity?): INetworkNode? = tile?.networkNode
     @Deprecated(replaceWith = ReplaceWith("blockEntity?.networkNode"), message = "kotlin goes brr")
     fun getNodeFromBlockEntity(blockEntity: BlockEntity?): INetworkNode? = blockEntity?.networkNode
     val BlockEntity.networkNode get(): INetworkNode? =
@@ -51,7 +51,7 @@ object NetworkUtils {
         if (world.isClient) {
             return ActionResult.SUCCESS
         }
-        val network: INetwork? = getNetworkFromNode(getNodeFromBlockEntity(world.getBlockEntity(pos)))
+        val network: INetwork? = world.getBlockEntity(pos)?.networkNode?.network
         if (network != null) {
             for (permission in permissionsRequired) {
                 /*
@@ -74,7 +74,7 @@ object NetworkUtils {
     ) {
         for (i in 0 until player.inventory.size()) {
             val slot: ItemStack = player.inventory.getStack(i)
-            if (instance().comparer.isEqualNoQuantity(StackUtils.EMPTY_BUCKET, slot)) {
+            if (API.comparer.isEqualNoQuantity(StackUtils.EMPTY_BUCKET, slot)) {
                 player.inventory.removeStack(i, 1)
                 onBucketFound(StackUtils.EMPTY_BUCKET.copy())
                 return

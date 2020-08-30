@@ -16,5 +16,5 @@ interface ISecurityCard {
      * @param permission the permission to check for
      * @return true if the bound player has the given permission, false otherwise
      */
-    fun hasPermission(permission: Permission?): Boolean
+    fun hasPermission(permission: Permission): Boolean
 }

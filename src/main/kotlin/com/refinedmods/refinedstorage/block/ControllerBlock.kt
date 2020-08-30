@@ -2,7 +2,7 @@ package com.refinedmods.refinedstorage.block
 
 import com.refinedmods.refinedstorage.RS
 import com.refinedmods.refinedstorage.api.network.NetworkType
-import com.refinedmods.refinedstorage.apiimpl.API.Companion.instance
+import com.refinedmods.refinedstorage.apiimpl.API
 import com.refinedmods.refinedstorage.apiimpl.network.Network
 import com.refinedmods.refinedstorage.tile.ControllerTile
 import com.refinedmods.refinedstorage.tile.CreativeControllerTile
@@ -82,8 +82,8 @@ open class ControllerBlock(val type: NetworkType = NetworkType.NORMAL):
     override fun neighborUpdate(state: BlockState, world: World, pos: BlockPos, block: Block, fromPos: BlockPos, notify: Boolean) {
         super.neighborUpdate(state, world, pos, block, fromPos, notify)
         if (!world.isClient) {
-            val network = instance()
-                    .getNetworkManager(world as ServerWorld)!!
+            val network = API
+                .getNetworkManager(world as ServerWorld)
                     .getNetwork(pos)
 
             if (network is Network) {

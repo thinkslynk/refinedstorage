@@ -1,7 +1,6 @@
 package com.refinedmods.refinedstorage.apiimpl.util
 
 import com.refinedmods.refinedstorage.api.util.IQuantityFormatter
-import com.refinedmods.refinedstorage.apiimpl.API.Companion.instance
 import java.math.RoundingMode
 import java.text.DecimalFormat
 import java.text.DecimalFormatSymbols
