@@ -1,5 +1,3 @@
-import java.nio.file.Files.isDirectory
-
 plugins {
     id("com.github.johnrengelman.shadow")
     java
@@ -55,6 +53,7 @@ dependencies {
 //    val libGui: String by project
 //    val spruceUi: String by project
     val cardinalComponents: String by project
+    val databreakerVersion: String by project
 
     //to change the versions see the gradle.properties file
     minecraft("com.mojang:minecraft:$minecraftVersion")
@@ -77,6 +76,11 @@ dependencies {
 
     // Tech Reborn Testing
     modRuntime("TechReborn:TechReborn-1.16:+")
+
+    // Databreaker
+    modRuntime ("com.github.SuperCoder7979:databreaker:$databreakerVersion") {
+        exclude(module="fabric-loader")
+    }
 
     // GUI Library
     // https://github.com/CottonMC/LibGui/wiki/Getting-Started-with-GUIs
