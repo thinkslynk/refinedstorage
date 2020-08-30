@@ -61,7 +61,7 @@ interface IStorage<T> {
      * @param remainder          the remainder that we got back, or null if no remainder was there
      * @return the amount to increase the cache with
      */
-    fun getCacheDelta(storedPreInsertion: Int, size: Int, remainder: T): Int
+    fun getCacheDelta(storedPreInsertion: Int, size: Int, remainder: T?): Int
 
     companion object {
         val COMPARATOR = java.util.Comparator { left: IStorage<*>, right: IStorage<*> ->

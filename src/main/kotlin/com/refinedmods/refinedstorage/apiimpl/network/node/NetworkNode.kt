@@ -3,8 +3,7 @@ package com.refinedmods.refinedstorage.apiimpl.network.node
 import com.refinedmods.refinedstorage.api.network.INetwork
 import com.refinedmods.refinedstorage.api.network.INetworkNodeVisitor
 import com.refinedmods.refinedstorage.api.network.node.INetworkNode
-import com.refinedmods.refinedstorage.api.util.Action
-import com.refinedmods.refinedstorage.apiimpl.API.Companion.instance
+import com.refinedmods.refinedstorage.apiimpl.API
 import com.refinedmods.refinedstorage.block.BaseBlock
 import com.refinedmods.refinedstorage.block.BlockDirection
 import com.refinedmods.refinedstorage.block.NetworkNodeBlock
@@ -95,7 +94,7 @@ abstract class NetworkNode(
 
     override fun markDirty() {
         if (!world.isClient) {
-            instance().getNetworkNodeManager(world as ServerWorld).markForSaving()
+            API.getNetworkNodeManager(world as ServerWorld).markForSaving()
         }
     }
 
@@ -221,10 +220,10 @@ abstract class NetworkNode(
     }
 
     override fun equals(other: Any?): Boolean {
-        return other == null || instance().isNetworkNodeEqual(this, other)
+        return other == null || API.isNetworkNodeEqual(this, other)
     }
 
     override fun hashCode(): Int {
-        return instance().getNetworkNodeHashCode(this)
+        return API.getNetworkNodeHashCode(this)
     }
 }

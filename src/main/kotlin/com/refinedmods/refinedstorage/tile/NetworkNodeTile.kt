@@ -1,7 +1,7 @@
 package com.refinedmods.refinedstorage.tile
 
 import com.refinedmods.refinedstorage.api.network.node.INetworkNodeProxy
-import com.refinedmods.refinedstorage.apiimpl.API.Companion.instance
+import com.refinedmods.refinedstorage.apiimpl.API
 import com.refinedmods.refinedstorage.apiimpl.network.node.NetworkNode
 import com.refinedmods.refinedstorage.extensions.getCustomLogger
 import com.refinedmods.refinedstorage.tile.config.IRedstoneConfigurable
@@ -53,7 +53,7 @@ abstract class NetworkNodeTile<N : NetworkNode>(tileType: BlockEntityType<*>?):
                 }
                 false -> {
                     try {
-                        instance()
+                        API
                                 .getNetworkNodeManager(world as ServerWorld)
                                 .getNode(pos)!! as N
                     } catch (e: Exception) {
@@ -69,7 +69,7 @@ abstract class NetworkNodeTile<N : NetworkNode>(tileType: BlockEntityType<*>?):
     override fun markRemoved() {
         super.markRemoved()
         if (!world!!.isClient) {
-            val manager = instance().getNetworkNodeManager(world as ServerWorld)
+            val manager = API.getNetworkNodeManager(world as ServerWorld)
             val node = manager.getNode(pos)
             if (node != null) {
                 removedNode = node as N

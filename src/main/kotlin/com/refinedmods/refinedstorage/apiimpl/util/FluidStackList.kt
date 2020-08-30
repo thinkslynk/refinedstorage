@@ -4,7 +4,7 @@ import com.google.common.collect.ArrayListMultimap
 import com.refinedmods.refinedstorage.api.util.IStackList
 import com.refinedmods.refinedstorage.api.util.StackListEntry
 import com.refinedmods.refinedstorage.api.util.StackListResult
-import com.refinedmods.refinedstorage.apiimpl.API.Companion.instance
+import com.refinedmods.refinedstorage.apiimpl.API
 import net.minecraft.fluid.Fluid
 import reborncore.common.fluid.FluidValue
 import reborncore.common.fluid.container.FluidInstance
@@ -81,7 +81,7 @@ class FluidInstanceList(
     override operator fun get(stack: FluidInstance, flags: Int): FluidInstance? {
         for (entry in stackMap[stack.fluid]) {
             val otherStack: FluidInstance = entry.stack
-            if (instance().comparer.isEqual(otherStack, stack, flags)) {
+            if (API.comparer.isEqual(otherStack, stack, flags)) {
                 return otherStack
             }
         }
@@ -91,7 +91,7 @@ class FluidInstanceList(
     override fun getEntry(stack: FluidInstance, flags: Int): StackListEntry<FluidInstance>? {
         for (entry in stackMap[stack.fluid]) {
             val otherStack: FluidInstance = entry.stack
-            if (instance().comparer.isEqual(otherStack, stack, flags)) {
+            if (API.comparer.isEqual(otherStack, stack, flags)) {
                 return entry
             }
         }

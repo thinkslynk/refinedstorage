@@ -313,7 +313,7 @@ class Network(override val world: World,
     }
 
     override fun markDirty() {
-        API.instance().getNetworkManager(world as ServerWorld).markForSaving()
+        API.getNetworkManager(world as ServerWorld).markForSaving()
     }
 
 
