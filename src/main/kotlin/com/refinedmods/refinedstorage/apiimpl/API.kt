@@ -34,12 +34,12 @@ import com.refinedmods.refinedstorage.apiimpl.util.Comparer
 import com.refinedmods.refinedstorage.apiimpl.util.FluidInstanceList
 import com.refinedmods.refinedstorage.apiimpl.util.ItemStackList
 import com.refinedmods.refinedstorage.apiimpl.util.QuantityFormatter
+import com.refinedmods.refinedstorage.extensions.getCustomLogger
 import net.minecraft.item.ItemStack
 import net.minecraft.nbt.CompoundTag
 import net.minecraft.nbt.ListTag
 import net.minecraft.nbt.Tag
 import net.minecraft.server.world.ServerWorld
-import org.apache.logging.log4j.LogManager
 import reborncore.common.fluid.container.FluidInstance
 import java.util.*
 
@@ -214,7 +214,7 @@ object API : IRSAPI {
     }
 
 
-    private val LOGGER = LogManager.getLogger(API::class.java)
+    private val LOGGER = getCustomLogger(API::class)
     @Deprecated("kotlin goes brrr", replaceWith = ReplaceWith("API", "com.refinedmods.refinedstorage.apiimpl.API"))
     fun instance(): IRSAPI {
         return API
