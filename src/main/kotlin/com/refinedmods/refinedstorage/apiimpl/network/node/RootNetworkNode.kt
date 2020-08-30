@@ -23,8 +23,8 @@ class RootNetworkNode(override val network: INetwork, override val world: World,
         get() = null
         set(value) {}
 
-    override val energyUsage: Int
-        get() = 0
+    override val energyUsage: Double
+        get() = 0.0
 
     override val itemStack: ItemStack
         get() {
@@ -45,18 +45,18 @@ class RootNetworkNode(override val network: INetwork, override val world: World,
     override fun markDirty() {}
 
 
-    override fun visit(operator: INetworkNodeVisitor.Operator?) {
+    override fun visit(operator: INetworkNodeVisitor.Operator) {
         for (facing in Direction.values()) {
-            operator!!.apply(world, pos.offset(facing), facing.opposite)
+            operator.apply(world, pos.offset(facing), facing.opposite)
         }
     }
 
     override fun equals(other: Any?): Boolean {
-        return API.instance().isNetworkNodeEqual(this, other!!)
+        return API.isNetworkNodeEqual(this, other!!)
     }
 
     override fun hashCode(): Int {
-        return API.instance().getNetworkNodeHashCode(this)
+        return API.getNetworkNodeHashCode(this)
     }
 
 }

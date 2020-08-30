@@ -29,7 +29,7 @@ abstract class NetworkNodeBlock(
     override fun neighborUpdate(state: BlockState, world: World, pos: BlockPos, block: Block, fromPos: BlockPos, notify: Boolean) {
         super.neighborUpdate(state, world, pos, block, fromPos, notify)
         if (!world.isClient) {
-            val node = API.instance().getNetworkNodeManager(world as ServerWorld).getNode(pos)
+            val node = API.getNetworkNodeManager(world as ServerWorld).getNode(pos)
             if (node is NetworkNode) {
                 node.setRedstonePowered(world.isReceivingRedstonePower(pos))
             }

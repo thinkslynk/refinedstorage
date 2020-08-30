@@ -44,15 +44,15 @@ class TileDataManager(
 
     companion object {
         private var LAST_ID = 0
-        private val REGISTRY: MutableMap<Int, TileDataParameter<Any, BlockEntity?>> = HashMap()
-        fun registerParameter(parameter: TileDataParameter<Any, BlockEntity?>) {
+        private val REGISTRY: MutableMap<Int, TileDataParameter<Any, BlockEntity>> = HashMap()
+        fun registerParameter(parameter: TileDataParameter<Any, BlockEntity>) {
             parameter.id = LAST_ID
             REGISTRY[LAST_ID++] = parameter
         }
 
-        fun <T: Any, E: BlockEntity?> getParameter(id: Int): TileDataParameter<T, E?>? {
+        fun <T: Any, E: BlockEntity> getParameter(id: Int): TileDataParameter<T, E>? {
             return try {
-                REGISTRY[id] as TileDataParameter<T, E?>?
+                REGISTRY[id] as TileDataParameter<T, E>?
             } catch (e: ClassCastException){
                 null
             }

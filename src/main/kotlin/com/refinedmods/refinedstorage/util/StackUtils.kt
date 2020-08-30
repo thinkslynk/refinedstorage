@@ -3,6 +3,7 @@
 package com.refinedmods.refinedstorage.util
 
 import com.refinedmods.refinedstorage.api.storage.tracker.StorageTrackerEntry
+//import com.refinedmods.refinedstorage.inventory.item.BaseItemHandler
 import com.refinedmods.refinedstorage.util.PacketBufUtils.readOptional
 import com.refinedmods.refinedstorage.util.PacketBufUtils.readOptionalUuid
 import com.refinedmods.refinedstorage.util.PacketBufUtils.writeOptional
@@ -155,8 +156,9 @@ fun createStorages(world: ServerWorld?, diskStack: ItemStack, slot: Int, itemDis
     fun writeItems(handler: IItemHandler, id: Int, tag: CompoundTag) {
         writeItems(handler, id, tag, Function<ItemStack, CompoundTag> { stack: ItemStack -> stack.write(CompoundTag()) })
     }
-
-    fun readItems(handler: IItemHandlerModifiable, id: Int, tag: CompoundTag, deserializer: Function<CompoundTag?, ItemStack?>) {
+*/
+    /*
+    fun readItems(handler: IItemHandlerModifiable, id: Int, tag: CompoundTag, deserializer: (CompoundTag)->ItemStack) {
         val name = String.format(NBT_INVENTORY, id)
         if (tag.contains(name)) {
             val tagList: ListTag = tag.getList(name, Constants.NBT.TAG_COMPOUND)
@@ -167,16 +169,21 @@ fun createStorages(world: ServerWorld?, diskStack: ItemStack, slot: Int, itemDis
                 }
             }
         }
-    }
+    }*/
 
+    /*
     fun readItems(handler: IItemHandlerModifiable, id: Int, tag: CompoundTag) {
         readItems(handler, id, tag, ItemStack::read)
     }
 
+
     fun readItems(handler: BaseItemHandler, id: Int, tag: CompoundTag) {
+        TODO("readItems")
+        /*
         handler.setReading(true)
         readItems(handler, id, tag, ItemStack::read)
         handler.setReading(false)
+         */
     }
 
     fun writeItems(inventory: IInventory, id: Int, tag: CompoundTag) {

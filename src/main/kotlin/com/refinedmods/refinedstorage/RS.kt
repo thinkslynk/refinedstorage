@@ -5,6 +5,7 @@ import com.refinedmods.refinedstorage.config.ClientConfig
 import com.refinedmods.refinedstorage.config.ServerConfig
 import com.refinedmods.refinedstorage.extensions.getCustomLogger
 import com.refinedmods.refinedstorage.tile.data.RSSerializers
+import com.refinedmods.refinedstorage.network.NetworkHandler
 import com.thinkslynk.fabric.generated.BlockEntityRegistryGenerated
 import com.thinkslynk.fabric.generated.BlockItemRegistryGenerated
 import com.thinkslynk.fabric.generated.BlockRegistryGenerated
@@ -17,6 +18,7 @@ class RS: ModInitializer {
     companion object{
         val log = getCustomLogger(RS::class)
         const val ID = "refinedstorage"
+        val NETWORK_HANDLER = NetworkHandler()
     }
 //    val NETWORK_HANDLER = NetworkHandler()
 

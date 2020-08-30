@@ -3,6 +3,7 @@ package com.refinedmods.refinedstorage.extensions
 import net.minecraft.inventory.Inventory
 import net.minecraft.item.ItemStack
 import net.minecraft.nbt.ListTag
+import net.minecraft.network.PacketByteBuf
 import net.minecraft.util.math.BlockPos
 import net.minecraft.world.World
 
@@ -25,5 +26,9 @@ fun Inventory.drop(world: World, pos: BlockPos) {
     // TODO figure out how to drop an inventory at a position...
 }
 
-val LIST_TAG_TYPE by lazy { ListTag().type.toInt() }
+@Deprecated("migration", ReplaceWith("Constants.NBT.LIST_TAG", "com.refinedmods.refinedstorage.extensions.Constants"))
+const val LIST_TAG_TYPE = Constants.NBT.LIST_TAG
+@Deprecated("migration", ReplaceWith("Constants.NBT.COMPOUND_TAG", "com.refinedmods.refinedstorage.extensions.Constants"))
+const val COMPOUND_TAG_TYPE = Constants.NBT.COMPOUND_TAG
+
 

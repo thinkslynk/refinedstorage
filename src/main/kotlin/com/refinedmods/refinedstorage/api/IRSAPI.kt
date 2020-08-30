@@ -64,116 +64,117 @@ interface IRSAPI {
      */
     fun getNetworkManager(world: ServerWorld): INetworkManager
 
-//    /**
-//     * @return the crafting task registry
-//     */
-//    val craftingTaskRegistry: ICraftingTaskRegistry
-//
-//    /**
-//     * @return the crafting monitor element registry
-//     */
-//    val craftingMonitorElementRegistry: ICraftingMonitorElementRegistry
-//
-//    /**
-//     * @return the crafting preview element registry
-//     */
-//    val craftingPreviewElementRegistry: ICraftingPreviewElementRegistry
+    /**
+     * @return the crafting task registry
+     */
+    val craftingTaskRegistry: ICraftingTaskRegistry
 
-//    /**
-//     * @return an empty item stack list
-//     */
-//    fun createItemStackList(): IStackList<ItemStack>
-//
-//    /**
-//     * @return an empty fluid stack list
-//     */
-//    fun createFluidInstanceList(): IStackList<FluidInstance>
-//
-//    /**
-//     * @return an empty crafting monitor element list
-//     */
-//    fun createCraftingMonitorElementList(): ICraftingMonitorElementList
+    /**
+     * @return the crafting monitor element registry
+     */
+    val craftingMonitorElementRegistry: ICraftingMonitorElementRegistry
+
+    /**
+     * @return the crafting preview element registry
+     */
+    val craftingPreviewElementRegistry: ICraftingPreviewElementRegistry
+
+    /**
+     * @return an empty item stack list
+     */
+    fun createItemStackList(): IStackList<ItemStack>
+
+    /**
+     * @return an empty fluid stack list
+     */
+    fun createFluidInstanceList(): IStackList<FluidInstance>
+
+    /**
+     * @return an empty crafting monitor element list
+     */
+    fun createCraftingMonitorElementList(): ICraftingMonitorElementList
 
     /**
      * @return the grid manager
      */
-//    val gridManager: IGridManager
-//
-//    /**
-//     * @return the default crafting grid behavior
-//     */
-//    val craftingGridBehavior: ICraftingGridBehavior
+    val gridManager: IGridManager
+
+    /**
+     * @return the default crafting grid behavior
+     */
+    val craftingGridBehavior: ICraftingGridBehavior
 
     /**
      * @return the storage disk registry
      */
-//    val storageDiskRegistry: IStorageDiskRegistry
-
-//    /**
-//     * @param anyWorld any world associated with the server
-//     * @return the storage disk manager
-//     */
-//    fun getStorageDiskManager(anyWorld: ServerWorld): IStorageDiskManager
-//
-//    /**
-//     * @return the storage disk sync manager
-//     */
-////    val storageDiskSync: IStorageDiskSync
-//
-//    /**
-//     * Adds an external storage provider for the given storage type.
-//     *
-//     * @param type     the storage type
-//     * @param provider the external storage provider
-//     */
-//    fun addExternalStorageProvider(type: StorageType, provider: IExternalStorageProvider<*>)
-//
-//    /**
-//     * @param type the type
-//     * @return a set of external storage providers
-//     */
-//    fun getExternalStorageProviders(type: StorageType): Set<IExternalStorageProvider<*>>
-//
-//    /**
-//     * @param world    the world
-//     * @param capacity the capacity
-//     * @return a storage disk
-//     */
-//    fun createDefaultItemDisk(world: ServerWorld, capacity: Int): IStorageDisk<ItemStack>
-//
-//    /**
-//     * @param world    the world
-//     * @param capacity the capacity in mB
-//     * @return a fluid storage disk
-//     */
-//    fun createDefaultFluidDisk(world: ServerWorld, capacity: Int): IStorageDisk<FluidInstance>
-//
-//    /**
-//     * Creates crafting request info for an item.
-//     *
-//     * @param stack the stack
-//     * @return the request info
-//     */
-//    fun createCraftingRequestInfo(stack: ItemStack): ICraftingRequestInfo
-//
-//    /**
-//     * Creates crafting request info for a fluid.
-//     *
-//     * @param stack the stack
-//     * @return the request info
-//     */
-//    fun createCraftingRequestInfo(stack: FluidInstance): ICraftingRequestInfo
-//
-//    /**
-//     * Creates crafting request info from NBT.
-//     *
-//     * @param tag the nbt tag
-//     * @return the request info
-//     */
-//    @Throws(CraftingTaskReadException::class)
-//    fun createCraftingRequestInfo(tag: CompoundTag): ICraftingRequestInfo
+    val storageDiskRegistry: IStorageDiskRegistry
 
     /**
+     * @param anyWorld any world associated with the server
+     * @return the storage disk manager
+     */
+    fun getStorageDiskManager(anyWorld: ServerWorld): IStorageDiskManager
+
+    /**
+     * @return the storage disk sync manager
+     */
+    val storageDiskSync: IStorageDiskSync
+
+    /**
+     * Adds an external storage provider for the given storage type.
+     *
+     * @param type     the storage type
+     * @param provider the external storage provider
+     */
+    fun addExternalStorageProvider(type: StorageType, provider: IExternalStorageProvider<*>)
+
+    /**
+     * @param type the type
+     * @return a set of external storage providers
+     */
+    fun getExternalStorageProviders(type: StorageType): Set<IExternalStorageProvider<*>>
+
+    /**
+     * @param world    the world
+     * @param capacity the capacity
+     * @return a storage disk
+     */
+    fun createDefaultItemDisk(world: ServerWorld, capacity: Int): IStorageDisk<ItemStack>
+
+    /**
+     * @param world    the world
+     * @param capacity the capacity in mB
+     * @return a fluid storage disk
+     */
+    fun createDefaultFluidDisk(world: ServerWorld, capacity: Int): IStorageDisk<FluidInstance>
+
+    /**
+     * Creates crafting request info for an item.
+     *
+     * @param stack the stack
+     * @return the request info
+    */
+    fun createCraftingRequestInfo(stack: ItemStack): ICraftingRequestInfo
+
+    /**
+     * Creates crafting request info for a fluid.
+     *
+     * @param stack the stack
+     * @return the request info
+     */
+    fun createCraftingRequestInfo(stack: FluidInstance): ICraftingRequestInfo
+
+    /**
+     * Creates crafting request info from NBT.
+     *
+     * @param tag the nbt tag
+     * @return the request info
+     */
+    // TODO check this exception?
+    @Throws(CraftingTaskReadException::class)
+    fun createCraftingRequestInfo(tag: CompoundTag): ICraftingRequestInfo
+
+   /**
      * @param renderHandler the render handler to add
      */
     fun addPatternRenderHandler(renderHandler: ICraftingPatternRenderHandler)

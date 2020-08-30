@@ -10,6 +10,6 @@ class SecurityCard(
     private val permissions: Map<Permission, Boolean> = EnumMap(Permission::class.java)
 
     override fun hasPermission(permission: Permission): Boolean {
-        return permissions[permission] ?: true // TODO Defaulting to permissive unless told otherwise
+        return permissions.getOrDefault(permission, true)
     }
 }

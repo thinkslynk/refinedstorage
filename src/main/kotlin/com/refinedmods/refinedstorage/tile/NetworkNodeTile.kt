@@ -3,6 +3,7 @@ package com.refinedmods.refinedstorage.tile
 import com.refinedmods.refinedstorage.api.network.node.INetworkNodeProxy
 import com.refinedmods.refinedstorage.api.util.Action
 import com.refinedmods.refinedstorage.apiimpl.API.Companion.instance
+import com.refinedmods.refinedstorage.apiimpl.API
 import com.refinedmods.refinedstorage.apiimpl.network.node.NetworkNode
 import com.refinedmods.refinedstorage.extensions.getCustomLogger
 import com.refinedmods.refinedstorage.tile.config.IRedstoneConfigurable
@@ -37,7 +38,7 @@ abstract class NetworkNodeTile<N : NetworkNode>(tileType: BlockEntityType<*>?):
         super.markRemoved()
         if (!world!!.isClient) {
             markedForRemoval = true
-            instance().getNetworkNodeManager(world as ServerWorld).removeNode(pos)
+            API.getNetworkNodeManager(world as ServerWorld).removeNode(pos)
 
             node.network?.let {
                 it.nodeGraph.invalidate(Action.PERFORM, it.world, it.position)

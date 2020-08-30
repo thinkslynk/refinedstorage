@@ -3,7 +3,7 @@ package com.refinedmods.refinedstorage.tile
 import com.refinedmods.refinedstorage.apiimpl.API.Companion.instance
 import net.minecraft.item.ItemStack
 
-class ClientNode(val stack: ItemStack, var amount: Int, val energyUsage: Int) {
+class ClientNode(val stack: ItemStack, var amount: Int, val energyUsage: Double) {
     override fun equals(other: Any?): Boolean {
         if (this === other) {
             return true
@@ -15,7 +15,7 @@ class ClientNode(val stack: ItemStack, var amount: Int, val energyUsage: Int) {
 
     override fun hashCode(): Int {
         var result = stack.hashCode()
-        result = 31 * result + energyUsage
+        result = 31 * result + energyUsage.toInt()
         return result
     }
 }

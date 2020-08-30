@@ -14,7 +14,7 @@ interface INetworkNodeVisitor {
      *
      * @param operator the operator
      */
-    fun visit(operator: Operator?)
+    fun visit(operator: Operator)
 
     /**
      * An operator is passed to the [.visit] method to allow the network node visitor to add positions of nodes to scan.

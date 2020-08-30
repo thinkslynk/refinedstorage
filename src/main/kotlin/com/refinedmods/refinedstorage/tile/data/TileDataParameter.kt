@@ -4,11 +4,11 @@ import net.minecraft.block.entity.BlockEntity
 import net.minecraft.entity.data.TrackedDataHandler
 import java.util.function.BiConsumer
 
-class TileDataParameter<T: Any, E : BlockEntity?>(
-        var value: T?,
+class TileDataParameter<T: Any, E : BlockEntity>(
+        var value: T,
         val serializer: TrackedDataHandler<T>,
-        val valueProducer: java.util.function.Function<E?, T>,
-        val valueConsumer: BiConsumer<E?, T>? = null,
+        val valueProducer: java.util.function.Function<E, T>,
+        val valueConsumer: BiConsumer<E, T>? = null,
         val listener: TileDataParameterClientListener<T>? = null
 ) {
     var id = 0

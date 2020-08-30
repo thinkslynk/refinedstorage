@@ -3,7 +3,6 @@ package com.refinedmods.refinedstorage.tile.data
 import com.refinedmods.refinedstorage.api.storage.AccessType
 import com.refinedmods.refinedstorage.tile.ClientNode
 import com.refinedmods.refinedstorage.util.AccessTypeUtils
-import com.sun.jna.platform.win32.WinDef
 import net.minecraft.entity.data.TrackedDataHandler
 import net.minecraft.entity.data.TrackedDataHandlerRegistry
 import net.minecraft.network.PacketByteBuf
@@ -30,7 +29,7 @@ object RSSerializers {
             for (node in nodes) {
                 data.writeItemStack(node.stack)
                 data.writeInt(node.amount)
-                data.writeInt(node.energyUsage)
+                data.writeDouble(node.energyUsage)
             }
         }
 
@@ -38,7 +37,7 @@ object RSSerializers {
             val nodes: MutableList<ClientNode> = ArrayList()
             val size: Int = data.readInt()
             for (i in 0 until size) {
-                nodes.add(ClientNode(data.readItemStack(), data.readInt(), data.readInt()))
+                nodes.add(ClientNode(data.readItemStack(), data.readInt(), data.readDouble()))
             }
             return nodes
         }

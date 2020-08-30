@@ -15,7 +15,7 @@ interface INetworkNode {
     /**
      * @return the energy usage of this node
      */
-    val energyUsage: Int
+    val energyUsage: Double
 
     /**
      * Returns the stack that is displayed in the controller GUI.

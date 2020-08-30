@@ -3,8 +3,7 @@ package com.refinedmods.refinedstorage.apiimpl.network.node
 import com.refinedmods.refinedstorage.api.network.INetwork
 import com.refinedmods.refinedstorage.api.network.INetworkNodeVisitor
 import com.refinedmods.refinedstorage.api.network.node.INetworkNode
-import com.refinedmods.refinedstorage.api.util.Action
-import com.refinedmods.refinedstorage.apiimpl.API.Companion.instance
+import com.refinedmods.refinedstorage.apiimpl.API
 import com.refinedmods.refinedstorage.block.BaseBlock
 import com.refinedmods.refinedstorage.block.BlockDirection
 import com.refinedmods.refinedstorage.block.NetworkNodeBlock
@@ -95,7 +94,7 @@ abstract class NetworkNode(
 
     override fun markDirty() {
         if (!world.isClient) {
-            instance().getNetworkNodeManager(world as ServerWorld).markDirty()
+            API.getNetworkNodeManager(world as ServerWorld).markDirty()
         }
     }
 
@@ -180,11 +179,11 @@ abstract class NetworkNode(
         return true
     }
 
-    override fun visit(operator: INetworkNodeVisitor.Operator?) {
-        operator?.let {
+    override fun visit(operator: INetworkNodeVisitor.Operator) {
+        operator.let {
             for (facing in Direction.values()) {
                 if (canConduct(facing)) {
-                    it.apply(world, pos.offset(facing), facing.getOpposite())
+                    it.apply(world, pos.offset(facing), facing.opposite)
                 }
             }
         }
@@ -193,7 +192,8 @@ abstract class NetworkNode(
 
     open val facingTile: BlockEntity?
         get() = world.getBlockEntity(pos.offset(direction))
-    
+
+    // TODO lazy?
     var direction: Direction? = null
         get() {
             if (field == null) {
@@ -221,10 +221,10 @@ abstract class NetworkNode(
     }
 
     override fun equals(other: Any?): Boolean {
-        return other == null || instance().isNetworkNodeEqual(this, other)
+        return other == null || API.isNetworkNodeEqual(this, other)
     }
 
     override fun hashCode(): Int {
-        return instance().getNetworkNodeHashCode(this)
+        return API.getNetworkNodeHashCode(this)
     }
 }

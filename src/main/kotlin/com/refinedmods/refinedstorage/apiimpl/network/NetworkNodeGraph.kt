@@ -29,12 +29,14 @@ class NetworkNodeGraph(
         val operator = Operator(action)
         val originNode: INetworkNode? = NetworkUtils.getNodeFromBlockEntity(world.getBlockEntity(origin))
         if (originNode is INetworkNodeVisitor) {
-            (originNode as INetworkNodeVisitor).visit(operator)
+            originNode.visit(operator)
         }
-        var currentVisitor: Visitor
-        while (operator.toCheck.poll().also { currentVisitor = it } != null) {
-            currentVisitor.visit(operator)
+
+        val toCheck = operator.toCheck
+        while (!toCheck.isEmpty()) {
+            operator.toCheck.remove().visit(operator)
         }
+
         nodes = operator.foundNodes
         if (action == Action.PERFORM) {
             for (node in operator.newNodes) {
@@ -120,15 +122,15 @@ class NetworkNodeGraph(
             private val side: Direction, 
             private val tile: BlockEntity
     ) : INetworkNodeVisitor {
-        override fun visit(operator: INetworkNodeVisitor.Operator?) {
+        override fun visit(operator: INetworkNodeVisitor.Operator) {
             if (node is INetworkNodeVisitor) {
-                (node as INetworkNodeVisitor).visit(operator)
+                node.visit(operator)
             } else {
                 for (checkSide in Direction.values()) {
                     if (checkSide != side) {
                         val nodeOnSide: INetworkNode? = NetworkUtils.getNodeFromTile(tile)
                         if (nodeOnSide == node) {
-                            operator!!.apply(world, pos.offset(checkSide), checkSide.opposite)
+                            operator.apply(world, pos.offset(checkSide), checkSide.opposite)
                         }
                     }
                 }

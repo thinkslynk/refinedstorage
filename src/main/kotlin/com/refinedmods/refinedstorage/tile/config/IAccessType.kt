@@ -12,7 +12,7 @@ interface IAccessType {
     var accessType: AccessType?
 
     companion object {
-        fun <E> createParameter(): TileDataParameter<Int, E> where E : BlockEntity?, E: INetworkNodeProxy<*>? {
+        fun <E> createParameter(): TileDataParameter<Int, E> where E : BlockEntity, E: INetworkNodeProxy<*>? {
             return TileDataParameter<Int, E>(
                     AccessType.INSERT_EXTRACT.ordinal,
                     TrackedDataHandlerRegistry.INTEGER,
