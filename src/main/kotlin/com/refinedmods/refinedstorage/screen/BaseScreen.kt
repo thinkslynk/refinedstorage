@@ -59,9 +59,9 @@ abstract class BaseScreen<T : ScreenHandler>(
 
     // TODO These are almost certainly WRONG
     val guiLeft: Int
-        get() {return this.titleX}
+        get() {return this.x}
     val guiTop: Int
-        get() {return this.titleY}
+        get() {return this.y}
 
     private fun runActions() {
         runActions(javaClass)

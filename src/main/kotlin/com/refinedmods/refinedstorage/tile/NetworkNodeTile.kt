@@ -55,7 +55,7 @@ abstract class NetworkNodeTile<N : NetworkNode>(tileType: BlockEntityType<*>?):
                     try {
                         instance()
                                 .getNetworkNodeManager(world as ServerWorld)
-                                .getNode(pos)!! as N
+                                .getNode(pos) as N? ?: createNode(world!!, pos) // TODO THIS DEFAULT IS TEMPORARY!
                     } catch (e: Exception) {
                         log.warn("No valid network node present at $pos, consider removing the block at this position!")
                         throw e
