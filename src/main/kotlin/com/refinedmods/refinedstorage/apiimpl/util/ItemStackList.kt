@@ -4,7 +4,7 @@ import com.google.common.collect.ArrayListMultimap
 import com.refinedmods.refinedstorage.api.util.IStackList
 import com.refinedmods.refinedstorage.api.util.StackListEntry
 import com.refinedmods.refinedstorage.api.util.StackListResult
-import com.refinedmods.refinedstorage.apiimpl.API.Companion.instance
+import com.refinedmods.refinedstorage.apiimpl.API
 import net.minecraft.item.Item
 import net.minecraft.item.ItemStack
 import java.util.*
@@ -17,7 +17,7 @@ class ItemStackList : IStackList<ItemStack> {
         require(!(stack.isEmpty || size <= 0)) { "Cannot accept empty stack" }
         for (entry in stacks[stack.item]) {
             val otherStack = entry.stack
-            if (instance().comparer.isEqualNoQuantity(otherStack, stack)) {
+            if (API.comparer.isEqualNoQuantity(otherStack, stack)) {
                 if (otherStack.count.toLong() + size.toLong() > Int.MAX_VALUE) {
                     otherStack.count = Int.MAX_VALUE
                 } else {
@@ -41,7 +41,7 @@ class ItemStackList : IStackList<ItemStack> {
     override fun remove(stack: ItemStack, size: Int): StackListResult<ItemStack>? {
         for (entry in stacks[stack.item]) {
             val otherStack = entry.stack
-            if (instance().comparer.isEqualNoQuantity(otherStack, stack)) {
+            if (API.comparer.isEqualNoQuantity(otherStack, stack)) {
                 return if (otherStack.count - size <= 0) {
                     stacks.remove(otherStack.item, entry)
                     index.remove(entry.id)
@@ -67,7 +67,7 @@ class ItemStackList : IStackList<ItemStack> {
     override operator fun get(stack: ItemStack, flags: Int): ItemStack? {
         for (entry in stacks[stack.item]) {
             val otherStack = entry.stack
-            if (instance().comparer.isEqual(otherStack, stack, flags)) {
+            if (API.comparer.isEqual(otherStack, stack, flags)) {
                 return otherStack
             }
         }
@@ -77,7 +77,7 @@ class ItemStackList : IStackList<ItemStack> {
     override fun getEntry(stack: ItemStack, flags: Int): StackListEntry<ItemStack>? {
         for (entry in stacks[stack.item]) {
             val otherStack = entry.stack
-            if (instance().comparer.isEqual(otherStack, stack, flags)) {
+            if (API.comparer.isEqual(otherStack, stack, flags)) {
                 return entry
             }
         }

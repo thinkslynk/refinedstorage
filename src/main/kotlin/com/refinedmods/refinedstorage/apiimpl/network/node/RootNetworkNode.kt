@@ -52,11 +52,11 @@ class RootNetworkNode(override val network: INetwork, override val world: World,
     }
 
     override fun equals(other: Any?): Boolean {
-        return API.instance().isNetworkNodeEqual(this, other!!)
+        return API.isNetworkNodeEqual(this, other!!)
     }
 
     override fun hashCode(): Int {
-        return API.instance().getNetworkNodeHashCode(this)
+        return API.getNetworkNodeHashCode(this)
     }
 
 }

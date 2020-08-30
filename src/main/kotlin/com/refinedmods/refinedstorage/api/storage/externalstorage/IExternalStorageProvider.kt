@@ -33,5 +33,5 @@ interface IExternalStorageProvider<T> {
      *
      * @return the priority
      */
-    fun getPriority(): Int
+    val priority: Int
 }
