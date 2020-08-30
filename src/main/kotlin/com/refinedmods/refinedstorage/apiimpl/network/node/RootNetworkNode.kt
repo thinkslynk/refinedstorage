@@ -23,8 +23,8 @@ class RootNetworkNode(override val network: INetwork, override val world: World,
         get() = null
         set(value) {}
 
-    override val energyUsage: Int
-        get() = 0
+    override val energyUsage: Double
+        get() = 0.0
 
     override val itemStack: ItemStack
         get() {

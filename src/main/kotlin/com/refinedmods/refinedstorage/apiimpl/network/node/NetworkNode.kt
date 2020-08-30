@@ -3,7 +3,6 @@ package com.refinedmods.refinedstorage.apiimpl.network.node
 import com.refinedmods.refinedstorage.api.network.INetwork
 import com.refinedmods.refinedstorage.api.network.INetworkNodeVisitor
 import com.refinedmods.refinedstorage.api.network.node.INetworkNode
-import com.refinedmods.refinedstorage.api.util.Action
 import com.refinedmods.refinedstorage.apiimpl.API.Companion.instance
 import com.refinedmods.refinedstorage.block.BaseBlock
 import com.refinedmods.refinedstorage.block.BlockDirection
@@ -193,7 +192,8 @@ abstract class NetworkNode(
 
     open val facingTile: BlockEntity?
         get() = world.getBlockEntity(pos.offset(direction))
-    
+
+    // TODO lazy?
     var direction: Direction? = null
         get() {
             if (field == null) {
