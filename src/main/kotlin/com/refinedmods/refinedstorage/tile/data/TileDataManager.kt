@@ -1,12 +1,17 @@
 package com.refinedmods.refinedstorage.tile.data
 
 import com.refinedmods.refinedstorage.RS
+import com.refinedmods.refinedstorage.network.NetworkHandler
 import com.refinedmods.refinedstorage.network.tiledata.TileDataParameterUpdateMessage
+import io.netty.buffer.Unpooled
+import net.fabricmc.fabric.api.network.ClientSidePacketRegistry
 import net.minecraft.block.entity.BlockEntity
+import net.minecraft.network.PacketByteBuf
 import java.lang.ClassCastException
 import java.util.*
 import java.util.concurrent.CopyOnWriteArrayList
 import java.util.function.Consumer
+import kotlin.collections.HashMap
 
 class TileDataManager(
         val tile: BlockEntity
@@ -47,23 +52,24 @@ class TileDataManager(
 
     companion object {
         private var LAST_ID = 0
-        private val REGISTRY: MutableMap<Int, TileDataParameter<Any?, BlockEntity?>> = HashMap()
-        fun registerParameter(parameter: TileDataParameter<Any?, BlockEntity?>) {
+        private val REGISTRY: MutableMap<Int, TileDataParameter<Any, BlockEntity>> = HashMap()
+        fun registerParameter(parameter: TileDataParameter<Any, BlockEntity>) {
             parameter.id = LAST_ID
             REGISTRY[LAST_ID++] = parameter
         }
 
-        fun <T: Any?, E: BlockEntity?> getParameter(id: Int): TileDataParameter<T?, E?>? {
-            return try {
-                REGISTRY[id] as TileDataParameter<T?, E?>?
-            } catch (e: ClassCastException){
-                null
-            }
+        fun getParameter(id: Int): TileDataParameter<Any, BlockEntity>? {
+            return REGISTRY[id]
         }
 
         fun setParameter(parameter: TileDataParameter<*, *>?, value: Any?) {
             // TODO Setup network handler
             //RS.NETWORK_HANDLER.sendToServer(TileDataParameterUpdateMessage(parameter, value))
+
+
+            var passedData: PacketByteBuf = PacketByteBuf(Unpooled.buffer())
+//            passedData.writeInt(0)
+            ClientSidePacketRegistry.INSTANCE.sendToServer(NetworkHandler.TILE_DATA_PARAMETER_UPDATE_MESSAGE_ID, passedData)
         }
     }
 

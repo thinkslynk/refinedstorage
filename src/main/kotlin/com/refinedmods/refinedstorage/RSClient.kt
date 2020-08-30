@@ -1,5 +1,6 @@
 package com.refinedmods.refinedstorage
 
+import com.refinedmods.refinedstorage.network.NetworkHandler
 import com.thinkslynk.fabric.generated.BlockItemRegistryGenerated
 import com.thinkslynk.fabric.generated.BlockRegistryGenerated
 import com.thinkslynk.fabric.generated.ItemRegistryGenerated
@@ -10,6 +11,8 @@ import net.minecraft.client.render.RenderLayer
 
 class RSClient : ClientModInitializer {
     override fun onInitializeClient() {
+        NetworkHandler.registerClient()
+
         BlockRenderLayerMap.INSTANCE.putBlocks(
                 RenderLayer.getCutout(),
                 BlockRegistryGenerated.CABLE_BLOCK,

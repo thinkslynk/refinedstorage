@@ -9,6 +9,7 @@ import com.refinedmods.refinedstorage.config.ServerConfig
 import com.refinedmods.refinedstorage.extensions.DOUBLE
 import com.thinkslynk.fabric.generated.BlockRegistryGenerated
 import com.refinedmods.refinedstorage.extensions.getCustomLogger
+import com.refinedmods.refinedstorage.network.NetworkHandler
 import com.thinkslynk.fabric.generated.BlockEntityRegistryGenerated
 import com.thinkslynk.fabric.generated.ItemRegistryGenerated
 import com.thinkslynk.fabric.generated.BlockItemRegistryGenerated
@@ -40,6 +41,8 @@ class RS: ModInitializer {
         BlockItemRegistryGenerated.register()
         BlockEntityRegistryGenerated.register()
         TrackedDataHandlerRegistry.register(DOUBLE)
+
+        NetworkHandler.register()
 
         ServerTickEvents.END_WORLD_TICK.register(NetworkListener())
 
