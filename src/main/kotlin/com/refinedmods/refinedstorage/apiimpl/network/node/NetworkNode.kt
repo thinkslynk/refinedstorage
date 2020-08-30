@@ -192,7 +192,8 @@ abstract class NetworkNode(
 
     open val facingTile: BlockEntity?
         get() = world.getBlockEntity(pos.offset(direction))
-    
+
+    // TODO lazy?
     var direction: Direction? = null
         get() {
             if (field == null) {
