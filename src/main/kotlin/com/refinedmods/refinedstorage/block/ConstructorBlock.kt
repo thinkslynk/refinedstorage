@@ -77,7 +77,7 @@ class ConstructorBlock:
     override fun onUse(state: BlockState, world: World, pos: BlockPos, player: PlayerEntity, hand: Hand, hit: BlockHitResult): ActionResult {
         return if (!world.isClient && CollisionUtils.isInBounds(getHeadShape(state), pos, hit.pos)) {
             log.info("Constructor block used...")
-            return NetworkUtils.attemptModify(world, pos, hit.side, player, Runnable {
+            NetworkUtils.attemptModify(world, pos, hit.side, player, Runnable {
                 log.info("Constructor block opening screen...")
                 player.openHandledScreen(state.createScreenHandlerFactory(world, pos))
                 log.info("Constructor block after opening screen...")

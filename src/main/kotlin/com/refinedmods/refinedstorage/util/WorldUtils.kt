@@ -44,7 +44,7 @@ object WorldUtils {
 
     fun getFakePlayer(world: ServerWorld, owner: UUID?): ServerPlayerEntity {
         if (owner != null) {
-            world.server.playerManager.getPlayer(owner)
+            return world.server.playerManager.getPlayer(owner)!!
         }
 
         val fakeProfile = GameProfile(null, "cured_storage")

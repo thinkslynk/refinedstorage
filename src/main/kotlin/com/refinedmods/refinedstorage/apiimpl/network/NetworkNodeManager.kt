@@ -1,10 +1,12 @@
 package com.refinedmods.refinedstorage.apiimpl.network
 
+import com.refinedmods.refinedstorage.RSComponents
 import com.refinedmods.refinedstorage.api.network.node.INetworkNode
 import com.refinedmods.refinedstorage.api.network.node.INetworkNodeFactory
 import com.refinedmods.refinedstorage.api.network.node.INetworkNodeManager
 import com.refinedmods.refinedstorage.apiimpl.API
 import com.refinedmods.refinedstorage.extensions.LIST_TAG_TYPE
+import dev.onyxstudios.cca.api.v3.block.BlockComponents
 import net.minecraft.nbt.CompoundTag
 import net.minecraft.nbt.ListTag
 import net.minecraft.util.Identifier
@@ -41,7 +43,7 @@ class NetworkNodeManager(
                         logger.error("Could not read network node", t)
                     }
                     if (node != null) {
-                        nodes.put(pos, node)
+                        nodes[pos] = node
                     }
                 } else {
                     logger.warn("Factory for $id not found in network node registry")
@@ -68,7 +70,25 @@ class NetworkNodeManager(
     }
 
     override fun getNode(pos: BlockPos): INetworkNode? {
-        return nodes[pos]
+        // TODO possible self-registering cache alternative
+//        // Use cache if it exists
+//        if(nodes.contains(pos)) {
+//            return nodes[pos]
+//        }
+//
+//        // Lookup and cache
+//        return BlockComponents.get(RSComponents.NETWORK_NODE_PROXY, world, pos)?.let {
+//            nodes[pos] = it.node
+//            it.node
+//        }
+
+        return when (val entity = world.getBlockEntity(pos)) {
+            is INetworkNode -> {
+                nodes[pos] = entity
+                entity
+            }
+            else -> null
+        }
     }
 
     override fun removeNode(pos: BlockPos) {
