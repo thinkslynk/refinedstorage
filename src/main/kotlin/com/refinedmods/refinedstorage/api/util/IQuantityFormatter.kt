@@ -15,7 +15,7 @@ interface IQuantityFormatter {
      * @param qty the quantity
      * @return the formatted quantity
      */
-    fun formatWithUnits(qty: Int): String?
+    fun formatWithUnits(qty: Int): String
 
     /**
      * Formats a quantity as they are formatted in the Grid.
@@ -28,7 +28,7 @@ interface IQuantityFormatter {
      * @param qty the quantity
      * @return the formatted quantity
      */
-    fun formatWithUnits(qty: Long): String?
+    fun formatWithUnits(qty: Long): String
 
     /**
      * Formats a quantity as they are formatted on the disk tooltips.
@@ -37,7 +37,7 @@ interface IQuantityFormatter {
      * @param qty the quantity
      * @return the formatted quantity
      */
-    fun format(qty: Int): String?
+    fun format(qty: Int): String
 
     /**
      * Formats a quantity as they are formatted on the disk tooltips.
@@ -46,7 +46,7 @@ interface IQuantityFormatter {
      * @param qty the quantity
      * @return the formatted quantity
      */
-    fun format(qty: Long): String?
+    fun format(qty: Long): String
 
     /**
      * Divides quantity by 1000 and appends "B".
@@ -54,7 +54,7 @@ interface IQuantityFormatter {
      * @param qty the quantity
      * @return the formatted quantity
      */
-    fun formatInBucketForm(qty: Int): String?
+    fun formatInBucketForm(qty: Int): String
 
     /**
      * Used in Fluid Grid.
@@ -62,5 +62,5 @@ interface IQuantityFormatter {
      * @param qty the quantity
      * @return the formatted quantity
      */
-    fun formatInBucketFormWithOnlyTrailingDigitsIfZero(qty: Int): String?
+    fun formatInBucketFormWithOnlyTrailingDigitsIfZero(qty: Int): String
 }

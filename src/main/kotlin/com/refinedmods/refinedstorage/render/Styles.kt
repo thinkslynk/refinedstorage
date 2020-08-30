@@ -5,26 +5,26 @@ import net.minecraft.text.TextColor
 import net.minecraft.util.Formatting
 
 object Styles {
-    val BLACK = Style.EMPTY.withColor(TextColor.fromFormatting(Formatting.BLACK))!!
-    val DARK_BLUE = Style.EMPTY.withColor(TextColor.fromFormatting(Formatting.DARK_BLUE))!!
-    val DARK_GREEN = Style.EMPTY.withColor(TextColor.fromFormatting(Formatting.DARK_GREEN))!!
-    val DARK_AQUA = Style.EMPTY.withColor(TextColor.fromFormatting(Formatting.DARK_AQUA))!!
-    val DARK_RED = Style.EMPTY.withColor(TextColor.fromFormatting(Formatting.DARK_RED))!!
-    val DARK_PURPLE = Style.EMPTY.withColor(TextColor.fromFormatting(Formatting.DARK_PURPLE))!!
-    val GOLD = Style.EMPTY.withColor(TextColor.fromFormatting(Formatting.GOLD))!!
-    val GRAY = Style.EMPTY.withColor(TextColor.fromFormatting(Formatting.GRAY))!!
-    val DARK_GRAY = Style.EMPTY.withColor(TextColor.fromFormatting(Formatting.DARK_GRAY))!!
-    val BLUE = Style.EMPTY.withColor(TextColor.fromFormatting(Formatting.BLUE))!!
-    val GREEN = Style.EMPTY.withColor(TextColor.fromFormatting(Formatting.GREEN))!!
-    val AQUA = Style.EMPTY.withColor(TextColor.fromFormatting(Formatting.AQUA))!!
-    val RED = Style.EMPTY.withColor(TextColor.fromFormatting(Formatting.RED))!!
-    val LIGHT_PURPLE = Style.EMPTY.withColor(TextColor.fromFormatting(Formatting.LIGHT_PURPLE))!!
-    val YELLOW = Style.EMPTY.withColor(TextColor.fromFormatting(Formatting.YELLOW))!!
-    val WHITE = Style.EMPTY.withColor(TextColor.fromFormatting(Formatting.WHITE))!!
-    val OBFUSCATED = Style.EMPTY.withColor(TextColor.fromFormatting(Formatting.OBFUSCATED))!!
-    val BOLD = Style.EMPTY.withColor(TextColor.fromFormatting(Formatting.BOLD))!!
-    val STRIKETHROUGH = Style.EMPTY.withColor(TextColor.fromFormatting(Formatting.STRIKETHROUGH))!!
-    val UNDERLINE = Style.EMPTY.withColor(TextColor.fromFormatting(Formatting.UNDERLINE))!!
-    val ITALIC = Style.EMPTY.withColor(TextColor.fromFormatting(Formatting.ITALIC))!!
-    val RESET = Style.EMPTY.withColor(TextColor.fromFormatting(Formatting.RESET))!!
+    val WHITE: Style = Style.EMPTY.withColor(TextColor.fromFormatting(Formatting.WHITE))
+    val GRAY: Style = Style.EMPTY.withColor(TextColor.fromFormatting(Formatting.GRAY))
+    val YELLOW: Style = Style.EMPTY.withColor(TextColor.fromFormatting(Formatting.YELLOW))
+    val RED: Style = Style.EMPTY.withColor(TextColor.fromFormatting(Formatting.RED))
+    val BLUE: Style = Style.EMPTY.withColor(TextColor.fromFormatting(Formatting.BLUE))
+    val AQUA: Style = Style.EMPTY.withColor(TextColor.fromFormatting(Formatting.AQUA))
+    val BLACK: Style = Style.EMPTY.withColor(TextColor.fromFormatting(Formatting.BLACK))
+    val DARK_BLUE: Style = Style.EMPTY.withColor(TextColor.fromFormatting(Formatting.DARK_BLUE))
+    val DARK_GREEN: Style = Style.EMPTY.withColor(TextColor.fromFormatting(Formatting.DARK_GREEN))
+    val DARK_AQUA: Style = Style.EMPTY.withColor(TextColor.fromFormatting(Formatting.DARK_AQUA))
+    val DARK_RED: Style = Style.EMPTY.withColor(TextColor.fromFormatting(Formatting.DARK_RED))
+    val DARK_PURPLE: Style = Style.EMPTY.withColor(TextColor.fromFormatting(Formatting.DARK_PURPLE))
+    val GOLD: Style = Style.EMPTY.withColor(TextColor.fromFormatting(Formatting.GOLD))
+    val DARK_GRAY: Style = Style.EMPTY.withColor(TextColor.fromFormatting(Formatting.DARK_GRAY))
+    val GREEN: Style = Style.EMPTY.withColor(TextColor.fromFormatting(Formatting.GREEN))
+    val LIGHT_PURPLE: Style = Style.EMPTY.withColor(TextColor.fromFormatting(Formatting.LIGHT_PURPLE))
+    val OBFUSCATED: Style = Style.EMPTY.withColor(TextColor.fromFormatting(Formatting.OBFUSCATED))
+    val BOLD: Style = Style.EMPTY.withColor(TextColor.fromFormatting(Formatting.BOLD))
+    val STRIKETHROUGH: Style = Style.EMPTY.withColor(TextColor.fromFormatting(Formatting.STRIKETHROUGH))
+    val UNDERLINE: Style = Style.EMPTY.withColor(TextColor.fromFormatting(Formatting.UNDERLINE))
+    val ITALIC: Style = Style.EMPTY.withColor(TextColor.fromFormatting(Formatting.ITALIC))
+    val RESET: Style = Style.EMPTY.withColor(TextColor.fromFormatting(Formatting.RESET))
 }

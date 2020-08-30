@@ -3,7 +3,7 @@ package com.refinedmods.refinedstorage.apiimpl.network
 import com.refinedmods.refinedstorage.api.network.INetwork
 import com.refinedmods.refinedstorage.api.network.INetworkManager
 import com.refinedmods.refinedstorage.api.network.NetworkType
-import com.refinedmods.refinedstorage.extensions.LIST_TAG_TYPE
+import com.refinedmods.refinedstorage.extensions.COMPOUND_TAG_TYPE
 import net.minecraft.nbt.CompoundTag
 import net.minecraft.nbt.ListTag
 import net.minecraft.util.math.BlockPos
@@ -24,7 +24,7 @@ class NetworkManager(
 
     override fun fromTag(tag: CompoundTag) {
         if (tag.contains(NBT_NETWORKS)) {
-            val networksTag: ListTag = tag.getList(NBT_NETWORKS, LIST_TAG_TYPE)
+            val networksTag: ListTag = tag.getList(NBT_NETWORKS, COMPOUND_TAG_TYPE)
             networks.clear()
             for (i in networksTag.indices) {
                 val networkTag: CompoundTag = networksTag.getCompound(i)

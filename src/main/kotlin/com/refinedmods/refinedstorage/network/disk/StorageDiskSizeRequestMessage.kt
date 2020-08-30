@@ -1,9 +1,7 @@
 package com.refinedmods.refinedstorage.network.disk
 
-import com.refinedmods.refinedstorage.RS
 import net.minecraft.network.PacketByteBuf
 import java.util.*
-import java.util.function.Supplier
 
 class StorageDiskSizeRequestMessage(private val id: UUID) {
     companion object {

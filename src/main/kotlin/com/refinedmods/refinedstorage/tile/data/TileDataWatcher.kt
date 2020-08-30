@@ -1,10 +1,6 @@
 package com.refinedmods.refinedstorage.tile.data
 
-import com.refinedmods.refinedstorage.RS
-import com.refinedmods.refinedstorage.network.tiledata.TileDataParameterMessage
-import net.minecraft.block.entity.BlockEntity
 import net.minecraft.server.network.ServerPlayerEntity
-import java.util.function.Consumer
 
 class TileDataWatcher(
         private val player: ServerPlayerEntity,

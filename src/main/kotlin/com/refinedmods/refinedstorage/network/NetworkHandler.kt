@@ -1,9 +1,6 @@
 package com.refinedmods.refinedstorage.network
 
-import com.refinedmods.refinedstorage.RS
 import net.minecraft.server.network.ServerPlayerEntity
-import net.minecraft.util.Identifier
-import java.util.function.Supplier
 
 // TODO Stub - Write class
 class NetworkHandler {

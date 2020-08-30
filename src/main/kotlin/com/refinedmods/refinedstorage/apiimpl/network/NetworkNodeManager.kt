@@ -41,7 +41,7 @@ class NetworkNodeManager(
                         logger.error("Could not read network node", t)
                     }
                     if (node != null) {
-                        nodes.put(pos, node)
+                        nodes[pos] = node
                     }
                 } else {
                     logger.warn("Factory for $id not found in network node registry")
@@ -68,7 +68,25 @@ class NetworkNodeManager(
     }
 
     override fun getNode(pos: BlockPos): INetworkNode? {
-        return nodes[pos]
+        // TODO possible self-registering cache alternative
+//        // Use cache if it exists
+//        if(nodes.contains(pos)) {
+//            return nodes[pos]
+//        }
+//
+//        // Lookup and cache
+//        return BlockComponents.get(RSComponents.NETWORK_NODE_PROXY, world, pos)?.let {
+//            nodes[pos] = it.node
+//            it.node
+//        }
+
+        return when (val entity = world.getBlockEntity(pos)) {
+            is INetworkNode -> {
+                nodes[pos] = entity
+                entity
+            }
+            else -> null
+        }
     }
 
     override fun removeNode(pos: BlockPos) {

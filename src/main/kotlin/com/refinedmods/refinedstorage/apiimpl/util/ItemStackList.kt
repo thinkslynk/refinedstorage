@@ -10,7 +10,7 @@ import net.minecraft.item.ItemStack
 import java.util.*
 
 
-class ItemStackList : IStackList<ItemStack> {
+open class ItemStackList : IStackList<ItemStack> {
     private val stacks = ArrayListMultimap.create<Item, StackListEntry<ItemStack>>()
     private val index: MutableMap<UUID, ItemStack> = HashMap()
     override fun add(stack: ItemStack, size: Int): StackListResult<ItemStack> {

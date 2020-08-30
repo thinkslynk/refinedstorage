@@ -50,7 +50,7 @@ dependencies {
     val fabricVersion: String by project
     val fabricKotlinVersion: String by project
     val reiVersion: String by project
-//    val libGui: String by project
+    val libGui: String by project
 //    val spruceUi: String by project
     val cardinalComponents: String by project
     val databreakerVersion: String by project
@@ -84,7 +84,7 @@ dependencies {
 
     // GUI Library
     // https://github.com/CottonMC/LibGui/wiki/Getting-Started-with-GUIs
-//    modImplementation("io.github.cottonmc:LibGui:$libGui")
+    modImplementation("io.github.cottonmc:LibGui:$libGui")
     // https://github.com/LambdAurora/SpruceUI
 //    modImplementation("com.github.lambdaurora:spruceui:$spruceUi")
 //    include("com.github.lambdaurora:spruceui:$spruceUi}")

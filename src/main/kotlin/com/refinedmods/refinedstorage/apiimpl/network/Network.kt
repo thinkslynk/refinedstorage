@@ -10,13 +10,13 @@ import com.refinedmods.refinedstorage.api.storage.IStorage
 import com.refinedmods.refinedstorage.api.util.Action
 import com.refinedmods.refinedstorage.apiimpl.API
 import com.refinedmods.refinedstorage.apiimpl.network.node.RootNetworkNode
+import com.refinedmods.refinedstorage.apiimpl.network.security.SecurityManager
 import com.refinedmods.refinedstorage.block.ControllerBlock
 import com.refinedmods.refinedstorage.config.ServerConfig
 import com.refinedmods.refinedstorage.energy.BaseEnergyStorage
 import com.refinedmods.refinedstorage.tile.ControllerTile
 import com.refinedmods.refinedstorage.tile.config.IRedstoneConfigurable
 import com.refinedmods.refinedstorage.tile.config.RedstoneMode
-import com.refinedmods.refinedstorage.apiimpl.network.security.SecurityManager
 import net.minecraft.block.BlockState
 import net.minecraft.block.entity.BlockEntity
 import net.minecraft.item.ItemStack
