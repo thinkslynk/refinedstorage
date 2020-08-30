@@ -5,7 +5,7 @@ import com.refinedmods.refinedstorage.RS
 import com.refinedmods.refinedstorage.api.network.INetwork
 import com.refinedmods.refinedstorage.api.network.NetworkType
 import com.refinedmods.refinedstorage.api.network.node.INetworkNodeProxy
-import com.refinedmods.refinedstorage.apiimpl.API.Companion.instance
+import com.refinedmods.refinedstorage.apiimpl.API
 import com.refinedmods.refinedstorage.apiimpl.network.Network
 import com.refinedmods.refinedstorage.apiimpl.network.node.RootNetworkNode
 import com.refinedmods.refinedstorage.block.ControllerBlock
@@ -56,7 +56,7 @@ open class ControllerTile(type: NetworkType, entity: BlockEntityType<*>?):
                 dummyNetwork = net
                 return net
             }
-            return instance().getNetworkManager(world as ServerWorld).getNetwork(pos)
+            return API.getNetworkManager(world as ServerWorld).getNetwork(pos)
                     ?: throw IllegalStateException("No network present at $pos")
         }
 
@@ -66,7 +66,7 @@ open class ControllerTile(type: NetworkType, entity: BlockEntityType<*>?):
         super.cancelRemoval()
 
         if (!world!!.isClient) {
-            val manager = instance().getNetworkManager(world as ServerWorld)
+            val manager = API.getNetworkManager(world as ServerWorld)
             if (manager.getNetwork(pos) == null) {
                 manager.setNetwork(pos, Network(world!!, pos, type))
                 manager.markForSaving()
@@ -77,7 +77,7 @@ open class ControllerTile(type: NetworkType, entity: BlockEntityType<*>?):
     override fun markRemoved() {
         super.markRemoved()
         if (!world!!.isClient) {
-            val manager = instance().getNetworkManager(world as ServerWorld)
+            val manager = API.getNetworkManager(world as ServerWorld)
             val network = manager.getNetwork(pos)
             removedNetwork = network
             manager.removeNetwork(pos)

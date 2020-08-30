@@ -4,7 +4,7 @@ import com.refinedmods.refinedstorage.api.network.node.INetworkNode
 import com.refinedmods.refinedstorage.api.network.node.INetworkNodeFactory
 import com.refinedmods.refinedstorage.api.network.node.INetworkNodeManager
 import com.refinedmods.refinedstorage.apiimpl.API
-import com.refinedmods.refinedstorage.extensions.LIST_TAG_TYPE
+import com.refinedmods.refinedstorage.extensions.Constants
 import net.minecraft.nbt.CompoundTag
 import net.minecraft.nbt.ListTag
 import net.minecraft.util.Identifier
@@ -25,14 +25,14 @@ class NetworkNodeManager(
     private val nodes: ConcurrentHashMap<BlockPos, INetworkNode> = ConcurrentHashMap<BlockPos, INetworkNode>()
     override fun fromTag(tag: CompoundTag) {
         if (tag.contains(NBT_NODES)) {
-            val nodesTag: ListTag = tag.getList(NBT_NODES, LIST_TAG_TYPE)
+            val nodesTag: ListTag = tag.getList(NBT_NODES, Constants.NBT.LIST_TAG)
             nodes.clear()
             for (i in nodesTag.indices) {
                 val nodeTag: CompoundTag = nodesTag.getCompound(i)
                 val id = Identifier(nodeTag.getString(NBT_NODE_ID))
                 val data: CompoundTag = nodeTag.getCompound(NBT_NODE_DATA)
                 val pos: BlockPos = BlockPos.fromLong(nodeTag.getLong(NBT_NODE_POS))
-                val factory: INetworkNodeFactory? = API.instance().networkNodeRegistry.get(id)
+                val factory: INetworkNodeFactory? = API.networkNodeRegistry.get(id)
                 if (factory != null) {
                     var node: INetworkNode? = null
                     try {

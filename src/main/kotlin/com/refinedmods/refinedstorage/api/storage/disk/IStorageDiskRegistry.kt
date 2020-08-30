@@ -13,7 +13,7 @@ interface IStorageDiskRegistry {
      * @param id      the id of this factory
      * @param factory the factory
      */
-    fun add(id: Identifier?, factory: IStorageDiskFactory<*>?)
+    fun add(id: Identifier, factory: IStorageDiskFactory<*>)
 
     /**
      * Gets a factory.
