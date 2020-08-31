@@ -29,6 +29,9 @@
     ],
     "cardinal-components-block": [
       "com.refinedmods.refinedstorage.RSComponents"
+    ],
+    "modmenu": [
+      "com.refinedmods.refinedstorage.integration.modmenu.ModMenuIntegration"
     ]
   },
 
