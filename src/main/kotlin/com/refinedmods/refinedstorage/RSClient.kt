@@ -1,5 +1,6 @@
 package com.refinedmods.refinedstorage
 
+import com.refinedmods.refinedstorage.network.NetworkHandler
 import com.refinedmods.refinedstorage.container.ConstructorScreenHandler
 import com.refinedmods.refinedstorage.container.FilterContainer
 import com.refinedmods.refinedstorage.screen.ConstructorScreen
@@ -14,6 +15,8 @@ import net.minecraft.client.render.RenderLayer
 class RSClient : ClientModInitializer {
 
     override fun onInitializeClient() {
+        NetworkHandler.registerClient()
+
         BlockRenderLayerMap.INSTANCE.putBlocks(
                 RenderLayer.getCutout(),
                 BlockRegistryGenerated.CABLE_BLOCK,

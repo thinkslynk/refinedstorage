@@ -24,9 +24,8 @@ fun Inventory.drop(world: World, pos: BlockPos) {
     // TODO figure out how to drop an inventory at a position...
 }
 
+
 @Deprecated("migration", ReplaceWith("Constants.NBT.LIST_TAG", "com.refinedmods.refinedstorage.extensions.Constants"))
 const val LIST_TAG_TYPE = Constants.NBT.LIST_TAG
 @Deprecated("migration", ReplaceWith("Constants.NBT.COMPOUND_TAG", "com.refinedmods.refinedstorage.extensions.Constants"))
 const val COMPOUND_TAG_TYPE = Constants.NBT.COMPOUND_TAG
-
-

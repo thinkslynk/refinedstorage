@@ -57,6 +57,8 @@ class RS: ModInitializer {
         BlockEntityRegistryGenerated.register()
         RSSerializers.registerAll()
 
+        NetworkHandler.register()
+
         ServerTickEvents.END_WORLD_TICK.register(NetworkListener())
 
         CONFIG = AutoConfig.getConfigHolder(RSConfig::class.java).config

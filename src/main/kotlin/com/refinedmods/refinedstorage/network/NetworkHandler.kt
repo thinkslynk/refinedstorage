@@ -1,10 +1,32 @@
 package com.refinedmods.refinedstorage.network
 
+import com.refinedmods.refinedstorage.RS
+import com.refinedmods.refinedstorage.network.tiledata.TileDataParameterMessage
+import com.refinedmods.refinedstorage.network.tiledata.TileDataParameterUpdateMessage
+import net.fabricmc.fabric.api.network.ClientSidePacketRegistry
+import net.fabricmc.fabric.api.network.ServerSidePacketRegistry
 import net.minecraft.server.network.ServerPlayerEntity
+import net.minecraft.util.Identifier
 
-// TODO Stub - Write class
 class NetworkHandler {
+
+    companion object {
+        val TILE_DATA_PARAMETER_UPDATE_MESSAGE_ID: Identifier = Identifier(RS.ID, "tile_data_parameter_update")
+        val TILE_DATA_PARAMETER_MESSAGE_ID: Identifier = Identifier(RS.ID, "tile_data_parameter")
+
+        fun registerClient() {
+            ClientSidePacketRegistry.INSTANCE.register(TILE_DATA_PARAMETER_MESSAGE_ID, TileDataParameterMessage())
+        }
+
+        fun register() {
+            ServerSidePacketRegistry.INSTANCE.register(TILE_DATA_PARAMETER_UPDATE_MESSAGE_ID, TileDataParameterUpdateMessage())
+        }
+
+
+    }
+
     private val protocolVersion = 1.toString()
+//    private val handler:
 //    private val handler: SimpleChannel = NetworkRegistry.ChannelBuilder
 //            .named(Identifier(RS.ID, "main_channel"))
 //            .clientAcceptedVersions(protocolVersion::equals)
@@ -12,7 +34,9 @@ class NetworkHandler {
 //            .networkProtocolVersion({ protocolVersion })
 //            .simpleChannel()
 
-    fun register() {
+
+
+
 //        var id = 0
 //        handler.registerMessage(id++, StorageDiskSizeRequestMessage::class.java, { message: StorageDiskSizeRequestMessage, buf: PacketByteBuf -> StorageDiskSizeRequestMessage.Companion.encode(message, buf) }, { buf: PacketByteBuf -> StorageDiskSizeRequestMessage.Companion.decode(buf) }, { message: StorageDiskSizeRequestMessage, ctx: Supplier<NetworkEvent.Context> -> StorageDiskSizeRequestMessage.Companion.handle(message, ctx) })
 //        handler.registerMessage(id++, StorageDiskSizeResponseMessage::class.java, { message: StorageDiskSizeResponseMessage, buf: PacketByteBuf -> StorageDiskSizeResponseMessage.Companion.encode(message, buf) }, { buf: PacketByteBuf -> StorageDiskSizeResponseMessage.Companion.decode(buf) }, { message: StorageDiskSizeResponseMessage, ctx: Supplier<NetworkEvent.Context> -> StorageDiskSizeResponseMessage.Companion.handle(message, ctx) })
@@ -50,7 +74,6 @@ class NetworkHandler {
 //        handler.registerMessage(id++, CraftingMonitorUpdateMessage::class.java, { message: CraftingMonitorUpdateMessage, buf: PacketByteBuf -> CraftingMonitorUpdateMessage.Companion.encode(message, buf) }, { buf: PacketByteBuf -> CraftingMonitorUpdateMessage.Companion.decode(buf) }, { message: CraftingMonitorUpdateMessage, ctx: Supplier<NetworkEvent.Context> -> CraftingMonitorUpdateMessage.Companion.handle(message, ctx) })
 //        handler.registerMessage(id++, CraftingMonitorCancelMessage::class.java, { message: CraftingMonitorCancelMessage, buf: PacketByteBuf -> CraftingMonitorCancelMessage.Companion.encode(message, buf) }, { buf: PacketByteBuf -> CraftingMonitorCancelMessage.Companion.decode(buf) }, { message: CraftingMonitorCancelMessage, ctx: Supplier<NetworkEvent.Context> -> CraftingMonitorCancelMessage.Companion.handle(message, ctx) })
 //        handler.registerMessage(id++, WirelessCraftingMonitorSettingsUpdateMessage::class.java, { message: WirelessCraftingMonitorSettingsUpdateMessage, buf: PacketByteBuf -> WirelessCraftingMonitorSettingsUpdateMessage.Companion.encode(message, buf) }, { buf: PacketByteBuf -> WirelessCraftingMonitorSettingsUpdateMessage.Companion.decode(buf) }, { message: WirelessCraftingMonitorSettingsUpdateMessage, ctx: Supplier<NetworkEvent.Context> -> WirelessCraftingMonitorSettingsUpdateMessage.Companion.handle(message, ctx) })
-    }
 
     fun sendToServer(message: Any?) {
 //        handler.sendToServer(message)
