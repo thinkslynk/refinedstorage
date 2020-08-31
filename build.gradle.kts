@@ -72,6 +72,7 @@ dependencies {
     include("com.github.OnyxStudios.Cardinal-Components-API:cardinal-components-block:$cardinalComponents")
 
     // JEI style mod
+    modCompileOnly("me.shedaniel:RoughlyEnoughItems-api:$reiVersion")
     modRuntime("me.shedaniel:RoughlyEnoughItems:$reiVersion")
 
     // Tech Reborn Testing
