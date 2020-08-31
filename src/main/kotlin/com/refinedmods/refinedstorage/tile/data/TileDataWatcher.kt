@@ -30,6 +30,7 @@ class TileDataWatcher(
         } else {
             for (i in manager.getWatchedParameters().indices) {
                 val parameter = manager.getWatchedParameters()[i]
+
                 val real: Any = parameter.valueProducer.apply(manager.tile)
                 val cached = cache[i]
                 if (real != cached) {
@@ -46,6 +47,7 @@ class TileDataWatcher(
 
     fun <T: Any, E: BlockEntity> sendParameter(initial: Boolean, parameter: TileDataParameter<T, E>) {
         val passedData = PacketByteBuf(Unpooled.buffer())
+
         passedData.writeInt(parameter.id)
         passedData.writeBoolean(initial)
         val toWrite = parameter.valueProducer.apply(manager.tile as E)

@@ -12,7 +12,8 @@ class TileDataParameterMessage : PacketConsumer {
     override fun accept(context: PacketContext, buffer: PacketByteBuf) {
         val id: Int = buffer.readInt()
         val initial: Boolean = buffer.readBoolean()
-        val parameter = TileDataManager.getParameter<Boolean, BlockEntity>(id)
+        val parameter = TileDataManager.getParameter<Any, BlockEntity>(id)
+
         if (parameter != null) {
             try {
                 parameter.setValue(initial, parameter.serializer.read(buffer))
