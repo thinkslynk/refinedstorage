@@ -110,10 +110,10 @@ interface IRSAPI {
     val storageDiskRegistry: IStorageDiskRegistry
 
     /**
-     * @param anyWorld any world associated with the server
+     * @param world any world associated with the server
      * @return the storage disk manager
      */
-    fun getStorageDiskManager(anyWorld: ServerWorld): IStorageDiskManager
+    fun getStorageDiskManager(world: ServerWorld): IStorageDiskManager
 
     /**
      * @return the storage disk sync manager
