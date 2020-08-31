@@ -10,7 +10,7 @@ import net.minecraft.network.PacketByteBuf
 class TileDataParameterUpdateMessage : PacketConsumer {
     override fun accept(context: PacketContext, buffer: PacketByteBuf) {
         val id: Int = buffer.readInt()
-        val parameter = TileDataManager.getParameter(id)
+        val parameter = TileDataManager.getParameter<Int, BlockEntity>(id)
         var value: Any? = null
 
         if (parameter != null) {

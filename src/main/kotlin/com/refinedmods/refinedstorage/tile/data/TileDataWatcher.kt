@@ -3,39 +3,35 @@ package com.refinedmods.refinedstorage.tile.data
 import com.refinedmods.refinedstorage.network.NetworkHandler
 import io.netty.buffer.Unpooled
 import net.fabricmc.fabric.api.network.ServerSidePacketRegistry
+import net.minecraft.block.entity.BlockEntity
 import net.minecraft.network.PacketByteBuf
 import net.minecraft.server.network.ServerPlayerEntity
-import java.util.function.Consumer
 
 class TileDataWatcher(
         private val player: ServerPlayerEntity,
-        private val manager: TileDataManager?
+        private val manager: TileDataManager
 ) {
     private var sentInitial = false
-    private val cache: Array<Any> by lazy {
-        if (manager != null) {
-            arrayOfNulls<Any>(manager.getWatchedParameters().size)
-        }
+    private val cache: Array<Any?> = arrayOfNulls(manager.getWatchedParameters().size)
 
-        emptyArray<Any>()
-    }
     fun getPlayer(): ServerPlayerEntity {
         return player
     }
 
     fun onClosed() {
-        manager!!.removeWatcher(this)
+        manager.removeWatcher(this)
     }
 
     fun detectAndSendChanges() {
         // TODO Detect and send
         if (!sentInitial) {
-            manager!!.getParameters().forEach(Consumer { p: TileDataParameter<*, *> -> sendParameter(true, p) })
+            manager.getParameters()
+                    .forEach { p -> sendParameter(true, p) }
             sentInitial = true
         } else {
-            for (i in manager!!.getWatchedParameters().indices) {
+            for (i in manager.getWatchedParameters().indices) {
                 val parameter = manager.getWatchedParameters()[i]
-                val real = parameter.valueProducer.apply(manager.tile)
+                val real: Any = parameter.valueProducer.apply(manager.tile)
                 val cached = cache[i]
                 if (real != cached) {
                     cache[i] = real
@@ -49,17 +45,16 @@ class TileDataWatcher(
         }
     }
 
-    fun sendParameter(initial: Boolean, parameter: TileDataParameter<*, *>) {
-        val passedData: PacketByteBuf = PacketByteBuf(Unpooled.buffer())
+    fun <T: Any, E: BlockEntity> sendParameter(initial: Boolean, parameter: TileDataParameter<T, E>) {
+        val passedData = PacketByteBuf(Unpooled.buffer())
         passedData.writeInt(parameter.id)
         passedData.writeBoolean(initial)
-        parameter.serializer.write(passedData, parameter.valueProducer.apply(manager!!.tile))
+        val toWrite = parameter.valueProducer.apply(manager.tile as E)
+        parameter.serializer.write(passedData, toWrite)
         ServerSidePacketRegistry.INSTANCE.sendToPlayer(player, NetworkHandler.TILE_DATA_PARAMETER_MESSAGE_ID, passedData)
     }
 
     init {
-        if (manager != null) {
-            this.manager.addWatcher(this)
-        }
+        this.manager.addWatcher(this)
     }
 }
