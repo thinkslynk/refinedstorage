@@ -146,7 +146,7 @@ open class ControllerTile(type: NetworkType, entity: BlockEntityType<*>?):
         dataManager.addWatchedParameter(ENERGY_USAGE)
         dataManager.addWatchedParameter(ENERGY_STORED)
         dataManager.addParameter(ENERGY_CAPACITY)
-//        dataManager.addParameter(NODES)
+//        dataManager.addParameter(NODES) //TODO Add Nodes Parameter
         this.type = type
     }
 

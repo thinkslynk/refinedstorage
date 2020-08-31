@@ -23,32 +23,32 @@ class TileDataParameterUpdateMessage : PacketConsumer {
     }
 }
 
-class TileDataParameterUpdateMessageOld<T: Any, E: BlockEntity>(
-        private val parameter: TileDataParameter<T, E>?,
-        private val value: T
-) {
-    companion object {
-        fun <T: Any, E: BlockEntity> decode(buf: PacketByteBuf): TileDataParameter<T, E>? {
-            val id: Int = buf.readInt()
-            val parameter = TileDataManager.getParameter<T, E>(id)
-            var value: T? = null
-            if (parameter != null) {
-                try {
-                    value = parameter.serializer.read(buf)
-                    return null
-                } catch (e: Exception) {
-                    // NO OP
-                }
-            }
-            return parameter
-        }
-
-        fun <T: Any, E: BlockEntity> encode(message: TileDataParameterUpdateMessageOld<T, E>, buf: PacketByteBuf) {
-            message.parameter?.let {
-                buf.writeInt(it.id)
-                it.serializer.write(buf, message.value)
-            }
-        }
+//class TileDataParameterUpdateMessageOld<T: Any, E: BlockEntity>(
+//        private val parameter: TileDataParameter<T, E>?,
+//        private val value: T
+//) {
+//    companion object {
+//        fun <T: Any, E: BlockEntity> decode(buf: PacketByteBuf): TileDataParameter<T, E>? {
+//            val id: Int = buf.readInt()
+//            val parameter = TileDataManager.getParameter<T, E>(id)
+//            var value: T? = null
+//            if (parameter != null) {
+//                try {
+//                    value = parameter.serializer.read(buf)
+//                    return null
+//                } catch (e: Exception) {
+//                    // NO OP
+//                }
+//            }
+//            return parameter
+//        }
+//
+//        fun <T: Any, E: BlockEntity> encode(message: TileDataParameterUpdateMessageOld<T, E>, buf: PacketByteBuf) {
+//            message.parameter?.let {
+//                buf.writeInt(it.id)
+//                it.serializer.write(buf, message.value)
+//            }
+//        }
 
 //        // TODO Not sure what the equivalent is for NetworkEvents
 ////        fun <T, E: BlockEntity> handle(message: TileDataParameterUpdateMessage<T, E>, ctx: Supplier<NetworkEvent.Context>) {
@@ -62,5 +62,5 @@ class TileDataParameterUpdateMessageOld<T: Any, E: BlockEntity>(
 ////            })
 ////            ctx.get().setPacketHandled(true)
 ////        }
-    }
-}
+//    }
+//}

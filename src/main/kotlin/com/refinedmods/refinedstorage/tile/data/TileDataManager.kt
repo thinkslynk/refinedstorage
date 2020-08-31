@@ -41,9 +41,9 @@ class TileDataManager(
         watchers.remove(listener)
     }
 
-    fun <T: Any, E: BlockEntity> sendParameterToWatchers(parameter: TileDataParameter<T, E>?) {
+    fun <T: Any, E: BlockEntity> sendParameterToWatchers(parameter: TileDataParameter<T, E>) {
         // TODO Send params
-//        watchers.forEach(Consumer { l: TileDataWatcher -> l.sendParameter(false, parameter) })
+        watchers.forEach { l -> l.sendParameter(false, parameter) }
     }
 
     companion object {
@@ -63,13 +63,16 @@ class TileDataManager(
             }
         }
 
-        fun setParameter(parameter: TileDataParameter<*, *>?, value: Any?) {
-            // TODO Setup network handler
+        fun <T: Any, E: BlockEntity> setParameter(parameter: TileDataParameter<T, E>, value: Any) {
+            // TODO Setup network handle
             //RS.NETWORK_HANDLER.sendToServer(TileDataParameterUpdateMessage(parameter, value))
 
 
-            var passedData: PacketByteBuf = PacketByteBuf(Unpooled.buffer())
-//            passedData.writeInt(0)
+            val passedData: PacketByteBuf = PacketByteBuf(Unpooled.buffer())
+            parameter.let {
+                passedData.writeInt(it.id)
+                parameter.serializer.write(passedData, it.value)
+            }
             ClientSidePacketRegistry.INSTANCE.sendToServer(NetworkHandler.TILE_DATA_PARAMETER_UPDATE_MESSAGE_ID, passedData)
         }
     }
