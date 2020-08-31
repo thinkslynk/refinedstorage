@@ -44,10 +44,10 @@ class RS: ModInitializer {
     }
 
     override fun onInitialize() {
-        AutoConfig.register<PartitioningSerializer.GlobalData>(
-                RSConfig::class.java,
-                PartitioningSerializer.wrap<GlobalData, ConfigData?> { definition: Config?, configClass: Class<RSConfig?>? -> JanksonConfigSerializer(definition, configClass) }
-        )
+        AutoConfig.register(RSConfig::class.java) {
+            definition: Config, configClass: Class<RSConfig> ->
+            JanksonConfigSerializer(definition, configClass)
+        }
 
         ItemRegistryGenerated.register()
         BlockRegistryGenerated.register()
