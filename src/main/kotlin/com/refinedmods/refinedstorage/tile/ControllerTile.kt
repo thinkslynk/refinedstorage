@@ -112,9 +112,9 @@ open class ControllerTile(type: NetworkType, entity: BlockEntityType<*>?):
 
     companion object {
         val REDSTONE_MODE = createParameter<ControllerTile>()
-        val ENERGY_USAGE = TileDataParameter<Double?, ControllerTile?>(0.0, DOUBLE, Function { t: ControllerTile? -> t!!.network.energyUsage })
-        val ENERGY_STORED = TileDataParameter<Double?, ControllerTile?>(0.0, DOUBLE, Function { t: ControllerTile? -> t!!.network.energyStorage.getStored(EnergySide.UNKNOWN) })
-        val ENERGY_CAPACITY = TileDataParameter<Double?, ControllerTile?>(0.0, DOUBLE, Function { t: ControllerTile? -> t!!.network.energyStorage.maxStoredPower })
+        val ENERGY_USAGE = TileDataParameter(0.0, DOUBLE, Function { t: ControllerTile -> t.network.energyUsage })
+        val ENERGY_STORED = TileDataParameter(0.0, DOUBLE, Function { t: ControllerTile -> t.network.energyStorage.getStored(EnergySide.UNKNOWN) })
+        val ENERGY_CAPACITY = TileDataParameter(0.0, DOUBLE, Function { t: ControllerTile -> t.network.energyStorage.maxStoredPower })
 //        val NODES: TileDataParameter<List<ClientNode>, ControllerTile> = TileDataParameter<T, E>(RSSerializers.CLIENT_NODE_SERIALIZER, ArrayList<Any>(), Function<E, T> { tile: E -> collectClientNodes(tile) })
         private const val NBT_ENERGY_TYPE = "EnergyType"
 //        private fun collectClientNodes(tile: ControllerTile): List<ClientNode> {

@@ -27,16 +27,16 @@ fun Inventory.drop(world: World, pos: BlockPos) {
     // TODO figure out how to drop an inventory at a position...
 }
 
-val DOUBLE: TrackedDataHandler<Double?> = object : TrackedDataHandler<Double?> {
-    override fun write(packetByteBuf: PacketByteBuf, double: Double?) {
-        packetByteBuf.writeDouble(double!!)
+val DOUBLE: TrackedDataHandler<Double> = object : TrackedDataHandler<Double> {
+    override fun write(packetByteBuf: PacketByteBuf, double: Double) {
+        packetByteBuf.writeDouble(double)
     }
 
-    override fun read(packetByteBuf: PacketByteBuf): Double? {
+    override fun read(packetByteBuf: PacketByteBuf): Double {
         return packetByteBuf.readDouble()
     }
 
-    override fun copy(double: Double?): Double? {
+    override fun copy(double: Double): Double {
         return double
     }
 }
