@@ -4,8 +4,6 @@ import com.refinedmods.refinedstorage.tile.data.TileDataParameter
 import net.minecraft.block.entity.BlockEntity
 import net.minecraft.entity.data.TrackedDataHandlerRegistry
 import net.minecraft.nbt.CompoundTag
-import java.util.function.BiConsumer
-import java.util.function.Function
 
 enum class RedstoneMode {
     IGNORE, HIGH, LOW;
@@ -40,8 +38,8 @@ enum class RedstoneMode {
             return TileDataParameter<Int, T>(
                     value = IGNORE.ordinal,
                     serializer = TrackedDataHandlerRegistry.INTEGER,
-                    valueProducer = Function { t: T? -> t!!.redstoneMode.ordinal },
-                    valueConsumer = BiConsumer { t: T?, v: Int? -> t!!.redstoneMode = getById(v!!) }
+                    valueProducer = { t: T? -> t!!.redstoneMode.ordinal },
+                    valueConsumer = { t: T?, v: Int? -> t!!.redstoneMode = getById(v!!) }
             )
         }
     }

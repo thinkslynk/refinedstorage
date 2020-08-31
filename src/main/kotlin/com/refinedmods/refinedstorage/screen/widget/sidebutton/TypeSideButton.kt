@@ -9,7 +9,7 @@ import net.minecraft.client.resource.language.I18n
 import net.minecraft.client.util.math.MatrixStack
 import net.minecraft.util.Formatting
 
-class TypeSideButton<T: NetworkNodeTile<*>>(screen: BaseScreen<*>, private val type: TileDataParameter<Int, T>) : SideButton(screen) {
+class TypeSideButton<T: NetworkNodeTile<*, T>>(screen: BaseScreen<*>, private val type: TileDataParameter<Int, T>) : SideButton(screen) {
     override fun getTooltip(): String {
         return I18n.translate("sidebutton.refinedstorage.type").toString() + "\n" + Formatting.GRAY + I18n.translate("sidebutton.refinedstorage.type." + type.value)
     }

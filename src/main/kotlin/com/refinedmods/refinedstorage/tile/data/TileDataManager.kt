@@ -9,39 +9,39 @@ import java.util.*
 import java.util.concurrent.CopyOnWriteArrayList
 import kotlin.collections.HashMap
 
-class TileDataManager(
-        val tile: BlockEntity
+class TileDataManager<E:BlockEntity>(
+        val tile: E
 ) {
-    private val parameters: MutableList<TileDataParameter<Any, BlockEntity>> = ArrayList()
-    private val watchedParameters: MutableList<TileDataParameter<Any, BlockEntity>> = ArrayList()
-    private val watchers: MutableList<TileDataWatcher> = CopyOnWriteArrayList()
+    private val parameters: MutableList<TileDataParameter<*, E>> = ArrayList()
+    private val watchedParameters: MutableList<TileDataParameter<*, E>> = ArrayList()
+    private val watchers: MutableList<TileDataWatcher<E>> = CopyOnWriteArrayList()
 
-    fun <T: Any, E: BlockEntity> addParameter(parameter: TileDataParameter<T, E>) {
-        parameters.add(parameter as TileDataParameter<Any, BlockEntity>)
+    fun addParameter(parameter: TileDataParameter<*, E>) {
+        parameters.add(parameter)
     }
 
-    fun getParameters(): List<TileDataParameter<Any, BlockEntity>> {
+    fun getParameters(): List<TileDataParameter<*,E>> {
         return parameters
     }
 
-    fun <T: Any, E: BlockEntity> addWatchedParameter(parameter: TileDataParameter<T, E>) {
+    fun addWatchedParameter(parameter: TileDataParameter<*,E>) {
         addParameter(parameter)
-        watchedParameters.add(parameter as TileDataParameter<Any, BlockEntity>)
+        watchedParameters.add(parameter)
     }
 
-    fun getWatchedParameters(): List<TileDataParameter<Any, BlockEntity>> {
+    fun getWatchedParameters(): List<TileDataParameter<*,E>> {
         return watchedParameters
     }
 
-    fun addWatcher(listener: TileDataWatcher) {
+    fun addWatcher(listener: TileDataWatcher<E>) {
         watchers.add(listener)
     }
 
-    fun removeWatcher(listener: TileDataWatcher?) {
+    fun removeWatcher(listener: TileDataWatcher<E>) {
         watchers.remove(listener)
     }
 
-    fun <T: Any, E: BlockEntity> sendParameterToWatchers(parameter: TileDataParameter<T, E>?) {
+    fun sendParameterToWatchers(parameter: TileDataParameter<*,E>) {
         // TODO Send params
 //        watchers.forEach(Consumer { l: TileDataWatcher -> l.sendParameter(false, parameter) })
     }
@@ -55,20 +55,16 @@ class TileDataManager(
         }
 
 
-        fun <T: Any, E: BlockEntity> getParameter(id: Int): TileDataParameter<T, E>? {
-            return try {
-                REGISTRY[id] as TileDataParameter<T, E>?
-            } catch (e: ClassCastException){
-                null
-            }
+        fun getParameter(id: Int): TileDataParameter<*,*>? {
+            return REGISTRY[id]
         }
 
-        fun setParameter(parameter: TileDataParameter<*, *>?, value: Any?) {
+        fun <T : Any>setParameter(parameter: TileDataParameter<T, *>, value: T) {
             // TODO Setup network handler
             //RS.NETWORK_HANDLER.sendToServer(TileDataParameterUpdateMessage(parameter, value))
 
 
-            var passedData: PacketByteBuf = PacketByteBuf(Unpooled.buffer())
+            val passedData: PacketByteBuf = PacketByteBuf(Unpooled.buffer())
 //            passedData.writeInt(0)
             ClientSidePacketRegistry.INSTANCE.sendToServer(NetworkHandler.TILE_DATA_PARAMETER_UPDATE_MESSAGE_ID, passedData)
         }

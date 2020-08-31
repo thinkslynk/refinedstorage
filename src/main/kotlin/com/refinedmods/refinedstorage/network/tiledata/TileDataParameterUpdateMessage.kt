@@ -10,7 +10,7 @@ import net.minecraft.network.PacketByteBuf
 class TileDataParameterUpdateMessage : PacketConsumer {
     override fun accept(context: PacketContext, buffer: PacketByteBuf) {
         val id: Int = buffer.readInt()
-        val parameter = TileDataManager.getParameter<Int, BlockEntity>(id)
+        val parameter = TileDataManager.getParameter(id)
         var value: Any? = null
 
         if (parameter != null) {
@@ -24,14 +24,20 @@ class TileDataParameterUpdateMessage : PacketConsumer {
 }
 
 class TileDataParameterUpdateMessageOld<T: Any, E: BlockEntity>(
-        private val parameter: TileDataParameter<T, E>?,
+        private val parameter: TileDataParameter<T, E>,
         private val value: T
 ) {
+    fun encode(buf: PacketByteBuf){
+        val parameter = this.parameter
+        buf.writeInt(parameter.id)
+        parameter.serializer.write(buf, this.value)
+    }
+
     companion object {
-        fun <T: Any, E: BlockEntity> decode(buf: PacketByteBuf): TileDataParameter<T, E>? {
+        fun decode(buf: PacketByteBuf): TileDataParameter<*,*>? {
             val id: Int = buf.readInt()
-            val parameter = TileDataManager.getParameter<T, E>(id)
-            var value: T? = null
+            val parameter = TileDataManager.getParameter(id)
+            var value: Any? = null
             if (parameter != null) {
                 try {
                     value = parameter.serializer.read(buf)
@@ -43,12 +49,11 @@ class TileDataParameterUpdateMessageOld<T: Any, E: BlockEntity>(
             return parameter
         }
 
-        fun <T: Any, E: BlockEntity> encode(message: TileDataParameterUpdateMessageOld<T, E>, buf: PacketByteBuf) {
-            message.parameter?.let {
-                buf.writeInt(it.id)
-                it.serializer.write(buf, message.value)
-            }
+        fun encode(message: TileDataParameterUpdateMessageOld<*,*>, buf: PacketByteBuf) {
+             message.encode(buf)
         }
+
+
 
 //        // TODO Not sure what the equivalent is for NetworkEvents
 ////        fun <T, E: BlockEntity> handle(message: TileDataParameterUpdateMessage<T, E>, ctx: Supplier<NetworkEvent.Context>) {

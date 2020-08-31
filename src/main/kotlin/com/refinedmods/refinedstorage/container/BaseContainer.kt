@@ -5,9 +5,7 @@ import com.refinedmods.refinedstorage.container.slot.legacy.LegacyDisabledSlot
 import com.refinedmods.refinedstorage.container.slot.legacy.LegacyFilterSlot
 import com.refinedmods.refinedstorage.container.transfer.TransferManager
 import com.refinedmods.refinedstorage.tile.BaseTile
-import com.refinedmods.refinedstorage.tile.data.TileDataParameter
 import com.refinedmods.refinedstorage.tile.data.TileDataWatcher
-import net.minecraft.block.entity.BlockEntity
 import net.minecraft.entity.player.PlayerEntity
 import net.minecraft.item.ItemStack
 import net.minecraft.screen.ScreenHandler
@@ -28,13 +26,13 @@ abstract class BaseContainer(
         windowId: Int
 ) : ScreenHandler(type, windowId) {
 
-    private var listener: TileDataWatcher? = null
+    private var listener: TileDataWatcher<out BaseTile<*>>? = null
     protected val transferManager = TransferManager(this)
 
-    lateinit var tile: BaseTile
+    lateinit var tile: BaseTile<*>
     init {
         context.run { world: World, blockPos: BlockPos ->
-            tile = world.getBlockEntity(blockPos) as BaseTile
+            tile = world.getBlockEntity(blockPos) as BaseTile<*>
         }
 
         if (player is ServerPlayerEntity) {
@@ -136,9 +134,9 @@ abstract class BaseContainer(
 
     // @Volatile: Logic from LockableLootBlockEntity#isUsableByPlayer
     private val isTileStillThere: Boolean
-        private get() = if (tile != null) {
+        get() = if (tile != null) {
             // @Volatile: Logic from LockableLootBlockEntity#isUsableByPlayer
-            tile.world!!.getBlockEntity(tile.pos) == tile
+            TODO() // tile.world!!.getBlockEntity(tile.pos) == tile
         } else true
 
     open fun canMergeSlot(stack: ItemStack?, slot: Slot): Boolean {

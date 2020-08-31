@@ -12,11 +12,9 @@ import com.thinkslynk.fabric.generated.BlockEntityRegistryGenerated
 import net.minecraft.entity.data.TrackedDataHandlerRegistry
 import net.minecraft.util.math.BlockPos
 import net.minecraft.world.World
-import java.util.function.BiConsumer
-import java.util.function.Function
 
 @RegisterBlockEntity(RS.ID, DestructorBlock.ID, ["DESTRUCTOR_BLOCK"])
-class DestructorTile : NetworkNodeTile<DestructorNetworkNode>(BlockEntityRegistryGenerated.DESTRUCTOR_TILE) {
+class DestructorTile : NetworkNodeTile<DestructorNetworkNode, DestructorTile>(BlockEntityRegistryGenerated.DESTRUCTOR_TILE) {
 
     override fun createNode(world: World, pos: BlockPos): DestructorNetworkNode = DestructorNetworkNode(world, pos)
 
@@ -27,8 +25,8 @@ class DestructorTile : NetworkNodeTile<DestructorNetworkNode>(BlockEntityRegistr
         val PICKUP = TileDataParameter<Boolean, DestructorTile>(
                 false,
                 TrackedDataHandlerRegistry.BOOLEAN,
-                Function { t: DestructorTile -> t.node.isPickupItem },
-                BiConsumer { t: DestructorTile, v: Boolean ->
+                { t: DestructorTile -> t.node.isPickupItem },
+                { t: DestructorTile, v: Boolean ->
                     t.node.isPickupItem = v
                     t.node.markDirty()
                 }

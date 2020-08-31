@@ -26,7 +26,7 @@ import team.reborn.energy.EnergyTier
 import java.util.function.Function
 
 open class ControllerTile(type: NetworkType, entity: BlockEntityType<*>?):
-        BaseTile(entity),
+        BaseTile<ControllerTile>(entity),
         INetworkNodeProxy<RootNetworkNode>,
         IRedstoneConfigurable,
         EnergyStorage
@@ -106,13 +106,13 @@ open class ControllerTile(type: NetworkType, entity: BlockEntityType<*>?):
 
     companion object {
         val REDSTONE_MODE = createParameter<ControllerTile>()
-        val ENERGY_USAGE = TileDataParameter<Double, ControllerTile>(0.0, DOUBLE_SERIALIZER, Function { t: ControllerTile? -> t!!.network.energyUsage })
-        val ENERGY_STORED = TileDataParameter<Double, ControllerTile>(0.0, DOUBLE_SERIALIZER, Function { t: ControllerTile? -> t!!.network.energyStorage.getStored(EnergySide.UNKNOWN) })
-        val ENERGY_CAPACITY = TileDataParameter<Double, ControllerTile>(0.0, DOUBLE_SERIALIZER, Function { t: ControllerTile? -> t!!.network.energyStorage.maxStoredPower })
+        val ENERGY_USAGE = TileDataParameter<Double, ControllerTile>(0.0, DOUBLE_SERIALIZER, { t: ControllerTile? -> t!!.network.energyUsage })
+        val ENERGY_STORED = TileDataParameter<Double, ControllerTile>(0.0, DOUBLE_SERIALIZER, { t: ControllerTile? -> t!!.network.energyStorage.getStored(EnergySide.UNKNOWN) })
+        val ENERGY_CAPACITY = TileDataParameter<Double, ControllerTile>(0.0, DOUBLE_SERIALIZER, { t: ControllerTile? -> t!!.network.energyStorage.maxStoredPower })
         val NODES: TileDataParameter<List<ClientNode>, ControllerTile> = TileDataParameter(
                 emptyList(),
                 RSSerializers.CLIENT_NODE_SERIALIZER,
-                Function {
+                {
                     tile: ControllerTile ->
                     collectClientNodes(tile)
                 }

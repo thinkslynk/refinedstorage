@@ -8,10 +8,10 @@ import net.minecraft.nbt.CompoundTag
 import net.minecraft.network.packet.s2c.play.BlockEntityUpdateS2CPacket
 import reborncore.common.network.NetworkManager
 
-abstract class BaseTile(tileType: BlockEntityType<*>?):
+abstract class BaseTile<S:BaseTile<S>>(tileType: BlockEntityType<*>?):
         BlockEntity(tileType)
 {
-    val dataManager by lazy { TileDataManager(this) }
+    val dataManager by lazy { TileDataManager(this as S) }
     open fun writeUpdate(tag: CompoundTag): CompoundTag {
         return tag
     }

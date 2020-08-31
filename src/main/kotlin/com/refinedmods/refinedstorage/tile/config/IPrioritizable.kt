@@ -4,8 +4,6 @@ import com.refinedmods.refinedstorage.api.network.node.INetworkNodeProxy
 import com.refinedmods.refinedstorage.tile.data.TileDataParameter
 import net.minecraft.block.entity.BlockEntity
 import net.minecraft.entity.data.TrackedDataHandlerRegistry
-import java.util.function.BiConsumer
-import java.util.function.Function
 
 interface IPrioritizable {
     var priority: Int
@@ -15,8 +13,8 @@ interface IPrioritizable {
             return TileDataParameter<Int, T>(
                     0,
                     TrackedDataHandlerRegistry.INTEGER,
-                    Function { t: T -> (t.node as IPrioritizable).priority },
-                    BiConsumer { t: T, v: Int -> (t.node as IPrioritizable).priority = v }
+                    { t: T -> (t.node as IPrioritizable).priority },
+                    { t: T, v: Int -> (t.node as IPrioritizable).priority = v }
             )
         }
     }

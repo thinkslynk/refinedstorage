@@ -7,8 +7,6 @@ import com.refinedmods.refinedstorage.tile.data.TileDataParameterClientListener
 import net.minecraft.block.entity.BlockEntity
 import net.minecraft.entity.data.TrackedDataHandlerRegistry
 import net.minecraft.inventory.Inventory
-import java.util.function.BiConsumer
-import java.util.function.Function
 
 interface IType {
     var type: Int
@@ -20,8 +18,8 @@ interface IType {
             return TileDataParameter<Int, T>(
                     ITEMS,
                     TrackedDataHandlerRegistry.INTEGER,
-                    Function { t: T? -> (t!!.node as IType).type },
-                    BiConsumer { t: T?, v: Int? ->
+                    { t: T? -> (t!!.node as IType).type },
+                    { t: T?, v: Int? ->
                         if (v == ITEMS || v == FLUIDS) {
                             (t!!.node as IType).type = v
                         }

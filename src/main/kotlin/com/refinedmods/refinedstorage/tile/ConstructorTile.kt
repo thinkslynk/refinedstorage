@@ -20,12 +20,10 @@ import net.minecraft.text.Text
 import net.minecraft.text.TranslatableText
 import net.minecraft.util.math.BlockPos
 import net.minecraft.world.World
-import java.util.function.BiConsumer
-import java.util.function.Function
 
 @RegisterBlockEntity(RS.ID, ConstructorBlock.ID, ["CONSTRUCTOR_BLOCK"])
 class ConstructorTile:
-        NetworkNodeTile<ConstructorNetworkNode>(BlockEntityRegistryGenerated.CONSTRUCTOR_TILE),
+        NetworkNodeTile<ConstructorNetworkNode, ConstructorTile>(BlockEntityRegistryGenerated.CONSTRUCTOR_TILE),
         NamedScreenHandlerFactory
 {
     override fun createNode(world: World, pos: BlockPos): ConstructorNetworkNode {
@@ -47,8 +45,8 @@ class ConstructorTile:
         val DROP = TileDataParameter<Boolean, ConstructorTile>(
                 false,
                 TrackedDataHandlerRegistry.BOOLEAN,
-                Function { t: ConstructorTile -> t.node.isDrop },
-                BiConsumer { t: ConstructorTile, v: Boolean ->
+                { t: ConstructorTile -> t.node.isDrop },
+                { t: ConstructorTile, v: Boolean ->
                     t.node.isDrop = v
                     t.node.markDirty()
                 }

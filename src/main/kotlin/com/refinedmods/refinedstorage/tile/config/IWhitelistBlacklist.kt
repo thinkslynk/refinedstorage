@@ -9,8 +9,6 @@ import net.minecraft.inventory.Inventory
 import net.minecraft.item.ItemStack
 import reborncore.common.fluid.container.FluidInstance
 import reborncore.common.util.Tank
-import java.util.function.BiConsumer
-import java.util.function.Function
 
 interface IWhitelistBlacklist {
     var whitelistBlacklistMode: Int
@@ -18,8 +16,8 @@ interface IWhitelistBlacklist {
     companion object {
         fun <T> createParameter(): TileDataParameter<Int, T> where T : BlockEntity, T : INetworkNodeProxy<*>? {
             return TileDataParameter<Int, T>(0, TrackedDataHandlerRegistry.INTEGER,
-                    Function { t: T -> (t.node as IWhitelistBlacklist).whitelistBlacklistMode },
-                    BiConsumer { t: T, v: Int ->
+                    { t: T -> (t.node as IWhitelistBlacklist).whitelistBlacklistMode },
+                    { t: T, v: Int ->
                         if (v == WHITELIST || v == BLACKLIST) {
                             (t.node as IWhitelistBlacklist).whitelistBlacklistMode = v
                         }

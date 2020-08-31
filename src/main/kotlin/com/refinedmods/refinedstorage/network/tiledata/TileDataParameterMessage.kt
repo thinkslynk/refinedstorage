@@ -12,10 +12,10 @@ class TileDataParameterMessage : PacketConsumer {
     override fun accept(context: PacketContext, buffer: PacketByteBuf) {
         val id: Int = buffer.readInt()
         val initial: Boolean = buffer.readBoolean()
-        val parameter = TileDataManager.getParameter<Boolean, BlockEntity>(id)
+        val parameter = TileDataManager.getParameter(id)
         if (parameter != null) {
             try {
-                parameter.setValue(initial, parameter.serializer.read(buffer))
+                parameter.setValueFromBuffer(initial, buffer)
             } catch (e: Exception) {
                 // NO OP
             }
@@ -33,10 +33,10 @@ class TileDataParameterMessageOld<T: Any, E: BlockEntity>(
         fun <T: Any, E: BlockEntity> decode(buf: PacketByteBuf): Boolean? {
             val id: Int = buf.readInt()
             val initial: Boolean = buf.readBoolean()
-            val parameter = TileDataManager.getParameter<T, E>(id)
+            val parameter = TileDataManager.getParameter(id)
             if (parameter != null) {
                 try {
-                    parameter.setValue(initial, parameter.serializer.read(buf))
+                    parameter.setValueFromBuffer(initial, buf)
                     return null
                 } catch (e: Exception) {
                     // NO OP
@@ -48,7 +48,7 @@ class TileDataParameterMessageOld<T: Any, E: BlockEntity>(
     fun <T: Any, E: BlockEntity> encode(message: TileDataParameterMessageOld<T, E>, buf: PacketByteBuf) {
         buf.writeInt(message.parameter!!.id)
         buf.writeBoolean(message.initial)
-        message.parameter.serializer.write(buf, message.parameter.valueProducer.apply(message.tile))
+        message.parameter.serializer.write(buf, message.parameter.valueProducer(message.tile))
     }
 
     ////        fun <T: Any?, E: BlockEntity?> handle(message: TileDataParameterMessage<T?, E?>?, ctx: Supplier<NetworkEvent.Context>) {

@@ -8,7 +8,7 @@ import net.minecraft.client.resource.language.I18n
 import net.minecraft.client.util.math.MatrixStack
 import net.minecraft.util.Formatting
 
-class RedstoneModeSideButton<T: NetworkNodeTile<*>>(screen: BaseScreen<*>, private val parameter: TileDataParameter<Int, T>) : SideButton(screen) {
+class RedstoneModeSideButton<T: NetworkNodeTile<*, T>>(screen: BaseScreen<*>, private val parameter: TileDataParameter<Int, T>) : SideButton(screen) {
     override fun getTooltip(): String {
         return I18n.translate("sidebutton.refinedstorage.redstone_mode").toString() + "\n" + Formatting.GRAY + I18n.translate("sidebutton.refinedstorage.redstone_mode." + parameter.value)
     }

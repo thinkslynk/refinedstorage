@@ -9,7 +9,7 @@ import net.minecraft.util.math.BlockPos
 import net.minecraft.world.World
 
 @RegisterBlockEntity(RS.ID, CableBlock.ID, ["CABLE_BLOCK"])
-class CableTile : NetworkNodeTile<CableNetworkNode>(BlockEntityRegistryGenerated.CABLE_TILE) {
+class CableTile : NetworkNodeTile<CableNetworkNode, CableTile>(BlockEntityRegistryGenerated.CABLE_TILE) {
     override fun createNode(world: World, pos: BlockPos): CableNetworkNode {
         return CableNetworkNode(world, pos)
     }

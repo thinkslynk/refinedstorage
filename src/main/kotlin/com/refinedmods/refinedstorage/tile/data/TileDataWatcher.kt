@@ -7,9 +7,9 @@ import net.minecraft.block.entity.BlockEntity
 import net.minecraft.network.PacketByteBuf
 import net.minecraft.server.network.ServerPlayerEntity
 
-class TileDataWatcher(
+class TileDataWatcher<E: BlockEntity>(
         private val player: ServerPlayerEntity,
-        private val manager: TileDataManager
+        private val manager: TileDataManager<E>
 ) {
     private var sentInitial = false
     private val cache: Array<Any?> = arrayOfNulls(manager.getWatchedParameters().size)
@@ -31,7 +31,7 @@ class TileDataWatcher(
         } else {
             for (i in manager.getWatchedParameters().indices) {
                 val parameter = manager.getWatchedParameters()[i]
-                val real: Any = parameter.valueProducer.apply(manager.tile)
+                val real: Any = parameter.valueProducer(manager.tile)
                 val cached = cache[i]
                 if (real != cached) {
                     cache[i] = real
@@ -45,11 +45,11 @@ class TileDataWatcher(
         }
     }
 
-    fun <T: Any, E: BlockEntity> sendParameter(initial: Boolean, parameter: TileDataParameter<T, E>) {
+    private fun <T: Any> sendParameter(initial: Boolean, parameter: TileDataParameter<T, E>) {
         val passedData = PacketByteBuf(Unpooled.buffer())
         passedData.writeInt(parameter.id)
         passedData.writeBoolean(initial)
-        val toWrite = parameter.valueProducer.apply(manager.tile as E)
+        val toWrite = parameter.valueProducer(manager.tile)
         parameter.serializer.write(passedData, toWrite)
         ServerSidePacketRegistry.INSTANCE.sendToPlayer(player, NetworkHandler.TILE_DATA_PARAMETER_MESSAGE_ID, passedData)
     }

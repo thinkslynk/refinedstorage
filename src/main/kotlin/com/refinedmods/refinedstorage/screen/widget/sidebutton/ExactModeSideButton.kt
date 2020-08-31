@@ -9,7 +9,7 @@ import net.minecraft.client.resource.language.I18n
 import net.minecraft.client.util.math.MatrixStack
 import net.minecraft.util.Formatting
 
-class ExactModeSideButton<T: NetworkNodeTile<*>>(screen: BaseScreen<*>, private val parameter: TileDataParameter<Int, T>) : SideButton(screen) {
+class ExactModeSideButton<T: NetworkNodeTile<*,T>>(screen: BaseScreen<*>, private val parameter: TileDataParameter<Int, T>) : SideButton(screen) {
     override fun getTooltip(): String {
         var tooltip: String = I18n.translate("sidebutton.refinedstorage.exact_mode").toString() + "\n" + Formatting.GRAY
         if (parameter.value and MASK == MASK) {

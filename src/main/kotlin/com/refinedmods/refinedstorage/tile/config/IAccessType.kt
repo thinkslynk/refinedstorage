@@ -5,8 +5,6 @@ import com.refinedmods.refinedstorage.api.storage.AccessType
 import com.refinedmods.refinedstorage.tile.data.TileDataParameter
 import net.minecraft.block.entity.BlockEntity
 import net.minecraft.entity.data.TrackedDataHandlerRegistry
-import java.util.function.BiConsumer
-import java.util.function.Function
 
 interface IAccessType {
     var accessType: AccessType?
@@ -16,8 +14,8 @@ interface IAccessType {
             return TileDataParameter<Int, E>(
                     AccessType.INSERT_EXTRACT.ordinal,
                     TrackedDataHandlerRegistry.INTEGER,
-                    Function { t: E? -> (t?.node as IAccessType).accessType?.ordinal!! },
-                    BiConsumer {
+                    { t: E? -> (t?.node as IAccessType).accessType?.ordinal!! },
+                    {
                         t: E?, v: Int? ->
                         (t?.node as IAccessType).accessType = v?.let { ordinal ->
                              AccessType.values()[ordinal]

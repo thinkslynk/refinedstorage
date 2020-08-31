@@ -17,8 +17,8 @@ import net.minecraft.util.math.BlockPos
 import net.minecraft.world.World
 
 @Suppress("UnstableApiUsage")
-abstract class NetworkNodeTile<N : NetworkNode>(tileType: BlockEntityType<*>?):
-        BaseTile(tileType),
+abstract class NetworkNodeTile<N : NetworkNode, S:NetworkNodeTile<N,S>>(tileType: BlockEntityType<*>?):
+        BaseTile<S>(tileType),
         INetworkNodeProxy<N>,
         IRedstoneConfigurable
 {
@@ -66,7 +66,7 @@ abstract class NetworkNodeTile<N : NetworkNode>(tileType: BlockEntityType<*>?):
         val log = getCustomLogger(NetworkNodeTile::class)
 
         @JvmField
-        val REDSTONE_MODE: TileDataParameter<Int, NetworkNodeTile<*>> = createParameter()
+        val REDSTONE_MODE: TileDataParameter<Int, NetworkNodeTile<*,*>> = createParameter()
     }
 
     init {
