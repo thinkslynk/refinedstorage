@@ -3,6 +3,7 @@ package com.refinedmods.refinedstorage.apiimpl.network
 import com.refinedmods.refinedstorage.api.network.INetwork
 import com.refinedmods.refinedstorage.api.network.INetworkManager
 import com.refinedmods.refinedstorage.api.network.NetworkType
+import com.refinedmods.refinedstorage.apiimpl.API
 import com.refinedmods.refinedstorage.extensions.COMPOUND_TAG_TYPE
 import net.minecraft.nbt.CompoundTag
 import net.minecraft.nbt.ListTag
@@ -78,7 +79,7 @@ class NetworkManager(
     }
 
     override fun markDirty() {
-        super.markDirty()
+        if(!API.isLoading) super.markDirty()
     }
 
     companion object {

@@ -78,6 +78,10 @@ class StorageDiskManager(name: String, private val world: ServerWorld) : Persist
         return tag
     }
 
+    override fun markDirty() {
+        if(!API.isLoading) super.markDirty()
+    }
+
     companion object {
         const val NAME = "refinedstorage_disks"
         private const val NBT_DISKS = "Disks"
