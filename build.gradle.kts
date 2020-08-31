@@ -57,6 +57,7 @@ dependencies {
     val libGui: String by project
     val clothConfig: String by project
     val autoconfig1u: String by project
+    val modMenu: String by project
 
     // Runtime mod Versions
     val reiVersion: String by project
@@ -90,6 +91,9 @@ dependencies {
     }
     include("me.shedaniel.cloth:config-2:$clothConfig")
     include("me.sargunvohra.mcmods:autoconfig1u:$autoconfig1u")
+
+    // ModMenu
+    modImplementation("io.github.prospector:modmenu:$modMenu")
 
     // JEI style mod
     modRuntime("me.shedaniel:RoughlyEnoughItems:$reiVersion")
