@@ -8,12 +8,12 @@ import net.fabricmc.fabric.api.network.ServerSidePacketRegistry
 import net.minecraft.server.network.ServerPlayerEntity
 import net.minecraft.util.Identifier
 
-// TODO Stub - Write class
 class NetworkHandler {
 
     companion object {
         val TILE_DATA_PARAMETER_UPDATE_MESSAGE_ID: Identifier = Identifier(RS.ID, "tile_data_parameter_update")
         val TILE_DATA_PARAMETER_MESSAGE_ID: Identifier = Identifier(RS.ID, "tile_data_parameter")
+
         fun registerClient() {
             ClientSidePacketRegistry.INSTANCE.register(TILE_DATA_PARAMETER_MESSAGE_ID, TileDataParameterMessage())
         }

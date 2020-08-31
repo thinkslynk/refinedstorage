@@ -42,7 +42,6 @@ class TileDataManager(
     }
 
     fun <T: Any, E: BlockEntity> sendParameterToWatchers(parameter: TileDataParameter<T, E>) {
-        // TODO Send params
         watchers.forEach { l -> l.sendParameter(false, parameter) }
     }
 
@@ -64,10 +63,6 @@ class TileDataManager(
         }
 
         fun <T: Any, E: BlockEntity> setParameter(parameter: TileDataParameter<T, E>, value: Any) {
-            // TODO Setup network handle
-            //RS.NETWORK_HANDLER.sendToServer(TileDataParameterUpdateMessage(parameter, value))
-
-
             val passedData: PacketByteBuf = PacketByteBuf(Unpooled.buffer())
             parameter.let {
                 passedData.writeInt(it.id)
