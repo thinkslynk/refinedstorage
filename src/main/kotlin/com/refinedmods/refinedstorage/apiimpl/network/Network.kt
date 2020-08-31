@@ -59,7 +59,7 @@ class Network(override val world: World,
     var ticks = 0
 
     val root = RootNetworkNode(this, world, position)
-    override val energyStorage = BaseEnergyStorage(ServerConfig.controllerCapacity, ServerConfig.controllerMaxTransfer, 0.0)
+    override val energyStorage = BaseEnergyStorage(RS.CONFIG.serverConfig.controller.capacity, RS.CONFIG.serverConfig.controller.maxTransfer, 0.0)
 
 
     override fun canRun(): Boolean {
@@ -83,7 +83,7 @@ class Network(override val world: World,
             }
             if (type == NetworkType.NORMAL) {
                 // TODO energy
-                if (!ServerConfig.controllerUseEnergy) {
+                if (!RS.CONFIG.serverConfig.controller.useEnergy) {
                     energyStorage.setStored(energyStorage.maxStoredPower)
                 } else {
                     energyStorage.extractEnergyBypassCanExtract(energyUsage, false)
@@ -321,7 +321,7 @@ class Network(override val world: World,
             energyUsage = 0.0
             return
         }
-        var usage: Double = ServerConfig.controllerBaseUsage
+        var usage: Double = RS.CONFIG.serverConfig.controller.baseUsage
 //        for (node in nodeGraph.all()!!) {
 //            if (node!!.isActive) {
 //                usage += node.energyUsage
