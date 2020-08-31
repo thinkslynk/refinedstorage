@@ -2,8 +2,7 @@ package com.refinedmods.refinedstorage
 
 import com.refinedmods.refinedstorage.apiimpl.network.NetworkListener
 import com.refinedmods.refinedstorage.block.ConstructorBlock
-import com.refinedmods.refinedstorage.config.ClientConfig
-import com.refinedmods.refinedstorage.config.ServerConfig
+import com.refinedmods.refinedstorage.config.RSConfig
 import com.refinedmods.refinedstorage.container.ConstructorScreenHandler
 import com.refinedmods.refinedstorage.container.FilterContainer
 import com.refinedmods.refinedstorage.extensions.getCustomLogger
@@ -13,6 +12,12 @@ import com.thinkslynk.fabric.generated.BlockEntityRegistryGenerated
 import com.thinkslynk.fabric.generated.BlockItemRegistryGenerated
 import com.thinkslynk.fabric.generated.BlockRegistryGenerated
 import com.thinkslynk.fabric.generated.ItemRegistryGenerated
+import me.sargunvohra.mcmods.autoconfig1u.AutoConfig
+import me.sargunvohra.mcmods.autoconfig1u.ConfigData
+import me.sargunvohra.mcmods.autoconfig1u.annotation.Config
+import me.sargunvohra.mcmods.autoconfig1u.serializer.JanksonConfigSerializer
+import me.sargunvohra.mcmods.autoconfig1u.serializer.PartitioningSerializer
+import me.sargunvohra.mcmods.autoconfig1u.serializer.PartitioningSerializer.GlobalData
 import net.fabricmc.api.ModInitializer
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerTickEvents
 import net.fabricmc.fabric.api.screenhandler.v1.ScreenHandlerRegistry
@@ -20,7 +25,6 @@ import net.minecraft.item.ItemStack
 import net.minecraft.screen.ScreenHandlerContext
 import net.minecraft.screen.ScreenHandlerType
 import net.minecraft.util.Identifier
-import reborncore.common.config.Configuration
 
 class RS: ModInitializer {
     companion object{
@@ -40,8 +44,10 @@ class RS: ModInitializer {
     }
 
     override fun onInitialize() {
-        Configuration(ServerConfig::class.java, ID)
-        Configuration(ClientConfig::class.java, ID)
+        AutoConfig.register<PartitioningSerializer.GlobalData>(
+                RSConfig::class.java,
+                PartitioningSerializer.wrap<GlobalData, ConfigData?> { definition: Config?, configClass: Class<RSConfig?>? -> JanksonConfigSerializer(definition, configClass) }
+        )
 
         ItemRegistryGenerated.register()
         BlockRegistryGenerated.register()
