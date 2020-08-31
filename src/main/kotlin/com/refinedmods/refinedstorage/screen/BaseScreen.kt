@@ -100,8 +100,7 @@ abstract class BaseScreen<T : ScreenHandler>(
     override fun render(matrixStack: MatrixStack, mouseX: Int, mouseY: Int, partialTicks: Float) {
         renderBackground(matrixStack)
         super.render(matrixStack, mouseX, mouseY, partialTicks)
-        this.renderForeground(matrixStack, mouseX, mouseY)
-        // func_230459_a_(matrixStack, mouseX, mouseY) // TODO is this the right function?
+        renderForeground(matrixStack, mouseX, mouseY)
     }
 
     override fun drawBackground(matrixStack: MatrixStack, delta: Float, mouseX: Int, mouseY: Int) {
@@ -289,7 +288,6 @@ abstract class BaseScreen<T : ScreenHandler>(
     }
 
     fun renderString(matrixStack: MatrixStack, x: Int, y: Int, message: String) {
-
         renderString(matrixStack, x, y, message, RenderSettings.INSTANCE.primaryColor)
     }
 

@@ -14,7 +14,7 @@ class TileDataParameter<T: Any, E : BlockEntity>(
     var id = 0
 
     fun setValue(initial: Boolean, value: T) {
-
+valueProducer.apply()
         this.value = value
         listener?.onChanged(initial, value)
     }
