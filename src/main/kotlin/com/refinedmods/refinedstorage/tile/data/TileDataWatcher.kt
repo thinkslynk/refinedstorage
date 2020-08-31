@@ -23,7 +23,6 @@ class TileDataWatcher(
     }
 
     fun detectAndSendChanges() {
-        // TODO Detect and send
         if (!sentInitial) {
             manager.getParameters()
                     .forEach { p -> sendParameter(true, p) }

@@ -1,6 +1,8 @@
 package com.refinedmods.refinedstorage.network
 
 import com.refinedmods.refinedstorage.RS
+import com.refinedmods.refinedstorage.network.disk.StorageDiskSizeRequestMessage
+import com.refinedmods.refinedstorage.network.disk.StorageDiskSizeResponseMessage
 import com.refinedmods.refinedstorage.network.tiledata.TileDataParameterMessage
 import com.refinedmods.refinedstorage.network.tiledata.TileDataParameterUpdateMessage
 import net.fabricmc.fabric.api.network.ClientSidePacketRegistry
@@ -8,18 +10,25 @@ import net.fabricmc.fabric.api.network.ServerSidePacketRegistry
 import net.minecraft.server.network.ServerPlayerEntity
 import net.minecraft.util.Identifier
 
-// TODO Stub - Write class
 class NetworkHandler {
 
     companion object {
+        //ServerSide Packet IDs (sendToServer)
         val TILE_DATA_PARAMETER_UPDATE_MESSAGE_ID: Identifier = Identifier(RS.ID, "tile_data_parameter_update")
+        val STORAGE_DISK_SIZE_REQUEST_MESSAGE_ID: Identifier = Identifier(RS.ID, "storage_disk_size_request")
+
+        //ClientSide Packet IDs (sendTo)
         val TILE_DATA_PARAMETER_MESSAGE_ID: Identifier = Identifier(RS.ID, "tile_data_parameter")
+        val STORAGE_DISK_SIZE_RESPONSE_MESSAGE_ID: Identifier = Identifier(RS.ID, "storage_disk_size_response")
+
         fun registerClient() {
             ClientSidePacketRegistry.INSTANCE.register(TILE_DATA_PARAMETER_MESSAGE_ID, TileDataParameterMessage())
+            ClientSidePacketRegistry.INSTANCE.register(STORAGE_DISK_SIZE_RESPONSE_MESSAGE_ID, StorageDiskSizeResponseMessage())
         }
 
         fun register() {
             ServerSidePacketRegistry.INSTANCE.register(TILE_DATA_PARAMETER_UPDATE_MESSAGE_ID, TileDataParameterUpdateMessage())
+            ServerSidePacketRegistry.INSTANCE.register(STORAGE_DISK_SIZE_REQUEST_MESSAGE_ID, StorageDiskSizeRequestMessage())
         }
 
 
