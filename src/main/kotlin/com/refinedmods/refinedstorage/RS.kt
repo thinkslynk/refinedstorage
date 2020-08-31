@@ -41,6 +41,8 @@ class RS: ModInitializer {
             ConstructorScreenHandler(ScreenHandlerContext.EMPTY, playerInventory.player, windowId)
         }
         val NETWORK_HANDLER = NetworkHandler()
+
+        lateinit var CONFIG: RSConfig
     }
 
     override fun onInitialize() {
@@ -56,6 +58,10 @@ class RS: ModInitializer {
         RSSerializers.registerAll()
 
         ServerTickEvents.END_WORLD_TICK.register(NetworkListener())
+
+        CONFIG = AutoConfig.getConfigHolder(RSConfig::class.java).config
+
+
 
 
         // TODO Register stuff!

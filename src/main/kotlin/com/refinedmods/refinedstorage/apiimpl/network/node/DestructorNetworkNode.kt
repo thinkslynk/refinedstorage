@@ -61,7 +61,7 @@ class DestructorNetworkNode(world: World, pos: BlockPos) : NetworkNode(world, po
     var isPickupItem = false
     private var tool: ItemStack = createTool()
     override val energyUsage: Double
-        get() = ServerConfig.destructorUsage + upgrades.energyUsage
+        get() = RS.CONFIG.serverConfig.destructor.usage + upgrades.energyUsage
 
     override fun update() {
         super.update()
