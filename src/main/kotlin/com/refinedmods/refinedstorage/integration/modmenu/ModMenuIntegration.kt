@@ -19,7 +19,6 @@ class ModMenuIntegration : ModMenuApi {
     override fun getModConfigScreenFactory(): ConfigScreenFactory<*>? {
         return ConfigScreenFactory<Screen> { parent: Screen ->
             AutoConfig.getConfigScreen(RSConfig::class.java, parent).get()
-            parent
         }
     }
 }
