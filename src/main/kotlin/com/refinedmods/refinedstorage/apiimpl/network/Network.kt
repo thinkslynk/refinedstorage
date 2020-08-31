@@ -1,26 +1,20 @@
 package com.refinedmods.refinedstorage.apiimpl.network
 
 import com.refinedmods.refinedstorage.RS
-import com.refinedmods.refinedstorage.api.autocrafting.ICraftingManager
 import com.refinedmods.refinedstorage.api.network.INetwork
 import com.refinedmods.refinedstorage.api.network.INetworkNodeGraph
 import com.refinedmods.refinedstorage.api.network.INetworkNodeGraphListener
 import com.refinedmods.refinedstorage.api.network.NetworkType
-import com.refinedmods.refinedstorage.api.network.grid.handler.IFluidGridHandler
-import com.refinedmods.refinedstorage.api.network.grid.handler.IItemGridHandler
-import com.refinedmods.refinedstorage.api.network.item.INetworkItemManager
 import com.refinedmods.refinedstorage.api.network.security.ISecurityManager
-import com.refinedmods.refinedstorage.api.storage.AccessType
 import com.refinedmods.refinedstorage.api.storage.IStorage
-import com.refinedmods.refinedstorage.api.storage.cache.IStorageCache
-import com.refinedmods.refinedstorage.api.storage.externalstorage.IExternalStorage
-import com.refinedmods.refinedstorage.api.storage.tracker.IStorageTracker
 import com.refinedmods.refinedstorage.api.util.Action
 import com.refinedmods.refinedstorage.apiimpl.API
 import com.refinedmods.refinedstorage.apiimpl.network.node.RootNetworkNode
+import com.refinedmods.refinedstorage.apiimpl.network.security.SecurityManager
 import com.refinedmods.refinedstorage.block.ControllerBlock
 import com.refinedmods.refinedstorage.config.ServerConfig
 import com.refinedmods.refinedstorage.energy.BaseEnergyStorage
+import com.refinedmods.refinedstorage.tile.ControllerTile
 import com.refinedmods.refinedstorage.tile.config.IRedstoneConfigurable
 import com.refinedmods.refinedstorage.tile.config.RedstoneMode
 import net.minecraft.block.BlockState
@@ -32,16 +26,13 @@ import net.minecraft.util.math.BlockPos
 import net.minecraft.world.World
 import org.apache.logging.log4j.LogManager
 import reborncore.common.fluid.container.FluidInstance
-import team.reborn.energy.EnergyStorage
 import java.util.function.Predicate
 
 class Network(override val world: World,
 //    override val itemGridHandler: IItemGridHandler = ItemGridHandler(this)
 //    override val fluidGridHandler: IFluidGridHandler = FluidGridHandler(this)
 //    override val networkItemManager: INetworkItemManager = NetworkItemManager(this)
-//    private val nodeGraph: INetworkNodeGraph = NetworkNodeGraph(this)
 //    private val craftingManager: ICraftingManager = CraftingManager(this)
-//    private val securityManager: ISecurityManager = SecurityManager(this)
 //    private val itemStorage: IStorageCache<ItemStack> = ItemStorageCache(this)
 //    private val itemStorageTracker: ItemStorageTracker = ItemStorageTracker(Runnable { markDirty() })
 //    private val fluidStorage: IStorageCache<FluidInstance> = FluidStorageCache(this)
@@ -51,6 +42,8 @@ class Network(override val world: World,
               override val position: BlockPos,
               override val type: NetworkType
 ) : INetwork, IRedstoneConfigurable {
+    override val nodeGraph: INetworkNodeGraph by lazy { NetworkNodeGraph(this) }
+    override val securityManager: ISecurityManager by lazy { SecurityManager(this) }
     private var lastEnergyType: ControllerBlock.EnergyType = ControllerBlock.EnergyType.OFF
     override var energyUsage = 0.0
     override var redstoneMode: RedstoneMode = RedstoneMode.IGNORE
@@ -134,7 +127,7 @@ class Network(override val world: World,
 
     override fun insertItem(stack: ItemStack, size: Int, action: Action): ItemStack {
         var size = size
-        if (stack.isEmpty()) {
+        if (stack.isEmpty) {
             return stack
         }
 //        if (itemStorage.getStorages().isEmpty()) {
@@ -313,7 +306,7 @@ class Network(override val world: World,
     }
 
     override fun markDirty() {
-        API.instance().getNetworkManager(world as ServerWorld).markForSaving()
+        API.getNetworkManager(world as ServerWorld).markDirty()
     }
 
 
@@ -368,11 +361,13 @@ class Network(override val world: World,
     }
 
     init {
-//        nodeGraph.addListener(INetworkNodeGraphListener {
-//            val tile: BlockEntity? = world.getBlockEntity(position)
-//            if (tile is ControllerTile) {
-//                (tile as ControllerTile).getDataManager().sendParameterToWatchers(ControllerTile.NODES)
-//            }
-//        })
+        nodeGraph.addListener(object : INetworkNodeGraphListener {
+            override fun onChanged() {
+                val tile: BlockEntity? = world.getBlockEntity(position)
+                if (tile is ControllerTile) {
+                    tile.dataManager.sendParameterToWatchers(ControllerTile.NODES)
+                }
+            }
+        })
     }
 }

@@ -1,48 +1,29 @@
 package com.refinedmods.refinedstorage
 
-import com.refinedmods.refinedstorage.api.component.INetworkNodeProxyComponent
-import com.refinedmods.refinedstorage.api.component.NetworkNodeProxyComponent
-import com.refinedmods.refinedstorage.block.CableBlock
-import com.refinedmods.refinedstorage.block.ConstructorBlock
-import com.refinedmods.refinedstorage.block.ControllerBlock
-import com.refinedmods.refinedstorage.block.DestructorBlock
+import com.refinedmods.refinedstorage.api.network.node.INetworkNodeProxy
+import com.refinedmods.refinedstorage.tile.NetworkNodeTile
 import dev.onyxstudios.cca.api.v3.block.BlockComponentFactoryRegistry
 import dev.onyxstudios.cca.api.v3.block.BlockComponentInitializer
 import dev.onyxstudios.cca.api.v3.component.ComponentKey
 import dev.onyxstudios.cca.api.v3.component.ComponentRegistryV3
-import nerdhub.cardinal.components.api.ComponentRegistry
-import nerdhub.cardinal.components.api.ComponentType
-import net.minecraft.block.BlockState
 import net.minecraft.util.Identifier
-import net.minecraft.util.math.BlockPos
-import net.minecraft.util.math.Direction
-import net.minecraft.world.BlockView
-import org.jetbrains.annotations.Nullable
 
 
 @Suppress("UnstableApiUsage")
-class RSComponents: BlockComponentInitializer {
+class RSComponents : BlockComponentInitializer {
     companion object {
-        val NETWORK_NODE_PROXY: ComponentType<INetworkNodeProxyComponent> =
-                ComponentRegistry.INSTANCE.registerStatic(
-                        Identifier(RS.ID, INetworkNodeProxyComponent.ID),
-                        INetworkNodeProxyComponent::class.java
-                )
+        val NETWORK_NODE_PROXY: ComponentKey<INetworkNodeProxy<*>> =
+            ComponentRegistryV3.INSTANCE.getOrCreate(
+                Identifier(RS.ID, INetworkNodeProxy.ID),
+                INetworkNodeProxy::class.java
+            )
     }
 
     override fun registerBlockComponentFactories(registry: BlockComponentFactoryRegistry) {
-        listOf(
-                CableBlock.ID,
-                ConstructorBlock.ID,
-                ControllerBlock.ID,
-                ControllerBlock.CREATIVE_ID
-        ).forEach {
-            registry.registerFor(
-                    Identifier(RS.ID, it),
-                    NETWORK_NODE_PROXY
-            ) { _: BlockState, _: BlockView, _: BlockPos, _: Direction? ->
-                NetworkNodeProxyComponent()
-            }
-        }
+
+        registry.registerFor(
+            NetworkNodeTile::class.java,
+            NETWORK_NODE_PROXY
+        ) { it }
     }
 }

@@ -12,11 +12,11 @@ interface IAccessType {
     var accessType: AccessType?
 
     companion object {
-        fun <E> createParameter(): TileDataParameter<Int?, E> where E : BlockEntity?, E: INetworkNodeProxy<*>? {
-            return TileDataParameter<Int?, E>(
+        fun <E> createParameter(): TileDataParameter<Int, E> where E : BlockEntity, E: INetworkNodeProxy<*>? {
+            return TileDataParameter<Int, E>(
                     AccessType.INSERT_EXTRACT.ordinal,
                     TrackedDataHandlerRegistry.INTEGER,
-                    Function { t: E? -> (t?.node as IAccessType).accessType?.ordinal },
+                    Function { t: E? -> (t?.node as IAccessType).accessType?.ordinal!! },
                     BiConsumer {
                         t: E?, v: Int? ->
                         (t?.node as IAccessType).accessType = v?.let { ordinal ->

@@ -1,7 +1,6 @@
 package com.refinedmods.refinedstorage.extensions
 
 import net.minecraft.fluid.Fluids
-import net.minecraft.nbt.CompoundTag
 import reborncore.common.fluid.FluidValue
 import reborncore.common.fluid.container.FluidInstance
 import reborncore.common.util.Tank

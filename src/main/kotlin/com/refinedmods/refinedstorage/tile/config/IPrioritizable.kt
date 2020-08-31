@@ -11,12 +11,12 @@ interface IPrioritizable {
     var priority: Int
 
     companion object {
-        fun <T> createParameter(): TileDataParameter<Int, T> where T : BlockEntity?, T : INetworkNodeProxy<*>? {
+        fun <T> createParameter(): TileDataParameter<Int, T> where T : BlockEntity, T : INetworkNodeProxy<*> {
             return TileDataParameter<Int, T>(
                     0,
                     TrackedDataHandlerRegistry.INTEGER,
-                    Function { t: T? -> (t!!.node as IPrioritizable).priority },
-                    BiConsumer { t: T?, v: Int? -> (t!!.node as IPrioritizable).priority = v!! }
+                    Function { t: T -> (t.node as IPrioritizable).priority },
+                    BiConsumer { t: T, v: Int -> (t.node as IPrioritizable).priority = v }
             )
         }
     }

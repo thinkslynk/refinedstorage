@@ -3,7 +3,7 @@ package com.refinedmods.refinedstorage.apiimpl.network
 import com.refinedmods.refinedstorage.api.network.INetwork
 import com.refinedmods.refinedstorage.api.network.INetworkManager
 import com.refinedmods.refinedstorage.api.network.NetworkType
-import com.refinedmods.refinedstorage.extensions.LIST_TAG_TYPE
+import com.refinedmods.refinedstorage.extensions.COMPOUND_TAG_TYPE
 import net.minecraft.nbt.CompoundTag
 import net.minecraft.nbt.ListTag
 import net.minecraft.util.math.BlockPos
@@ -12,17 +12,19 @@ import net.minecraft.world.World
 import org.apache.logging.log4j.LogManager
 import java.util.concurrent.ConcurrentHashMap
 
-class NetworkManager(name: String?, world: World):
+class NetworkManager(
+        name: String?,
+        private val world: World
+):
         PersistentState(name),
         INetworkManager
 {
-    private val world: World
     private val logger = LogManager.getLogger(javaClass)
-    private val networks: ConcurrentHashMap<BlockPos, INetwork> = ConcurrentHashMap<BlockPos, INetwork>()
+    private val networks: ConcurrentHashMap<BlockPos, INetwork> = ConcurrentHashMap()
 
     override fun fromTag(tag: CompoundTag) {
         if (tag.contains(NBT_NETWORKS)) {
-            val networksTag: ListTag = tag.getList(NBT_NETWORKS, LIST_TAG_TYPE)
+            val networksTag: ListTag = tag.getList(NBT_NETWORKS, COMPOUND_TAG_TYPE)
             networks.clear()
             for (i in networksTag.indices) {
                 val networkTag: CompoundTag = networksTag.getCompound(i)
@@ -63,18 +65,20 @@ class NetworkManager(name: String?, world: World):
 
     override fun removeNetwork(pos: BlockPos) {
         networks.remove(pos)
+        markDirty()
     }
 
     override fun setNetwork(pos: BlockPos, node: INetwork) {
         networks[pos] = node
+        markDirty()
     }
 
     override fun all(): Collection<INetwork> {
         return networks.values
     }
 
-    override fun markForSaving() {
-//        markDirty() // TODO mark dirty
+    override fun markDirty() {
+        super.markDirty()
     }
 
     companion object {
@@ -85,7 +89,4 @@ class NetworkManager(name: String?, world: World):
         private const val NBT_POS = "Pos"
     }
 
-    init {
-        this.world = world
-    }
 }

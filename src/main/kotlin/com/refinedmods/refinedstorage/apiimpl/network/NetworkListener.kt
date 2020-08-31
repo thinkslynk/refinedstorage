@@ -5,13 +5,13 @@ import net.fabricmc.fabric.api.event.lifecycle.v1.ServerTickEvents
 import net.minecraft.server.world.ServerWorld
 
 class NetworkListener : ServerTickEvents.EndWorldTick {
-    override fun onEndTick(world: ServerWorld?) {
+    override fun onEndTick(world: ServerWorld) {
         // TODO Profiler
-        for (network in API.instance().getNetworkManager(world!!).all()) {
+        for (network in API.getNetworkManager(world).all()) {
             network.update()
         }
 
-        for (node in API.instance().getNetworkNodeManager(world).all()) {
+        for (node in API.getNetworkNodeManager(world).all()) {
             node.update()
         }
     }

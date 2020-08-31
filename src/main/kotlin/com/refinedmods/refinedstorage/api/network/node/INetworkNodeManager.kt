@@ -35,7 +35,7 @@ interface INetworkNodeManager {
     fun all(): Collection<INetworkNode>
 
     /**
-     * Marks the network node manager for saving.
+     * Marks the network dirty.
      */
-    fun markForSaving()
+    fun markDirty()
 }

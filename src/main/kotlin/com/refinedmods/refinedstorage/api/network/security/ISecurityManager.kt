@@ -12,7 +12,7 @@ interface ISecurityManager {
      * @param player     the player to check that permission for
      * @return true if the player has the given permission, false otherwise
      */
-    fun hasPermission(permission: Permission?, player: PlayerEntity?): Boolean
+    fun hasPermission(permission: Permission, player: PlayerEntity): Boolean
 
     /**
      * Invalidates the security list.

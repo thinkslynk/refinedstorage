@@ -1,15 +1,14 @@
 package com.refinedmods.refinedstorage.block
 
-import com.refinedmods.refinedstorage.RS
-import com.refinedmods.refinedstorage.api.network.NetworkType
-import com.refinedmods.refinedstorage.apiimpl.API.Companion.instance
-import com.refinedmods.refinedstorage.apiimpl.network.Network
-import com.refinedmods.refinedstorage.tile.ControllerTile
-import com.refinedmods.refinedstorage.tile.CreativeControllerTile
-import com.refinedmods.refinedstorage.tile.NormalControllerTile
 //import com.refinedmods.refinedstorage.apiimpl.API.Companion.instance
 //import com.refinedmods.refinedstorage.apiimpl.network.Network
 //import com.refinedmods.refinedstorage.tile.ControllerTile
+import com.refinedmods.refinedstorage.RS
+import com.refinedmods.refinedstorage.api.network.NetworkType
+import com.refinedmods.refinedstorage.apiimpl.API
+import com.refinedmods.refinedstorage.apiimpl.network.Network
+import com.refinedmods.refinedstorage.tile.CreativeControllerTile
+import com.refinedmods.refinedstorage.tile.NormalControllerTile
 import com.refinedmods.refinedstorage.util.BlockUtils
 import com.thinkslynk.fabric.annotations.registry.RegisterBlock
 import com.thinkslynk.fabric.annotations.registry.RegisterBlockItem
@@ -32,7 +31,6 @@ import net.minecraft.world.BlockView
 import net.minecraft.world.World
 import team.reborn.energy.Energy
 import team.reborn.energy.EnergySide
-import java.util.*
 
 @RegisterBlock(RS.ID, ControllerBlock.ID)
 @RegisterBlockItem(RS.ID, ControllerBlock.ID, "CURED_STORAGE")
@@ -62,6 +60,7 @@ open class ControllerBlock(val type: NetworkType = NetworkType.NORMAL):
         }
     }
 
+
     override fun onPlaced(world: World, pos: BlockPos, state: BlockState, placer: LivingEntity?, itemStack: ItemStack) {
         super.onPlaced(world, pos, state, placer, itemStack)
         if (!world.isClient) {
@@ -81,8 +80,8 @@ open class ControllerBlock(val type: NetworkType = NetworkType.NORMAL):
     override fun neighborUpdate(state: BlockState, world: World, pos: BlockPos, block: Block, fromPos: BlockPos, notify: Boolean) {
         super.neighborUpdate(state, world, pos, block, fromPos, notify)
         if (!world.isClient) {
-            val network = instance()
-                    .getNetworkManager(world as ServerWorld)!!
+            val network = API
+                .getNetworkManager(world as ServerWorld)
                     .getNetwork(pos)
 
             if (network is Network) {

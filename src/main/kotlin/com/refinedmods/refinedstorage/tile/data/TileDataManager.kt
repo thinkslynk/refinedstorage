@@ -12,6 +12,7 @@ import java.util.*
 import java.util.concurrent.CopyOnWriteArrayList
 import java.util.function.Consumer
 import kotlin.collections.HashMap
+import java.util.*
 
 class TileDataManager(
         val tile: BlockEntity
@@ -58,8 +59,13 @@ class TileDataManager(
             REGISTRY[LAST_ID++] = parameter
         }
 
-        fun getParameter(id: Int): TileDataParameter<Any, BlockEntity>? {
-            return REGISTRY[id]
+
+        fun <T: Any, E: BlockEntity> getParameter(id: Int): TileDataParameter<T, E>? {
+            return try {
+                REGISTRY[id] as TileDataParameter<T, E>?
+            } catch (e: ClassCastException){
+                null
+            }
         }
 
         fun setParameter(parameter: TileDataParameter<*, *>?, value: Any?) {

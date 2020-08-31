@@ -1,15 +1,19 @@
 package com.refinedmods.refinedstorage
 
 import com.refinedmods.refinedstorage.network.NetworkHandler
+import com.refinedmods.refinedstorage.container.ConstructorScreenHandler
+import com.refinedmods.refinedstorage.container.FilterContainer
+import com.refinedmods.refinedstorage.screen.ConstructorScreen
+import com.refinedmods.refinedstorage.screen.FilterScreen
 import com.thinkslynk.fabric.generated.BlockItemRegistryGenerated
 import com.thinkslynk.fabric.generated.BlockRegistryGenerated
-import com.thinkslynk.fabric.generated.ItemRegistryGenerated
 import net.fabricmc.api.ClientModInitializer
 import net.fabricmc.fabric.api.blockrenderlayer.v1.BlockRenderLayerMap
-import net.minecraft.block.Block
+import net.fabricmc.fabric.api.client.screenhandler.v1.ScreenRegistry
 import net.minecraft.client.render.RenderLayer
 
 class RSClient : ClientModInitializer {
+
     override fun onInitializeClient() {
         NetworkHandler.registerClient()
 
@@ -40,6 +44,16 @@ class RSClient : ClientModInitializer {
                 BlockItemRegistryGenerated.CONSTRUCTOR_BLOCK,
                 BlockItemRegistryGenerated.DESTRUCTOR_BLOCK
         )
+
+        ScreenRegistry.register<FilterContainer, FilterScreen>(RS.FILTER_SCREEN_HANDLER) {
+            gui, inventory, title ->
+            FilterScreen(gui, inventory, title)
+        }
+
+        ScreenRegistry.register<ConstructorScreenHandler, ConstructorScreen>(RS.CONSTRUCTOR_SCREEN_HANDLER) {
+            gui, inventory, title ->
+            ConstructorScreen(gui, inventory, title)
+        }
     }
 
 }

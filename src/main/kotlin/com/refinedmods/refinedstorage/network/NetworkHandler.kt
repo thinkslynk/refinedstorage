@@ -4,14 +4,9 @@ import com.refinedmods.refinedstorage.RS
 import com.refinedmods.refinedstorage.network.tiledata.TileDataParameterMessage
 import com.refinedmods.refinedstorage.network.tiledata.TileDataParameterUpdateMessage
 import net.fabricmc.fabric.api.network.ClientSidePacketRegistry
-import net.fabricmc.fabric.api.network.PacketContext
 import net.fabricmc.fabric.api.network.ServerSidePacketRegistry
-import net.minecraft.client.MinecraftClient
-import net.minecraft.network.PacketByteBuf
-import net.minecraft.particle.ParticleTypes
 import net.minecraft.server.network.ServerPlayerEntity
 import net.minecraft.util.Identifier
-
 
 // TODO Stub - Write class
 class NetworkHandler {

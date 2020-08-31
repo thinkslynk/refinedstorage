@@ -4,7 +4,7 @@ import com.refinedmods.refinedstorage.api.network.node.INetworkNode
 import com.refinedmods.refinedstorage.api.network.node.INetworkNodeFactory
 import com.refinedmods.refinedstorage.api.network.node.INetworkNodeManager
 import com.refinedmods.refinedstorage.apiimpl.API
-import com.refinedmods.refinedstorage.extensions.LIST_TAG_TYPE
+import com.refinedmods.refinedstorage.extensions.Constants
 import net.minecraft.nbt.CompoundTag
 import net.minecraft.nbt.ListTag
 import net.minecraft.util.Identifier
@@ -22,17 +22,17 @@ class NetworkNodeManager(
         INetworkNodeManager
 {
     private val logger = LogManager.getLogger(javaClass)
-    private val nodes: ConcurrentHashMap<BlockPos, INetworkNode> = ConcurrentHashMap<BlockPos, INetworkNode>()
+    private val nodes: ConcurrentHashMap<BlockPos, INetworkNode> = ConcurrentHashMap()
     override fun fromTag(tag: CompoundTag) {
         if (tag.contains(NBT_NODES)) {
-            val nodesTag: ListTag = tag.getList(NBT_NODES, LIST_TAG_TYPE)
+            val nodesTag: ListTag = tag.getList(NBT_NODES, Constants.NBT.LIST_TAG)
             nodes.clear()
             for (i in nodesTag.indices) {
                 val nodeTag: CompoundTag = nodesTag.getCompound(i)
                 val id = Identifier(nodeTag.getString(NBT_NODE_ID))
                 val data: CompoundTag = nodeTag.getCompound(NBT_NODE_DATA)
                 val pos: BlockPos = BlockPos.fromLong(nodeTag.getLong(NBT_NODE_POS))
-                val factory: INetworkNodeFactory? = API.instance().networkNodeRegistry.get(id)
+                val factory: INetworkNodeFactory? = API.networkNodeRegistry.get(id)
                 if (factory != null) {
                     var node: INetworkNode? = null
                     try {
@@ -41,7 +41,7 @@ class NetworkNodeManager(
                         logger.error("Could not read network node", t)
                     }
                     if (node != null) {
-                        nodes.put(pos, node)
+                        nodes[pos] = node
                     }
                 } else {
                     logger.warn("Factory for $id not found in network node registry")
@@ -68,23 +68,39 @@ class NetworkNodeManager(
     }
 
     override fun getNode(pos: BlockPos): INetworkNode? {
-        return nodes[pos]
+        // TODO possible self-registering cache alternative
+//        // Use cache if it exists
+//        if(nodes.contains(pos)) {
+//            return nodes[pos]
+//        }
+//
+//        // Lookup and cache
+//        return BlockComponents.get(RSComponents.NETWORK_NODE_PROXY, world, pos)?.let {
+//            nodes[pos] = it.node
+//            it.node
+//        }
+
+        return when (val entity = world.getBlockEntity(pos)) {
+            is INetworkNode -> {
+                nodes[pos] = entity
+                entity
+            }
+            else -> null
+        }
     }
 
     override fun removeNode(pos: BlockPos) {
         nodes.remove(pos)
+        markDirty()
     }
 
     override fun setNode(pos: BlockPos, node: INetworkNode) {
         nodes[pos] = node
+        markDirty()
     }
 
     override fun all(): Collection<INetworkNode> {
         return nodes.values
-    }
-
-    override fun markForSaving() {
-//        markDirty()
     }
 
     companion object {

@@ -14,7 +14,7 @@ interface INetworkNodeVisitor {
      *
      * @param operator the operator
      */
-    fun visit(operator: Operator?)
+    fun visit(operator: Operator)
 
     /**
      * An operator is passed to the [.visit] method to allow the network node visitor to add positions of nodes to scan.
@@ -29,7 +29,7 @@ interface INetworkNodeVisitor {
          * @param pos   the position
          * @param side  the side
          */
-        fun apply(world: World?, pos: BlockPos?, side: Direction?)
+        fun apply(world: World, pos: BlockPos, side: Direction)
 
         /**
          * Returns whether the network graph is scanning in simulation mode.
