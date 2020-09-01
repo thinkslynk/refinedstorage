@@ -31,7 +31,7 @@
       "com.refinedmods.refinedstorage.RSComponents"
     ],
     "rei_plugins": [
-      "com.refinedmods.refinedstorage.integration.rei.RSReiPlugin,"
+      "com.refinedmods.refinedstorage.integration.rei.RSReiPlugin"
     ]
   },
 

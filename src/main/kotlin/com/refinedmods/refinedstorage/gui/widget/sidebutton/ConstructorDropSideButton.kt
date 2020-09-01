@@ -1,7 +1,7 @@
-package com.refinedmods.refinedstorage.screen.widget.sidebutton
+package com.refinedmods.refinedstorage.gui.widget.sidebutton
 
-import com.refinedmods.refinedstorage.container.ConstructorScreenHandler
-import com.refinedmods.refinedstorage.screen.BaseScreen
+import com.refinedmods.refinedstorage.gui.screenhandlers.ConstructorScreenHandler
+import com.refinedmods.refinedstorage.gui.screen.BaseScreen
 import com.refinedmods.refinedstorage.tile.ConstructorTile
 import com.refinedmods.refinedstorage.tile.data.TileDataManager
 import net.minecraft.client.resource.language.I18n

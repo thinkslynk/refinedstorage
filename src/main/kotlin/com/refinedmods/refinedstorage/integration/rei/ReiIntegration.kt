@@ -4,7 +4,7 @@ import net.fabricmc.loader.api.FabricLoader
 
 
 object ReiIntegration {
-    val isLoaded: Boolean
-        get() = FabricLoader.getInstance().isModLoaded("roughlyenoughitems")
-
+    val isLoaded: Boolean by lazy {
+        FabricLoader.getInstance().isModLoaded("roughlyenoughitems")
+    }
 }

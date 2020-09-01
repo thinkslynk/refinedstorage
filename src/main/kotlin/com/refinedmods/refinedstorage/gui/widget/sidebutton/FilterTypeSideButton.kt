@@ -1,6 +1,6 @@
-package com.refinedmods.refinedstorage.screen.widget.sidebutton
+package com.refinedmods.refinedstorage.gui.widget.sidebutton
 
-import com.refinedmods.refinedstorage.screen.FilterScreen
+import com.refinedmods.refinedstorage.gui.screen.FilterScreen
 import com.refinedmods.refinedstorage.tile.config.IType
 import net.minecraft.client.resource.language.I18n
 import net.minecraft.client.util.math.MatrixStack

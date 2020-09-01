@@ -29,12 +29,9 @@ class FilterSlot(handler: Inventory, inventoryIndex: Int, x: Int, y: Int, privat
         return false
     }
 
-    val isSizeAllowed: Boolean
-        get() = flags and FILTER_ALLOW_SIZE == FILTER_ALLOW_SIZE
-    val isBlockAllowed: Boolean
-        get() = flags and FILTER_ALLOW_BLOCKS == FILTER_ALLOW_BLOCKS
-    val isAlternativesAllowed: Boolean
-        get() = flags and FILTER_ALLOW_ALTERNATIVES == FILTER_ALLOW_ALTERNATIVES
+    override val isSizeAllowed: Boolean = flags and FILTER_ALLOW_SIZE == FILTER_ALLOW_SIZE
+    val isBlockAllowed: Boolean = flags and FILTER_ALLOW_BLOCKS == FILTER_ALLOW_BLOCKS
+    val isAlternativesAllowed: Boolean = flags and FILTER_ALLOW_ALTERNATIVES == FILTER_ALLOW_ALTERNATIVES
 
     companion object {
         const val FILTER_ALLOW_SIZE = 1

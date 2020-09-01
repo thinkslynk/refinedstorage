@@ -1,6 +1,6 @@
-package com.refinedmods.refinedstorage.screen.widget.sidebutton
+package com.refinedmods.refinedstorage.gui.widget.sidebutton
 
-import com.refinedmods.refinedstorage.screen.BaseScreen
+import com.refinedmods.refinedstorage.gui.screen.BaseScreen
 import com.refinedmods.refinedstorage.tile.NetworkNodeTile
 import com.refinedmods.refinedstorage.tile.data.TileDataManager
 import com.refinedmods.refinedstorage.tile.data.TileDataParameter

@@ -1,7 +1,7 @@
 package com.refinedmods.refinedstorage.screen.grid.stack
 
 import com.refinedmods.refinedstorage.api.storage.tracker.StorageTrackerEntry
-import com.refinedmods.refinedstorage.screen.BaseScreen
+import com.refinedmods.refinedstorage.gui.screen.BaseScreen
 import net.minecraft.client.util.math.MatrixStack
 import net.minecraft.text.Text
 import java.util.*

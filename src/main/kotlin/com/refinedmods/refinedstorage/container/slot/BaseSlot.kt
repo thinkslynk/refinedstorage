@@ -13,6 +13,8 @@ open class BaseSlot(itemHandler: Inventory, inventoryIndex: Int, x: Int, y: Int)
         return this
     }
 
-    open val isEnabled: Boolean
-        get() = enableHandler.get()
+    open val isEnabled: Boolean = enableHandler.get()
+
+    open val isSizeAllowed: Boolean
+        get() = false
 }

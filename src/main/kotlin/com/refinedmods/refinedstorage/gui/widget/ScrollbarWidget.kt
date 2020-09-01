@@ -1,8 +1,8 @@
-package com.refinedmods.refinedstorage.screen.widget
+package com.refinedmods.refinedstorage.gui.widget
 
 import com.mojang.blaze3d.systems.RenderSystem
 import com.refinedmods.refinedstorage.RS
-import com.refinedmods.refinedstorage.screen.BaseScreen
+import com.refinedmods.refinedstorage.gui.screen.BaseScreen
 import com.refinedmods.refinedstorage.util.RenderUtils
 import net.minecraft.client.gui.Element
 import net.minecraft.client.util.math.MatrixStack
@@ -11,11 +11,11 @@ import java.util.function.Consumer
 import kotlin.math.floor
 
 class ScrollbarWidget(
-        val screen: BaseScreen<*>,
-        val x: Int,
-        val y: Int,
-        val width: Int,
-        val height: Int
+    val screen: BaseScreen<*>,
+    val x: Int,
+    val y: Int,
+    val width: Int,
+    val height: Int
 ) : Element {
     private var enabled = false
     private var offset = 0
@@ -37,14 +37,14 @@ class ScrollbarWidget(
     fun render(matrixStack: MatrixStack?) {
         RenderSystem.color4f(1.0f, 1.0f, 1.0f, 1.0f)
         screen.bindTexture(RS.ID, "icons.png")
-        screen.drawTexture(matrixStack, screen.guiLeft + x, screen.guiTop + y + (height - SCROLLER_HEIGHT.toFloat()).coerceAtMost(offset.toFloat() / maxOffset.toFloat() * (height - SCROLLER_HEIGHT).toFloat()).toInt(), if (isEnabled()) 232 else 244, 0, 12, 15)
+        screen.drawTexture(matrixStack, screen.getX() + x, screen.getY() + y + (height - SCROLLER_HEIGHT.toFloat()).coerceAtMost(offset.toFloat() / maxOffset.toFloat() * (height - SCROLLER_HEIGHT).toFloat()).toInt(), if (isEnabled()) 232 else 244, 0, 12, 15)
     }
 
     override fun mouseClicked(mx: Double, my: Double, button: Int): Boolean {
         var rx = mx
         var ry = my
-        rx -= screen.guiLeft
-        ry -= screen.guiTop
+        rx -= screen.getX()
+        ry -= screen.getY()
         if (button == 0 && RenderUtils.inBounds(x, y, width, height, rx, ry)) {
             // Prevent accidental scrollbar click after clicking recipe transfer button
             // TODO Rei
@@ -61,8 +61,8 @@ class ScrollbarWidget(
     override fun mouseMoved(mx: Double, my: Double) {
         var rx = mx
         var ry = my
-        rx -= screen.guiLeft
-        ry -= screen.guiTop
+        rx -= screen.getX()
+        ry -= screen.getY()
         if (clicked && RenderUtils.inBounds(x, y, width, height, rx, ry)) {
             updateOffset(ry)
         }

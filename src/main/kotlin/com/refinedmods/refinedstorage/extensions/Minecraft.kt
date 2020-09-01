@@ -1,7 +1,13 @@
 package com.refinedmods.refinedstorage.extensions
 
+import com.refinedmods.refinedstorage.render.RenderSettings
+import net.fabricmc.fabric.api.renderer.v1.Renderer
+import net.minecraft.client.font.TextRenderer
+import net.minecraft.client.util.math.MatrixStack
 import net.minecraft.inventory.Inventory
+import net.minecraft.item.BlockItem
 import net.minecraft.item.ItemStack
+import net.minecraft.text.Text
 import net.minecraft.util.math.BlockPos
 import net.minecraft.world.World
 
@@ -22,6 +28,14 @@ fun Inventory.getStacks(): Collection<ItemStack> =
 
 fun Inventory.drop(world: World, pos: BlockPos) {
     // TODO figure out how to drop an inventory at a position...
+}
+
+fun TextRenderer.draw(matrices: MatrixStack, text: Text, x: Float, y: Float) {
+    this.draw(matrices, text, x, y, RenderSettings.INSTANCE.secondaryColor)
+}
+
+fun TextRenderer.draw(matrices: MatrixStack, text: String, x: Float, y: Float) {
+    this.draw(matrices, text, x, y, RenderSettings.INSTANCE.secondaryColor)
 }
 
 @Deprecated("migration", ReplaceWith("Constants.NBT.LIST_TAG", "com.refinedmods.refinedstorage.extensions.Constants"))

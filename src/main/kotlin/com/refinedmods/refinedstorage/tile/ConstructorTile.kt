@@ -3,8 +3,8 @@ package com.refinedmods.refinedstorage.tile
 import com.refinedmods.refinedstorage.RS
 import com.refinedmods.refinedstorage.apiimpl.network.node.ConstructorNetworkNode
 import com.refinedmods.refinedstorage.block.ConstructorBlock
-import com.refinedmods.refinedstorage.container.ConstructorScreenHandler
 import com.refinedmods.refinedstorage.extensions.getCustomLogger
+import com.refinedmods.refinedstorage.gui.screenhandlers.ConstructorScreenHandler
 import com.refinedmods.refinedstorage.tile.config.IComparable
 import com.refinedmods.refinedstorage.tile.config.IType
 import com.refinedmods.refinedstorage.tile.data.TileDataParameter
@@ -33,7 +33,7 @@ class ConstructorTile:
     }
 
     override fun createMenu(syncId: Int, inv: PlayerInventory, player: PlayerEntity): ScreenHandler {
-        return ConstructorScreenHandler(ScreenHandlerContext.create(world, pos), player, syncId)
+        return ConstructorScreenHandler(syncId, ScreenHandlerContext.create(world, pos), player, node)
     }
 
     override fun getDisplayName(): Text {

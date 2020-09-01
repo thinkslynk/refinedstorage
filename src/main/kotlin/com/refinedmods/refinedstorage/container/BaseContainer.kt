@@ -27,7 +27,7 @@ abstract class BaseContainer(
 ) : ScreenHandler(type, windowId) {
 
     private var listener: TileDataWatcher? = null
-    protected val transferManager = TransferManager(this)
+    protected val transferManager by lazy { TransferManager(this) }
 
     lateinit var tile: BaseTile
     init {
@@ -134,10 +134,7 @@ abstract class BaseContainer(
 
     // @Volatile: Logic from LockableLootBlockEntity#isUsableByPlayer
     private val isTileStillThere: Boolean
-        private get() = if (tile != null) {
-            // @Volatile: Logic from LockableLootBlockEntity#isUsableByPlayer
-            tile.world!!.getBlockEntity(tile.pos) == tile
-        } else true
+        get() = tile.world!!.getBlockEntity(tile.pos) == tile
 
     open fun canMergeSlot(stack: ItemStack?, slot: Slot): Boolean {
         return if (slot is FilterSlot || slot is LegacyFilterSlot //|| slot is FluidFilterSlot // TODO Fluid
@@ -147,7 +144,7 @@ abstract class BaseContainer(
     }
 
     protected open val disabledSlotNumber: Int
-        protected get() = -1
+        get() = -1
 
     protected override fun addSlot(slot: Slot): Slot {
         // TODO Fluid

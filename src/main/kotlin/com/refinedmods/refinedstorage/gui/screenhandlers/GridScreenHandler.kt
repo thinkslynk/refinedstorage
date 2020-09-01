@@ -1,4 +1,4 @@
-//package com.refinedmods.refinedstorage.container
+package com.refinedmods.refinedstorage.gui.screenhandlers//package com.refinedmods.refinedstorage.container
 //
 //import com.refinedmods.refinedstorage.api.network.grid.GridType
 //import com.refinedmods.refinedstorage.api.network.grid.ICraftingGridListener
