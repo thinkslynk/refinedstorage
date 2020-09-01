@@ -79,9 +79,14 @@ open class ControllerTile(type: NetworkType, entity: BlockEntityType<*>?):
         super.markRemoved()
         if (!world!!.isClient) {
             val manager = API.getNetworkManager(world as ServerWorld)
+
             val network = manager.getNetwork(pos)
+
             removedNetwork = network
+
             manager.removeNetwork(pos)
+            manager.markDirty()
+
             network!!.onRemoved()
         }
     }

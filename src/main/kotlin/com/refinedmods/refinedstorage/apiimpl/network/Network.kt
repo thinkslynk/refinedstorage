@@ -82,14 +82,12 @@ class Network(override val world: World,
 //                }
             }
             if (type == NetworkType.NORMAL) {
-                // TODO energy
                 if (!RS.CONFIG.serverConfig.controller.useEnergy) {
                     energyStorage.setStored(energyStorage.maxStoredPower)
                 } else {
                     energyStorage.extractEnergyBypassCanExtract(energyUsage, false)
                 }
             } else if (type == NetworkType.CREATIVE) {
-//                 TODO energy
                 energyStorage.setStored(energyStorage.maxStoredPower)
             }
             val canRun = canRun()
@@ -108,7 +106,6 @@ class Network(override val world: World,
             }
             val energyType: ControllerBlock.EnergyType = energyType
             if (lastEnergyType != energyType) {
-                RS.log.info("energyType replaced to $energyType")
                 lastEnergyType = energyType
                 val state: BlockState = world.getBlockState(position)
                 if (state.block is ControllerBlock) {
@@ -122,7 +119,7 @@ class Network(override val world: World,
 //        for (task in craftingManager.getTasks()) {
 //            task.onCancelled()
 //        }
-//        nodeGraph.disconnectAll()
+        nodeGraph.disconnectAll()
     }
 
     override fun insertItem(stack: ItemStack, size: Int, action: Action): ItemStack {
@@ -282,10 +279,12 @@ class Network(override val world: World,
     }
 
     override fun readFromNbt(tag: CompoundTag): INetwork {
+        RS.log.info("contains NBT_ENERGY: " + tag.contains(NBT_ENERGY))
         if (tag.contains(NBT_ENERGY)) {
             energyStorage.setStored(tag.getDouble(NBT_ENERGY))
         }
         redstoneMode = RedstoneMode.read(tag)
+
 //        craftingManager.readFromNbt(tag)
 //        if (tag.contains(NBT_ITEM_STORAGE_TRACKER)) {
 //            itemStorageTracker.readFromNbt(tag.getList(NBT_ITEM_STORAGE_TRACKER, Constants.NBT.TAG_COMPOUND))
@@ -306,7 +305,7 @@ class Network(override val world: World,
     }
 
     override fun markDirty() {
-        API.getNetworkManager(world as ServerWorld).markDirty()
+        if(!API.isLoading) API.getNetworkManager(world as ServerWorld).markDirty()
     }
 
 
@@ -344,7 +343,6 @@ class Network(override val world: World,
 
         fun getEnergyType(stored: Double, capacity: Double): ControllerBlock.EnergyType {
             val energy = getEnergyScaled(stored, capacity, 100)
-            RS.log.info("energy percent: $energy%")
             return when {
                 energy <= 0 -> {
                     ControllerBlock.EnergyType.OFF
