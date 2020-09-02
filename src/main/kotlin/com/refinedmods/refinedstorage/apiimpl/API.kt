@@ -42,6 +42,9 @@ import net.minecraft.nbt.Tag
 import net.minecraft.server.world.ServerWorld
 import reborncore.common.fluid.container.FluidInstance
 import java.util.*
+import java.util.function.Function
+import java.util.function.Supplier
+import net.minecraft.world.PersistentState
 
 object API : IRSAPI {
     override val comparer: IComparer = Comparer()
@@ -62,21 +65,29 @@ object API : IRSAPI {
         EnumMap(StorageType::class.java)
     override val patternRenderHandlers: MutableList<ICraftingPatternRenderHandler> = LinkedList()
 
+    var isLoading = false
+
+    private fun <T: PersistentState> safeLoad(world: ServerWorld, name: String, func: Supplier<T>): T {
+        isLoading = true
+        val ret = world.persistentStateManager
+            .getOrCreate<T>(
+                func,
+                name
+            )
+        isLoading = false
+        return ret
+    }
 
     override fun getNetworkNodeManager(world: ServerWorld): INetworkNodeManager {
-        return world.persistentStateManager
-            .getOrCreate(
-                { NetworkNodeManager(NetworkNodeManager.NAME, world) },
-                NetworkNodeManager.NAME
-            )
+        return safeLoad(world, NetworkNodeManager.NAME, Supplier {
+            NetworkNodeManager(NetworkNodeManager.NAME, world)
+        })
     }
 
     override fun getNetworkManager(world: ServerWorld): INetworkManager {
-        return world.chunkManager.persistentStateManager
-            .getOrCreate(
-                { NetworkManager(NetworkManager.NAME, world) },
-                NetworkManager.NAME
-            )
+        return safeLoad(world, NetworkManager.NAME, Supplier {
+            NetworkManager(NetworkManager.NAME, world)
+        })
     }
 
 
@@ -95,13 +106,10 @@ object API : IRSAPI {
     }
 
 
-    override fun getStorageDiskManager(anyWorld: ServerWorld): IStorageDiskManager {
-        val world: ServerWorld = anyWorld.server.overworld
-        return world.persistentStateManager
-            .getOrCreate(
-                { StorageDiskManager(StorageDiskManager.NAME, world) },
-                StorageDiskManager.NAME
-            )
+    override fun getStorageDiskManager(world: ServerWorld): IStorageDiskManager {
+        return safeLoad(world, StorageDiskManager.NAME, Supplier {
+            StorageDiskManager(StorageDiskManager.NAME, world)
+        })
     }
 
 

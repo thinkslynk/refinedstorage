@@ -1,6 +1,7 @@
 package com.refinedmods.refinedstorage
 
 import com.refinedmods.refinedstorage.api.network.node.INetworkNodeProxy
+import com.refinedmods.refinedstorage.tile.ControllerTile
 import com.refinedmods.refinedstorage.tile.NetworkNodeTile
 import dev.onyxstudios.cca.api.v3.block.BlockComponentFactoryRegistry
 import dev.onyxstudios.cca.api.v3.block.BlockComponentInitializer
@@ -25,5 +26,7 @@ class RSComponents : BlockComponentInitializer {
             NetworkNodeTile::class.java,
             NETWORK_NODE_PROXY
         ) { it }
+
+
     }
 }

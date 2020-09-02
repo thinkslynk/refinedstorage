@@ -16,6 +16,6 @@ class CableNetworkNode(
     }
 
     override val energyUsage: Double
-        get() = ServerConfig.cableUsage
+        get() = RS.CONFIG.serverConfig.cable.usage
 
 }

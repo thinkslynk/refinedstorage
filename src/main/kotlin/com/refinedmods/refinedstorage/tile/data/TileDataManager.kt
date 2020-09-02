@@ -1,30 +1,35 @@
 package com.refinedmods.refinedstorage.tile.data
 
+import com.refinedmods.refinedstorage.network.NetworkHandler
+import io.netty.buffer.Unpooled
+import net.fabricmc.fabric.api.network.ClientSidePacketRegistry
 import net.minecraft.block.entity.BlockEntity
+import net.minecraft.network.PacketByteBuf
 import java.util.*
 import java.util.concurrent.CopyOnWriteArrayList
+import kotlin.collections.HashMap
 
 class TileDataManager(
         val tile: BlockEntity
 ) {
-    private val parameters: MutableList<TileDataParameter<*, *>> = ArrayList()
-    private val watchedParameters: MutableList<TileDataParameter<*, *>> = ArrayList()
+    private val parameters: MutableList<TileDataParameter<Any, BlockEntity>> = ArrayList()
+    private val watchedParameters: MutableList<TileDataParameter<Any, BlockEntity>> = ArrayList()
     private val watchers: MutableList<TileDataWatcher> = CopyOnWriteArrayList()
 
-    fun addParameter(parameter: TileDataParameter<*, *>) {
-        parameters.add(parameter)
+    fun <T: Any, E: BlockEntity> addParameter(parameter: TileDataParameter<T, E>) {
+        parameters.add(parameter as TileDataParameter<Any, BlockEntity>)
     }
 
-    fun getParameters(): List<TileDataParameter<*, *>> {
+    fun getParameters(): List<TileDataParameter<Any, BlockEntity>> {
         return parameters
     }
 
-    fun addWatchedParameter(parameter: TileDataParameter<*, *>) {
+    fun <T: Any, E: BlockEntity> addWatchedParameter(parameter: TileDataParameter<T, E>) {
         addParameter(parameter)
-        watchedParameters.add(parameter)
+        watchedParameters.add(parameter as TileDataParameter<Any, BlockEntity>)
     }
 
-    fun getWatchedParameters(): List<TileDataParameter<*, *>> {
+    fun getWatchedParameters(): List<TileDataParameter<Any, BlockEntity>> {
         return watchedParameters
     }
 
@@ -36,9 +41,8 @@ class TileDataManager(
         watchers.remove(listener)
     }
 
-    fun sendParameterToWatchers(parameter: TileDataParameter<*, *>?) {
-        // TODO Send params
-//        watchers.forEach(Consumer { l: TileDataWatcher -> l.sendParameter(false, parameter) })
+    fun <T: Any, E: BlockEntity> sendParameterToWatchers(parameter: TileDataParameter<T, E>) {
+        watchers.forEach { l -> l.sendParameter(false, parameter) }
     }
 
     companion object {
@@ -49,6 +53,7 @@ class TileDataManager(
             REGISTRY[LAST_ID++] = parameter
         }
 
+
         fun <T: Any, E: BlockEntity> getParameter(id: Int): TileDataParameter<T, E>? {
             return try {
                 REGISTRY[id] as TileDataParameter<T, E>?
@@ -57,9 +62,13 @@ class TileDataManager(
             }
         }
 
-        fun setParameter(parameter: TileDataParameter<*, *>?, value: Any?) {
-            // TODO Setup network handler
-            //RS.NETWORK_HANDLER.sendToServer(TileDataParameterUpdateMessage(parameter, value))
+        fun <T: Any, E: BlockEntity> setParameter(parameter: TileDataParameter<T, E>, value: Any) {
+            val passedData: PacketByteBuf = PacketByteBuf(Unpooled.buffer())
+            parameter.let {
+                passedData.writeInt(it.id)
+                parameter.serializer.write(passedData, it.value)
+            }
+            ClientSidePacketRegistry.INSTANCE.sendToServer(NetworkHandler.TILE_DATA_PARAMETER_UPDATE_MESSAGE_ID, passedData)
         }
     }
 

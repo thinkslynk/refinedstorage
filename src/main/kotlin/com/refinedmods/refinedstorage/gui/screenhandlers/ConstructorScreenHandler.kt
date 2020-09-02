@@ -5,6 +5,7 @@ import com.refinedmods.refinedstorage.RSGui
 import com.refinedmods.refinedstorage.apiimpl.network.node.ConstructorNetworkNode
 import com.refinedmods.refinedstorage.container.slot.filter.FilterSlot
 import com.refinedmods.refinedstorage.container.slot.filter.FluidFilterSlot
+import com.refinedmods.refinedstorage.data.BaseBlockEntityData
 import com.refinedmods.refinedstorage.inventory.fluid.FluidInventory
 import com.refinedmods.refinedstorage.tile.ConstructorTile
 import com.refinedmods.refinedstorage.tile.config.IType
@@ -22,11 +23,11 @@ import net.minecraft.world.World
 
 
 class ConstructorScreenHandler(
-        syncId: Int,
-        context: ScreenHandlerContext,
-        player: PlayerEntity,
-        node: ConstructorNetworkNode? = null
-): BaseScreenHandler(RSGui.CONSTRUCTOR, context, player, syncId) {
+    syncId: Int,
+    entityData: BaseBlockEntityData,
+    player: PlayerEntity,
+    node: ConstructorNetworkNode? = null
+): BaseScreenHandler(RSGui.CONSTRUCTOR, entityData, player, syncId) {
     companion object{
         const val SECTION_PADDING = 5
     }

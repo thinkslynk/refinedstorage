@@ -42,5 +42,3 @@ fun TextRenderer.draw(matrices: MatrixStack, text: String, x: Float, y: Float) {
 const val LIST_TAG_TYPE = Constants.NBT.LIST_TAG
 @Deprecated("migration", ReplaceWith("Constants.NBT.COMPOUND_TAG", "com.refinedmods.refinedstorage.extensions.Constants"))
 const val COMPOUND_TAG_TYPE = Constants.NBT.COMPOUND_TAG
-
-

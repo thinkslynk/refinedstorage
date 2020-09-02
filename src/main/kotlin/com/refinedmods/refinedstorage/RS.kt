@@ -1,8 +1,7 @@
 package com.refinedmods.refinedstorage
 
 import com.refinedmods.refinedstorage.apiimpl.network.NetworkListener
-import com.refinedmods.refinedstorage.config.ClientConfig
-import com.refinedmods.refinedstorage.config.ServerConfig
+import com.refinedmods.refinedstorage.config.RSConfig
 import com.refinedmods.refinedstorage.extensions.getCustomLogger
 import com.refinedmods.refinedstorage.network.NetworkHandler
 import com.refinedmods.refinedstorage.tile.data.RSSerializers
@@ -10,20 +9,26 @@ import com.thinkslynk.fabric.generated.BlockEntityRegistryGenerated
 import com.thinkslynk.fabric.generated.BlockItemRegistryGenerated
 import com.thinkslynk.fabric.generated.BlockRegistryGenerated
 import com.thinkslynk.fabric.generated.ItemRegistryGenerated
+import me.sargunvohra.mcmods.autoconfig1u.AutoConfig
+import me.sargunvohra.mcmods.autoconfig1u.annotation.Config
+import me.sargunvohra.mcmods.autoconfig1u.serializer.JanksonConfigSerializer
 import net.fabricmc.api.ModInitializer
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerTickEvents
-import reborncore.common.config.Configuration
 
 class RS: ModInitializer {
     companion object{
         val log = getCustomLogger(RS::class)
         const val ID = "refinedstorage"
         val NETWORK_HANDLER = NetworkHandler()
+
+        lateinit var CONFIG: RSConfig
     }
 
     override fun onInitialize() {
-        Configuration(ServerConfig::class.java, ID)
-        Configuration(ClientConfig::class.java, ID)
+        AutoConfig.register(RSConfig::class.java) {
+            definition: Config, configClass: Class<RSConfig> ->
+            JanksonConfigSerializer(definition, configClass)
+        }
 
         ItemRegistryGenerated.register()
         BlockRegistryGenerated.register()
@@ -31,7 +36,13 @@ class RS: ModInitializer {
         BlockEntityRegistryGenerated.register()
         RSSerializers.registerAll()
 
+        NetworkHandler.register()
+
         ServerTickEvents.END_WORLD_TICK.register(NetworkListener())
+
+        CONFIG = AutoConfig.getConfigHolder(RSConfig::class.java).config
+
+
 
 
         // TODO Register stuff!

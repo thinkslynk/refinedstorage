@@ -37,6 +37,7 @@ configurations.api {
 
 
 repositories {
+    jcenter()
     maven("https://jitpack.io")
     maven("http://maven.fabricmc.net/")
     maven("https://server.bbkr.space/artifactory/libs-release")
@@ -44,15 +45,22 @@ repositories {
 }
 
 dependencies {
+    // Fabric Versions
     val minecraftVersion: String by project
     val yarnMappings: String by project
     val loaderVersion: String by project
     val fabricVersion: String by project
     val fabricKotlinVersion: String by project
-    val reiVersion: String by project
-    val libGui: String by project
-//    val spruceUi: String by project
+
+    // Dependency Versions
     val cardinalComponents: String by project
+    val libGui: String by project
+    val clothConfig: String by project
+    val autoconfig1u: String by project
+    val modMenu: String by project
+
+    // Runtime mod Versions
+    val reiVersion: String by project
     val databreakerVersion: String by project
 
     //to change the versions see the gradle.properties file
@@ -64,12 +72,28 @@ dependencies {
     modImplementation("net.fabricmc.fabric-api:fabric-api:$fabricVersion")
     modImplementation("net.fabricmc:fabric-language-kotlin:$fabricKotlinVersion")
 
-    // Replace modImplementation with modApi if you expose components in your own API
+    // Cardinal Components
     modImplementation("com.github.OnyxStudios.Cardinal-Components-API:cardinal-components-base:$cardinalComponents")
     modImplementation("com.github.OnyxStudios.Cardinal-Components-API:cardinal-components-block:$cardinalComponents")
-    // Includes Cardinal Components API as a Jar-in-Jar dependency (optional but recommended)
     include("com.github.OnyxStudios.Cardinal-Components-API:cardinal-components-base:$cardinalComponents")
     include("com.github.OnyxStudios.Cardinal-Components-API:cardinal-components-block:$cardinalComponents")
+
+    // GUI Library
+    // https://github.com/CottonMC/LibGui/wiki/Getting-Started-with-GUIs
+    modImplementation("io.github.cottonmc:LibGui:$libGui")
+
+    // ClothConfig and autoconfig1u
+    modApi("me.shedaniel.cloth:config-2:$clothConfig") {
+        exclude(group="net.fabricmc.fabric-api")
+    }
+    modApi("me.sargunvohra.mcmods:autoconfig1u:$autoconfig1u") {
+        exclude(group="net.fabricmc.fabric-api")
+    }
+    include("me.shedaniel.cloth:config-2:$clothConfig")
+    include("me.sargunvohra.mcmods:autoconfig1u:$autoconfig1u")
+
+    // ModMenu
+    modImplementation("io.github.prospector:modmenu:$modMenu")
 
     // JEI style mod
     modCompileOnly("me.shedaniel:RoughlyEnoughItems-api:$reiVersion")
@@ -82,18 +106,6 @@ dependencies {
     modRuntime ("com.github.SuperCoder7979:databreaker:$databreakerVersion") {
         exclude(module="fabric-loader")
     }
-
-    // GUI Library
-    // https://github.com/CottonMC/LibGui/wiki/Getting-Started-with-GUIs
-    modImplementation("io.github.cottonmc:LibGui:$libGui")
-    // https://github.com/LambdAurora/SpruceUI
-//    modImplementation("com.github.lambdaurora:spruceui:$spruceUi")
-//    include("com.github.lambdaurora:spruceui:$spruceUi}")
-//
-//    shadow("org.aperlambda:lambdajcommon:1.8.1") {
-//        exclude("com.google.code.gson")
-//        exclude("com.google.guava")
-//    }
 
     val rcVersion = "RebornCore:RebornCore-1.16:+"
     modApi (rcVersion) {

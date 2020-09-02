@@ -1,29 +1,34 @@
 package com.refinedmods.refinedstorage.config
 
-import reborncore.common.config.Config
+import com.refinedmods.refinedstorage.RS
+import me.sargunvohra.mcmods.autoconfig1u.ConfigData
+import me.sargunvohra.mcmods.autoconfig1u.annotation.Config
+import me.sargunvohra.mcmods.autoconfig1u.annotation.ConfigEntry
 
-open class ClientConfig {
-    companion object {
-        // Grid
-        @JvmField
-        @Config(config = "client", category = "grid", key = "maxRowsStretch", comment = "The maximum amount of rows that the Grid can show when stretched")
-        var gridMaxRowsStretch: Int = Int.MAX_VALUE
+@Config(name = "client")
+class ClientConfig : ConfigData {
+    @ConfigEntry.Gui.CollapsibleObject
+    val grid: Grid = Grid()
 
-        @JvmField
-        @Config(config = "client", category = "grid", key = "detailedTooltip", comment = "Whether the Grid should display a detailed tooltip when hovering over an item or fluid")
-        var gridDetailedTooltip: Boolean = true
+    @ConfigEntry.Gui.CollapsibleObject
+    val crafterManager: CrafterManager = CrafterManager()
 
-        @JvmField
-        @Config(config = "client", category = "grid", key = "largeFont", comment = "Whether the Grid should use a large font for stack quantity display")
-        var gridLargeFont: Boolean = false
+    class CrafterManager {
+        @ConfigEntry.Gui.Tooltip
+        var maxRowsStretch: Int = Int.MAX_VALUE
+    }
 
-        @JvmField
-        @Config(config = "client", category = "grid", key = "preventSortingWhileShiftIsDown", comment = "Whether the Grid should prevent sorting while the shift key is held down")
-        var gridPreventSortingWhileShiftIsDown: Boolean = true
+    class Grid {
+        @ConfigEntry.Gui.Tooltip
+        var maxRowsStretch: Int = Integer.MAX_VALUE
 
-        // Crafter Manager
-        @JvmField
-        @Config(config = "client", category = "crafterManager", key = "maxRowsStretch", comment = "The maximum amount of rows that the Crafter Manager can show when stretched")
-        var crafterManagerMaxRowsStretch: Int = Int.MAX_VALUE
+        @ConfigEntry.Gui.Tooltip
+        var detailedTooltip: Boolean = true
+
+        @ConfigEntry.Gui.Tooltip
+        var largeFont: Boolean = false
+
+        @ConfigEntry.Gui.Tooltip
+        var preventSortingWhileShiftIsDown: Boolean = true
     }
 }

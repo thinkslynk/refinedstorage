@@ -85,8 +85,6 @@ open class ControllerBlock(val type: NetworkType = NetworkType.NORMAL):
                     .getNetwork(pos)
 
             if (network is Network) {
-                RS.log.info("power: " + network.energyStorage.getStored(EnergySide.UNKNOWN))
-
                 network.redstonePowered = world.isReceivingRedstonePower(pos)
             }
         }

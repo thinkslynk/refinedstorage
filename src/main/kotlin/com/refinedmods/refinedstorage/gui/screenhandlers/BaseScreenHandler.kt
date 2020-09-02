@@ -9,6 +9,7 @@ import com.refinedmods.refinedstorage.container.slot.filter.FluidFilterSlot
 import com.refinedmods.refinedstorage.container.slot.legacy.LegacyDisabledSlot
 import com.refinedmods.refinedstorage.container.slot.legacy.LegacyFilterSlot
 import com.refinedmods.refinedstorage.container.transfer.TransferManager
+import com.refinedmods.refinedstorage.data.BaseBlockEntityData
 import com.refinedmods.refinedstorage.tile.BaseTile
 import com.refinedmods.refinedstorage.tile.data.TileDataWatcher
 import io.github.cottonmc.cotton.gui.SyncedGuiDescription
@@ -26,25 +27,10 @@ import reborncore.common.fluid.container.FluidInstance
 
 abstract class BaseScreenHandler(
         type: ScreenHandlerType<*>,
-        context: ScreenHandlerContext,
+        val entityData: BaseBlockEntityData,
         val player: PlayerEntity,
         windowId: Int
 ) : SyncedGuiDescription(type, windowId, player.inventory) {
-
-    private var listener: TileDataWatcher? = null
-    protected val transferManager by lazy { TransferManager(this) }
-
-    lateinit var tile: BaseTile
-    init {
-        this.world
-        context.run { world: World, blockPos: BlockPos ->
-            tile = world.getBlockEntity(blockPos) as BaseTile
-        }
-
-        if (player is ServerPlayerEntity) {
-            listener = TileDataWatcher(player, tile.dataManager)
-        }
-    }
 
     val fluidSlots: MutableList<FluidFilterSlot> = mutableListOf()
     private val fluids: MutableList<FluidInstance> = ArrayList()
@@ -134,11 +120,15 @@ abstract class BaseScreenHandler(
 
     }
 
-    open fun transferStackInSlot(player: PlayerEntity, slotIndex: Int): ItemStack = transferManager.transfer(slotIndex)
+//    open fun transferStackInSlot(player: PlayerEntity, slotIndex: Int): ItemStack = transferManager.transfer(slotIndex)
 
     fun canInteractWith(player: PlayerEntity): Boolean = isTileStillThere
 
-    private val isTileStillThere: Boolean = tile.world!!.getBlockEntity(tile.pos) == tile
+    private val isTileStillThere: Boolean
+        get() {
+            val entity = world.getBlockEntity(entityData.blockPos) ?: return false
+            return !entity.isRemoved
+        }
 
     open fun canMergeSlot(stack: ItemStack?, slot: Slot): Boolean =
         if (slot is FilterSlot || slot is LegacyFilterSlot || slot is FluidFilterSlot) {
@@ -162,7 +152,7 @@ abstract class BaseScreenHandler(
         // Prevent sending changes about a tile that doesn't exist anymore.
         // This prevents crashes when sending network node data (network node would crash because it no longer exists and we're querying it from the various tile data parameters).
         if (isTileStillThere) {
-            listener?.detectAndSendChanges()
+//            listener?.detectAndSendChanges()
         }
 
         if (player is ServerPlayerEntity) {
@@ -181,6 +171,6 @@ abstract class BaseScreenHandler(
 
     override fun close(player: PlayerEntity) {
         super.close(player)
-        listener?.onClosed()
+//        listener?.onClosed()
     }
 }

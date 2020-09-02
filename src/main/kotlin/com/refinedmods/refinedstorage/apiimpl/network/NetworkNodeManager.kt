@@ -99,6 +99,10 @@ class NetworkNodeManager(
         markDirty()
     }
 
+    override fun markDirty() {
+        if(!API.isLoading) super.markDirty()
+    }
+
     override fun all(): Collection<INetworkNode> {
         return nodes.values
     }

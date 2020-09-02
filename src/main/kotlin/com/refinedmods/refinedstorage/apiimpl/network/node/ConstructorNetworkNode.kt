@@ -62,7 +62,7 @@ class ConstructorNetworkNode(world: World, pos: BlockPos):
 
     var isDrop = false
     override val energyUsage: Double
-        get() = ServerConfig.constructorUsage + upgrades.energyUsage
+        get() = RS.CONFIG.serverConfig.constructor.usage
 
     override fun update() {
         super.update()

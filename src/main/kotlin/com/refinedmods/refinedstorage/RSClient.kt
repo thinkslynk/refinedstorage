@@ -4,6 +4,7 @@ import com.refinedmods.refinedstorage.gui.screen.ConstructorScreen
 import com.refinedmods.refinedstorage.gui.screen.FilterScreen
 import com.refinedmods.refinedstorage.gui.screenhandlers.ConstructorScreenHandler
 import com.refinedmods.refinedstorage.gui.screenhandlers.FilterScreenHandler
+import com.refinedmods.refinedstorage.network.NetworkHandler
 import com.thinkslynk.fabric.generated.BlockItemRegistryGenerated
 import com.thinkslynk.fabric.generated.BlockRegistryGenerated
 import net.fabricmc.api.ClientModInitializer
@@ -14,6 +15,8 @@ import net.minecraft.client.render.RenderLayer
 class RSClient : ClientModInitializer {
 
     override fun onInitializeClient() {
+        NetworkHandler.registerClient()
+
         BlockRenderLayerMap.INSTANCE.putBlocks(
                 RenderLayer.getCutout(),
                 BlockRegistryGenerated.CABLE_BLOCK,

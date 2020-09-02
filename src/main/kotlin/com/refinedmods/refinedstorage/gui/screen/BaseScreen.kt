@@ -302,7 +302,7 @@ abstract class BaseScreen<T : SyncedGuiDescription>(
     }
 
     fun renderQuantity(matrixStack: MatrixStack, x: Int, y: Int, qty: String, color: Int) {
-        val large = MinecraftClient.getInstance().forcesUnicodeFont() || ClientConfig.gridLargeFont
+        val large = MinecraftClient.getInstance().forcesUnicodeFont() || RS.CONFIG.clientConfig.grid.largeFont
 
         RenderSystem.pushMatrix()
         RenderSystem.translatef(x.toFloat(), y.toFloat(), Z_LEVEL_QTY.toFloat())
