@@ -3,6 +3,7 @@ package com.refinedmods.refinedstorage.apiimpl.network.node
 import com.refinedmods.refinedstorage.api.network.INetwork
 import com.refinedmods.refinedstorage.api.network.INetworkNodeVisitor
 import com.refinedmods.refinedstorage.api.network.node.INetworkNode
+import com.refinedmods.refinedstorage.api.util.Action
 import com.refinedmods.refinedstorage.apiimpl.API
 import com.refinedmods.refinedstorage.block.BaseBlock
 import com.refinedmods.refinedstorage.block.BlockDirection
@@ -79,18 +80,18 @@ abstract class NetworkNode(
         }
 
     override fun onConnected(network: INetwork) {
-//        onConnectedStateChange(network, true, ConnectivityStateChangeCause.GRAPH_CHANGE)
+        onConnectedStateChange(network, true, ConnectivityStateChangeCause.GRAPH_CHANGE)
         this.network = network
     }
 
     override fun onDisconnected(network: INetwork) {
         this.network = null
-//        onConnectedStateChange(network, false, ConnectivityStateChangeCause.GRAPH_CHANGE)
+        onConnectedStateChange(network, false, ConnectivityStateChangeCause.GRAPH_CHANGE)
     }
 
-//    protected open fun onConnectedStateChange(network: INetwork?, state: Boolean, cause: ConnectivityStateChangeCause?) {
-//        // NO OP
-//    }
+    protected open fun onConnectedStateChange(network: INetwork?, state: Boolean, cause: ConnectivityStateChangeCause) {
+        // NO OP
+    }
 
     override fun markDirty() {
         if (!world.isClient) {
@@ -135,10 +136,10 @@ abstract class NetworkNode(
                     world.setBlockState(pos, world.getBlockState(pos).with(NetworkNodeBlock.CONNECTED, canUpdate))
                 }
                 if (network != null) {
-//                    onConnectedStateChange(network, canUpdate, ConnectivityStateChangeCause.REDSTONE_MODE_OR_NETWORK_ENERGY_CHANGE)
-//                    if (shouldRebuildGraphOnChange()) {
-//                        network!!.nodeGraph!!.invalidate(Action.PERFORM, network!!.world, network!!.position)
-//                    }
+                    onConnectedStateChange(network, canUpdate, ConnectivityStateChangeCause.REDSTONE_MODE_OR_NETWORK_ENERGY_CHANGE)
+                    if (shouldRebuildGraphOnChange()) {
+                        network!!.nodeGraph.invalidate(Action.PERFORM, network!!.world, network!!.position)
+                    }
                 }
             }
         } else {

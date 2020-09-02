@@ -2,7 +2,11 @@
 
 package com.refinedmods.refinedstorage.util
 
+import com.refinedmods.refinedstorage.api.storage.StorageType
+import com.refinedmods.refinedstorage.api.storage.disk.IStorageDisk
+import com.refinedmods.refinedstorage.api.storage.disk.IStorageDiskProvider
 import com.refinedmods.refinedstorage.api.storage.tracker.StorageTrackerEntry
+import com.refinedmods.refinedstorage.apiimpl.API
 import com.refinedmods.refinedstorage.extensions.COMPOUND_TAG_TYPE
 import com.refinedmods.refinedstorage.util.PacketBufUtils.readOptional
 import com.refinedmods.refinedstorage.util.PacketBufUtils.readOptionalUuid
@@ -16,6 +20,7 @@ import net.minecraft.item.Items
 import net.minecraft.nbt.CompoundTag
 import net.minecraft.nbt.ListTag
 import net.minecraft.network.PacketByteBuf
+import net.minecraft.server.world.ServerWorld
 import net.minecraft.util.Identifier
 import net.minecraft.util.registry.Registry
 import org.apache.logging.log4j.LogManager
@@ -121,20 +126,26 @@ object StackUtils {
         TODO("return FluidGridStack(id, otherId, stack, entry, craftable)")
     }
 
-    /*
-fun createStorages(world: ServerWorld?, diskStack: ItemStack, slot: Int, itemDisks: Array<IStorageDisk<ItemStack?>?>, fluidDisks: Array<IStorageDisk<FluidInstance?>?>, itemDiskWrapper: Function<IStorageDisk<ItemStack?>?, IStorageDisk<*>?>, fluidDiskWrapper: Function<IStorageDisk<FluidInstance?>?, IStorageDisk<*>?>) {
+fun createStorages(
+        world: ServerWorld,
+        diskStack: ItemStack,
+        slot: Int,
+        itemDisks: Array<IStorageDisk<ItemStack>?>,
+        fluidDisks: Array<IStorageDisk<FluidInstance>?>,
+        itemDiskWrapper: (IStorageDisk<ItemStack>) -> IStorageDisk<ItemStack>,
+        fluidDiskWrapper: (IStorageDisk<FluidInstance>) -> IStorageDisk<FluidInstance>) {
     if (diskStack.isEmpty) {
         itemDisks[slot] = null
         fluidDisks[slot] = null
     } else {
-        val disk = instance().getStorageDiskManager(world).getByStack(diskStack)
+        val disk = API.getStorageDiskManager(world).getByStack(diskStack)
         if (disk != null) {
-            when ((diskStack.item as IStorageDiskProvider).type) {
+            when ((diskStack.item as IStorageDiskProvider).getType()) {
                 StorageType.ITEM -> {
-                    itemDisks[slot] = itemDiskWrapper.apply(disk)
+                    itemDisks[slot] = itemDiskWrapper.invoke(disk as IStorageDisk<ItemStack>)
                 }
                 StorageType.FLUID -> {
-                    fluidDisks[slot] = fluidDiskWrapper.apply(disk)
+                    fluidDisks[slot] = fluidDiskWrapper.invoke(disk as IStorageDisk<FluidInstance>)
                 }
             }
         } else {
@@ -142,7 +153,7 @@ fun createStorages(world: ServerWorld?, diskStack: ItemStack, slot: Int, itemDis
             fluidDisks[slot] = null
         }
     }
-}*/
+}
 
     fun writeItems(inventory: Inventory, id: Int, tag: CompoundTag) {
         val tagList = ListTag()

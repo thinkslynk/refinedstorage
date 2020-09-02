@@ -9,17 +9,17 @@ import java.util.function.BiConsumer
 import java.util.function.Function
 
 interface IAccessType {
-    var accessType: AccessType?
+    var accessType: AccessType
 
     companion object {
         fun <E> createParameter(): TileDataParameter<Int, E> where E : BlockEntity, E: INetworkNodeProxy<*>? {
             return TileDataParameter<Int, E>(
                     AccessType.INSERT_EXTRACT.ordinal,
                     TrackedDataHandlerRegistry.INTEGER,
-                    Function { t: E? -> (t?.node as IAccessType).accessType?.ordinal!! },
+                    Function { t: E? -> (t?.node as IAccessType).accessType.ordinal },
                     BiConsumer {
-                        t: E?, v: Int? ->
-                        (t?.node as IAccessType).accessType = v?.let { ordinal ->
+                        t: E?, v: Int ->
+                        (t?.node as IAccessType).accessType = v.let { ordinal ->
                              AccessType.values()[ordinal]
                         }
                     }

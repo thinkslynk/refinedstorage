@@ -10,5 +10,5 @@ interface IStorageDiskContainerContext {
     /**
      * @return the access type
      */
-    fun getAccessType(): AccessType?
+    fun getAccessType(): AccessType
 }
