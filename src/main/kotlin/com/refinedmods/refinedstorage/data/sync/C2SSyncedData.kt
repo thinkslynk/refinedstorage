@@ -1,10 +1,6 @@
 package com.refinedmods.refinedstorage.data.sync
 
-import io.netty.buffer.PooledByteBufAllocator
 import net.fabricmc.fabric.api.network.ClientSidePacketRegistry
-import net.fabricmc.fabric.api.network.PacketConsumer
-import net.fabricmc.fabric.api.network.PacketContext
-import net.fabricmc.fabric.api.network.ServerSidePacketRegistry
 import net.minecraft.entity.data.TrackedDataHandler
 import net.minecraft.entity.player.PlayerEntity
 import net.minecraft.network.PacketByteBuf
@@ -24,17 +20,14 @@ class C2SSyncedData<T: SimpleObservable>(
 ) : BiSyncedData<T>(identifier, isClient, internalData, serializer, player, onChanged) {
 
     override fun send() {
+        if(!isClient) return
         val byteBuffer = byteBuffers.buffer()
         try {
             val buf = PacketByteBuf(byteBuffer)
             this.serializer.write(buf, internalData)
-            when(isClient) {
-                true -> ClientSidePacketRegistry.INSTANCE.sendToServer(identifier, buf)
-                false -> {} // NO-OP on server
-            }
+            ClientSidePacketRegistry.INSTANCE.sendToServer(identifier, buf)
         } finally { byteBuffer.release() }
     }
-
 
     override fun registerClient() {}
     override fun unregisterClient() {}

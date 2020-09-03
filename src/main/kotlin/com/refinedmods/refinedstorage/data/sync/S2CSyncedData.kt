@@ -33,14 +33,12 @@ open class S2CSyncedData<T: SimpleObservable>(
         }
 
     override fun send() {
+        if(isClient) return
         val byteBuffer = byteBuffers.buffer()
         try {
             val buf = PacketByteBuf(byteBuffer)
             this.serializer.write(buf, internalData)
-            when(isClient) {
-                true -> {} // NO-OP
-                false -> players.forEach { ServerSidePacketRegistry.INSTANCE.sendToPlayer(it, identifier, buf) }
-            }
+            players.forEach { ServerSidePacketRegistry.INSTANCE.sendToPlayer(it, identifier, buf) }
         } finally { byteBuffer.release() }
     }
 
