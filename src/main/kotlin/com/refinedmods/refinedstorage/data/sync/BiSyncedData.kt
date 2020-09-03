@@ -4,7 +4,6 @@ import io.netty.buffer.PooledByteBufAllocator
 import net.fabricmc.fabric.api.network.ClientSidePacketRegistry
 import net.fabricmc.fabric.api.network.PacketContext
 import net.fabricmc.fabric.api.network.ServerSidePacketRegistry
-import net.minecraft.entity.data.TrackedDataHandler
 import net.minecraft.entity.player.PlayerEntity
 import net.minecraft.network.PacketByteBuf
 import net.minecraft.util.Identifier
@@ -16,59 +15,86 @@ import net.minecraft.util.Identifier
  * synced value may be an unexpected value. Consider using
  * `S2CSyncedData` or `C2SSyncedData` instead.
  */
-open class BiSyncedData<T: SimpleObservable>(
+open class BiSyncedData<T>(
     override val identifier: Identifier,
     override val isClient: Boolean,
     protected var internalData: T,
-    override val serializer: TrackedDataHandler<T>,
     protected val player: PlayerEntity,
     var onChanged: ((T)->Unit)? = null
-) : Syncable<T>, SimpleObserver {
+) : Syncable<T> where T: Trackable<T>, T: SimpleObservable {
     // TODO If thread safe, consider storing it companion object
-    protected val byteBuffers =  PooledByteBufAllocator.DEFAULT
+    protected val byteBuffers: PooledByteBufAllocator =  PooledByteBufAllocator.DEFAULT
+
+    private val observer = object: SimpleObserver {
+        override fun onUpdate() {
+            // Notify our lister on this side, if we have anyone listening
+            onChanged?.invoke(internalData)
+
+            // Send data to server
+            send()
+        }
+    }
+
+    init {
+        internalData.observers.add(observer)
+    }
 
     override var data: T
         get() = internalData
         set(value) {
+            // Store what we had
             val old = internalData
+
+            // Set new value
             internalData = value
+
+            // Unregister for changes to the old object
+            old.observers.remove(observer)
+
+            // Register for changes to the new object
+            internalData.observers.add(observer)
+
+            // Send to server if the new object is actually different, otherwise save the bandwidth
             if(old != value) send()
+
+            // Notify our lister on this side, if we have anyone listening
+            onChanged?.invoke(internalData)
         }
 
     override fun send() {
         val byteBuffer = byteBuffers.buffer()
         try {
             val buf = PacketByteBuf(byteBuffer)
-            this.serializer.write(buf, internalData)
+            internalData.getSerializer().write(buf, internalData)
             when(isClient) {
-                true -> ClientSidePacketRegistry.INSTANCE.sendToServer(identifier, buf)
-                false -> ServerSidePacketRegistry.INSTANCE.sendToPlayer(player, identifier, buf)
+                true -> getClientRegistry().sendToServer(identifier, buf)
+                false -> getServerRegistry().sendToPlayer(player, identifier, buf)
             }
         } finally { byteBuffer.release() }
     }
 
     override fun accept(ctx: PacketContext, buf: PacketByteBuf) {
-        internalData = serializer.read(buf)
+        internalData = internalData.getSerializer().read(buf)
         ctx.taskQueue.execute {
             onChanged?.invoke(internalData)
         }
     }
 
+    // These are only here so that they can be mocked
+    protected fun getClientRegistry(): ClientSidePacketRegistry = ClientSidePacketRegistry.INSTANCE
+    protected fun getServerRegistry(): ServerSidePacketRegistry = ServerSidePacketRegistry.INSTANCE
+
     override fun registerClient() {
-        if(isClient) ClientSidePacketRegistry.INSTANCE.register(identifier, this)
+        if(isClient) getClientRegistry().register(identifier, this)
     }
     override fun registerServer() {
-        if(!isClient) ServerSidePacketRegistry.INSTANCE.register(identifier, this)
+        if(!isClient) getServerRegistry().register(identifier, this)
     }
 
     override fun unregisterClient() {
-        if(isClient) ClientSidePacketRegistry.INSTANCE.unregister(identifier)
+        if(isClient) getClientRegistry().unregister(identifier)
     }
     override fun unregisterServer() {
-        if(!isClient) ServerSidePacketRegistry.INSTANCE.unregister(identifier)
-    }
-
-    override fun onUpdate() {
-        send()
+        if(!isClient) getServerRegistry().unregister(identifier)
     }
 }

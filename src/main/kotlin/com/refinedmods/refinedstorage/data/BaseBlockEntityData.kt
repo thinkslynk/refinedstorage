@@ -2,16 +2,28 @@ package com.refinedmods.refinedstorage.data
 
 import com.refinedmods.refinedstorage.data.sync.SimpleObservable
 import com.refinedmods.refinedstorage.data.sync.SimpleObserver
+import com.refinedmods.refinedstorage.data.sync.Trackable
 import net.minecraft.entity.data.TrackedDataHandler
 import net.minecraft.network.PacketByteBuf
 import net.minecraft.util.math.BlockPos
 import net.minecraft.util.math.Direction
 
 class BaseBlockEntityData(
-    var blockPos: BlockPos,
-    var direction: Direction,
-    override val observers: Collection<SimpleObserver> = emptyList()
-): SimpleObservable {
+    blockPos: BlockPos,
+    direction: Direction,
+    override val observers: MutableList<SimpleObserver> = mutableListOf()
+): SimpleObservable, Trackable<BaseBlockEntityData> {
+    var blockPos: BlockPos = blockPos
+        set(v) {
+            field = v
+            this.onUpdate()
+        }
+    var direction: Direction = direction
+        set(v) {
+            field = v
+            this.onUpdate()
+        }
+
     companion object{
         // TODO Add annotation to Fabric Seams for TrackedDataHandlers
         val SERIALIZER = object: TrackedDataHandler<BaseBlockEntityData>{
@@ -31,5 +43,9 @@ class BaseBlockEntityData(
                 return o
             }
         }
+    }
+
+    override fun getSerializer(): TrackedDataHandler<BaseBlockEntityData> {
+        return SERIALIZER
     }
 }
