@@ -3,6 +3,7 @@ package com.refinedmods.refinedstorage.data
 import com.refinedmods.refinedstorage.data.sync.SimpleObservable
 import com.refinedmods.refinedstorage.data.sync.SimpleObserver
 import com.refinedmods.refinedstorage.data.sync.Trackable
+import java.lang.ref.WeakReference
 import net.minecraft.entity.data.TrackedDataHandler
 import net.minecraft.network.PacketByteBuf
 import net.minecraft.util.math.BlockPos
@@ -11,17 +12,17 @@ import net.minecraft.util.math.Direction
 class BaseBlockEntityData(
     blockPos: BlockPos,
     direction: Direction,
-    override val observers: MutableList<SimpleObserver> = mutableListOf()
+    override val observers: HashSet<WeakReference<SimpleObserver>> = hashSetOf()
 ): SimpleObservable, Trackable<BaseBlockEntityData> {
     var blockPos: BlockPos = blockPos
         set(v) {
             field = v
-            this.onUpdate()
+            this.notifyObservers()
         }
     var direction: Direction = direction
         set(v) {
             field = v
-            this.onUpdate()
+            this.notifyObservers()
         }
 
     companion object{

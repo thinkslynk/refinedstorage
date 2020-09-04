@@ -1,8 +1,10 @@
 package com.refinedmods.refinedstorage.data.sync
 
-interface SimpleObservable: SimpleObserver {
-    val observers: MutableList<SimpleObserver>
-    override fun onUpdate() {
-        observers.forEach {it.onUpdate()}
+import java.lang.ref.WeakReference
+
+interface SimpleObservable {
+    val observers: HashSet<WeakReference<SimpleObserver>>
+    fun notifyObservers() {
+        observers.forEach {it.get()?.onUpdate()}
     }
 }

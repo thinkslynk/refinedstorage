@@ -1,9 +1,8 @@
 package com.refinedmods.refinedstorage.data.sync
 
-import io.netty.buffer.PooledByteBufAllocator
-import net.fabricmc.fabric.api.network.ClientSidePacketRegistry
+import com.refinedmods.refinedstorage.data.sync.Syncable.Companion.byteBuffers
+import java.lang.ref.WeakReference
 import net.fabricmc.fabric.api.network.PacketContext
-import net.fabricmc.fabric.api.network.ServerSidePacketRegistry
 import net.minecraft.entity.player.PlayerEntity
 import net.minecraft.network.PacketByteBuf
 import net.minecraft.util.Identifier
@@ -19,24 +18,24 @@ open class BiSyncedData<T>(
     override val identifier: Identifier,
     override val isClient: Boolean,
     protected var internalData: T,
-    protected val player: PlayerEntity,
-    var onChanged: ((T)->Unit)? = null
-) : Syncable<T> where T: Trackable<T>, T: SimpleObservable {
-    // TODO If thread safe, consider storing it companion object
-    protected val byteBuffers: PooledByteBufAllocator =  PooledByteBufAllocator.DEFAULT
-
-    private val observer = object: SimpleObserver {
-        override fun onUpdate() {
-            // Notify our lister on this side, if we have anyone listening
-            onChanged?.invoke(internalData)
-
-            // Send data to server
-            send()
-        }
-    }
+    protected val player: PlayerEntity
+) : Syncable<T>, SimpleObserver where T: Trackable<T>, T: SimpleObservable {
+    override val observers: HashSet<WeakReference<SimpleObserver>> = hashSetOf()
 
     init {
-        internalData.observers.add(observer)
+        internalData.observers.add(getReference())
+    }
+
+    override fun onUpdate() {
+        // Notify our lister on this side, if we have anyone listening
+        this.notifyObservers()
+
+        // Send data to server
+        send()
+    }
+
+    private fun getReference(): WeakReference<SimpleObserver> {
+        return WeakReference(this)
     }
 
     override var data: T
@@ -48,17 +47,14 @@ open class BiSyncedData<T>(
             // Set new value
             internalData = value
 
-            // Unregister for changes to the old object
-            old.observers.remove(observer)
-
             // Register for changes to the new object
-            internalData.observers.add(observer)
+            internalData.observers.add(getReference())
 
             // Send to server if the new object is actually different, otherwise save the bandwidth
             if(old != value) send()
 
             // Notify our lister on this side, if we have anyone listening
-            onChanged?.invoke(internalData)
+            notifyObservers()
         }
 
     override fun send() {
@@ -75,26 +71,24 @@ open class BiSyncedData<T>(
 
     override fun accept(ctx: PacketContext, buf: PacketByteBuf) {
         internalData = internalData.getSerializer().read(buf)
-        ctx.taskQueue.execute {
-            onChanged?.invoke(internalData)
+        if (observers.isNotEmpty()) {
+            ctx.taskQueue.execute {
+                notifyObservers()
+            }
         }
     }
 
-    // These are only here so that they can be mocked
-    protected fun getClientRegistry(): ClientSidePacketRegistry = ClientSidePacketRegistry.INSTANCE
-    protected fun getServerRegistry(): ServerSidePacketRegistry = ServerSidePacketRegistry.INSTANCE
-
-    override fun registerClient() {
-        if(isClient) getClientRegistry().register(identifier, this)
-    }
-    override fun registerServer() {
-        if(!isClient) getServerRegistry().register(identifier, this)
+    override fun register() {
+        when(isClient) {
+            true -> getClientRegistry().register(identifier, this)
+            false -> getServerRegistry().register(identifier, this)
+        }
     }
 
-    override fun unregisterClient() {
-        if(isClient) getClientRegistry().unregister(identifier)
-    }
-    override fun unregisterServer() {
-        if(!isClient) getServerRegistry().unregister(identifier)
+    override fun unregister() {
+        when(isClient) {
+            true -> getClientRegistry().unregister(identifier)
+            false -> getServerRegistry().unregister(identifier)
+        }
     }
 }

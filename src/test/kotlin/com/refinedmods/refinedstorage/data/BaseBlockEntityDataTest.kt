@@ -1,6 +1,7 @@
 package com.refinedmods.refinedstorage.data
 
 import com.refinedmods.refinedstorage.data.sync.SimpleObserver
+import java.lang.ref.WeakReference
 import net.minecraft.util.math.BlockPos
 import net.minecraft.util.math.Direction
 import org.junit.jupiter.api.Assertions.assertEquals
@@ -24,7 +25,7 @@ class BaseBlockEntityDataTest {
         )
 
         // Test Block position updates
-        data.observers.add(observer)
+        data.observers.add(WeakReference(observer))
         data.blockPos = BlockPos(2,3,4)
         assert(observed)
         assertEquals(data.blockPos, BlockPos(2, 3, 4))

@@ -1,6 +1,6 @@
 package com.refinedmods.refinedstorage.data.sync
 
-import net.fabricmc.fabric.api.network.ClientSidePacketRegistry
+import com.refinedmods.refinedstorage.data.sync.Syncable.Companion.byteBuffers
 import net.minecraft.entity.player.PlayerEntity
 import net.minecraft.network.PacketByteBuf
 import net.minecraft.util.Identifier
@@ -13,9 +13,8 @@ class C2SSyncedData<T>(
     identifier: Identifier,
     isClient: Boolean,
     internalData: T,
-    player: PlayerEntity,
-    onChanged: ((T)->Unit)? = null
-) : BiSyncedData<T>(identifier, isClient, internalData, player, onChanged)
+    player: PlayerEntity
+) : BiSyncedData<T>(identifier, isClient, internalData, player)
         where T: Trackable<T>, T:SimpleObservable {
 
     override fun send() {
@@ -28,6 +27,11 @@ class C2SSyncedData<T>(
         } finally { byteBuffer.release() }
     }
 
-    override fun registerClient() {}
-    override fun unregisterClient() {}
+    override fun register() {
+        if(!isClient) getServerRegistry().register(identifier, this)
+    }
+
+    override fun unregister() {
+        if(!isClient) getServerRegistry().unregister(identifier)
+    }
 }
