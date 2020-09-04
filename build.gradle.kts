@@ -63,6 +63,10 @@ dependencies {
     val reiVersion: String by project
     val databreakerVersion: String by project
 
+    // Unit Test Versions
+    val junitVersion: String by project
+    val mockkVersion: String by project
+
     //to change the versions see the gradle.properties file
     minecraft("com.mojang:minecraft:$minecraftVersion")
     mappings("net.fabricmc:yarn:$yarnMappings:v2")
@@ -115,9 +119,19 @@ dependencies {
     compileOnly(project(":annotations"))
     kapt(project(":processor"))
 
-    // https://github.com/TechReborn/Energy
+    // Unit Tests
+    testImplementation("org.junit.jupiter:junit-jupiter:$junitVersion")
+    testImplementation("io.mockk:mockk:$mockkVersion")
+
     // https://github.com/natanfudge/Working-Scheduler
     // https://github.com/Siphalor/nbt-crafting
+}
+
+tasks.test {
+    useJUnitPlatform()
+    testLogging {
+        events("passed", "skipped", "failed")
+    }
 }
 
 val processResources = tasks.getByName<ProcessResources>("processResources") {
