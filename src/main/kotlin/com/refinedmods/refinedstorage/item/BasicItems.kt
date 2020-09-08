@@ -14,8 +14,6 @@ class SiliconItem : Item(Settings().group(MyItemGroups.CURED_STORAGE))
 @RegisterItem(RS.ID,"processor_binding")
 class ProcessorBindingItem : Item(Settings().group(MyItemGroups.CURED_STORAGE))
 
-// wrench
-
 // pattern
 
 // filter
@@ -75,28 +73,6 @@ class AdvancedProcessorItem : Item(Settings().group(MyItemGroups.CURED_STORAGE))
 // wireless_fluid_grid
 
 // creative_wireless_fluid_grid
-
-@RegisterItem(RS.ID, "64k_fluid_storage_part")
-class SixtyFourKFluidStoragePartItem : Item(Settings().group(MyItemGroups.CURED_STORAGE))
-
-@RegisterItem(RS.ID, "256k_fluid_storage_part")
-class TwoHundredFiftySixKFluidStoragePartItem : Item(Settings().group(MyItemGroups.CURED_STORAGE))
-
-@RegisterItem(RS.ID, "1024k_fluid_storage_part")
-class ThousandTwentyFourKFluidStoragePartItem : Item(Settings().group(MyItemGroups.CURED_STORAGE))
-
-@RegisterItem(RS.ID, "4096k_fluid_storage_part")
-class FourThousandNinetySixKFluidStoragePartItem : Item(Settings().group(MyItemGroups.CURED_STORAGE))
-
-// 64k_fluid_storage_disk
-
-// 256k_fluid_storage_disk
-
-// 1024k_fluid_storage_disk
-
-// 4096k_fluid_storage_disk
-
-// creative_fluid_storage_disk
 
 // wireless_crafting_monitor
 
