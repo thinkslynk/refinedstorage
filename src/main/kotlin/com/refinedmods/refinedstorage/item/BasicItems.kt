@@ -1,7 +1,6 @@
 package com.refinedmods.refinedstorage.item
 
 import com.refinedmods.refinedstorage.RS
-import com.refinedmods.refinedstorage.apiimpl.storage.ItemStorageType
 import com.thinkslynk.fabric.annotations.registry.RegisterItem
 import com.thinkslynk.fabric.generated.MyItemGroups
 import net.minecraft.item.Item
@@ -76,33 +75,6 @@ class AdvancedProcessorItem : Item(Settings().group(MyItemGroups.CURED_STORAGE))
 // wireless_fluid_grid
 
 // creative_wireless_fluid_grid
-
-@RegisterItem(RS.ID, "1k_storage_part")
-class OneKStoragePartItem : StoragePartItem(ItemStorageType.ONE_K)
-
-@RegisterItem(RS.ID, "4k_storage_part")
-class FourKStoragePartItem : StoragePartItem(ItemStorageType.FOUR_K)
-
-@RegisterItem(RS.ID, "16k_storage_part")
-class SixteenKStoragePartItem : StoragePartItem(ItemStorageType.SIXTEEN_K)
-
-@RegisterItem(RS.ID, "64k_storage_part")
-class SixtyFourKStoragePartItem : StoragePartItem(ItemStorageType.SIXTY_FOUR_K)
-
-@RegisterItem(RS.ID, "1k_storage_disk")
-class OneKStorageDiskItem : StorageDiskItem(ItemStorageType.ONE_K)
-
-@RegisterItem(RS.ID, "4k_storage_disk")
-class FourKStorageDiskItem : StorageDiskItem(ItemStorageType.FOUR_K)
-
-@RegisterItem(RS.ID, "16k_storage_disk")
-class SixteenKStorageDiskItem : StorageDiskItem(ItemStorageType.SIXTEEN_K)
-
-@RegisterItem(RS.ID, "64k_storage_disk")
-class SixtyFourKStorageDiskItem : StorageDiskItem(ItemStorageType.SIXTY_FOUR_K)
-
-@RegisterItem(RS.ID, "creative_storage_disk")
-class CreativeKStorageDiskItem : StorageDiskItem(ItemStorageType.CREATIVE)
 
 @RegisterItem(RS.ID, "64k_fluid_storage_part")
 class SixtyFourKFluidStoragePartItem : Item(Settings().group(MyItemGroups.CURED_STORAGE))

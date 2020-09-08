@@ -1,3 +1,5 @@
+import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
+
 plugins {
     id("com.github.johnrengelman.shadow")
     java
@@ -51,6 +53,7 @@ dependencies {
     val loaderVersion: String by project
     val fabricVersion: String by project
     val fabricKotlinVersion: String by project
+    val fabricSeamsVersion: String by project
 
     // Dependency Versions
     val cardinalComponents: String by project
@@ -84,10 +87,10 @@ dependencies {
 
     // ClothConfig and autoconfig1u
     modApi("me.shedaniel.cloth:config-2:$clothConfig") {
-        exclude(group="net.fabricmc.fabric-api")
+        exclude(group = "net.fabricmc.fabric-api")
     }
     modApi("me.sargunvohra.mcmods:autoconfig1u:$autoconfig1u") {
-        exclude(group="net.fabricmc.fabric-api")
+        exclude(group = "net.fabricmc.fabric-api")
     }
     include("me.shedaniel.cloth:config-2:$clothConfig")
     include("me.sargunvohra.mcmods:autoconfig1u:$autoconfig1u")
@@ -102,12 +105,12 @@ dependencies {
     modRuntime("TechReborn:TechReborn-1.16:+")
 
     // Databreaker
-    modRuntime ("com.github.SuperCoder7979:databreaker:$databreakerVersion") {
-        exclude(module="fabric-loader")
+    modRuntime("com.github.SuperCoder7979:databreaker:$databreakerVersion") {
+        exclude(module = "fabric-loader")
     }
 
     val rcVersion = "RebornCore:RebornCore-1.16:+"
-    modApi (rcVersion) {
+    modApi(rcVersion) {
         exclude("net.fabricmc.fabric-api")
     }
     include(rcVersion)
@@ -138,7 +141,6 @@ val processResources = tasks.getByName<ProcessResources>("processResources") {
 }
 
 
-
 val javaCompile = tasks.withType<JavaCompile> {
     options.encoding = "UTF-8"
 }
@@ -153,7 +155,7 @@ val shadowJar = tasks.withType<Jar> {
     from(sourceSets.main.get().output)
 
     val shadowFiles = configurations.shadow.get().files
-        .map { if(it.isDirectory) it else zipTree(it) }
+        .map { if (it.isDirectory) it else zipTree(it) }
     from(shadowFiles)
 }
 
@@ -174,6 +176,9 @@ val sourcesJar by tasks.registering(Jar::class) {
     from(sourceSets.main.get().allSource)
 }
 
-tasks.withType<org.jetbrains.kotlin.gradle.tasks.KotlinCompile>().configureEach {
-    kotlinOptions.jvmTarget = "1.8"
+tasks.withType<KotlinCompile>().configureEach {
+    kotlinOptions {
+        jvmTarget = "1.8"
+        freeCompilerArgs = freeCompilerArgs + listOf("-Xopt-in=kotlin.ExperimentalStdlibApi")
+    }
 }

@@ -1,11 +1,13 @@
 package com.refinedmods.refinedstorage.item
 
+import com.refinedmods.refinedstorage.RS
 import com.refinedmods.refinedstorage.api.storage.StorageType
 import com.refinedmods.refinedstorage.api.storage.disk.IStorageDiskProvider
 import com.refinedmods.refinedstorage.api.storage.disk.StorageDiskSyncData
 import com.refinedmods.refinedstorage.apiimpl.API
 import com.refinedmods.refinedstorage.apiimpl.storage.ItemStorageType
 import com.refinedmods.refinedstorage.render.Styles
+import com.thinkslynk.fabric.annotations.registry.RegisterItem
 import com.thinkslynk.fabric.generated.ItemRegistryGenerated
 import com.thinkslynk.fabric.generated.MyItemGroups
 import net.minecraft.client.item.TooltipContext
@@ -25,8 +27,8 @@ import net.minecraft.world.World
 import org.apache.logging.log4j.LogManager
 import java.util.*
 
-
-open class StorageDiskItem(private val type: ItemStorageType) : Item(
+@RegisterItem(RS.ID, "$0_storage_disk")
+class StorageDiskItem(private val type: ItemStorageType) : Item(
     Settings().group(MyItemGroups.CURED_STORAGE).maxCount(1)
 ), IStorageDiskProvider {
     override fun inventoryTick(

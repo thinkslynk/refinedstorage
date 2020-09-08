@@ -18,6 +18,7 @@ import net.minecraft.nbt.ListTag
 import net.minecraft.util.Hand
 import net.minecraft.util.Identifier
 import net.minecraft.util.hit.BlockHitResult
+import net.minecraft.util.math.BlockPos
 import net.minecraft.util.math.Direction
 import net.minecraft.world.World
 import java.util.*
@@ -74,6 +75,22 @@ fun Direction.getYOffset() = offsetY
 
 @Deprecated("fabric", ReplaceWith("this.offsetZ"))
 fun Direction.getZOffset() = offsetZ
+
+@JvmName("getPosCall")
+@Deprecated("fabric", ReplaceWith("this.blockPos"))
+fun BlockItemUseContext.getPos(): BlockPos = blockPos
+
+@Deprecated("fabric", ReplaceWith("this.blockPos"))
+val BlockItemUseContext.pos: BlockPos
+    get() = blockPos
+
+@JvmName("getFaceCall")
+@Deprecated("fabric", ReplaceWith("this.face"))
+fun BlockItemUseContext.getFace(): Direction = side
+
+@Deprecated("fabric", ReplaceWith("this.face"))
+val BlockItemUseContext.face: Direction
+    get() = side
 
 @Deprecated("fabric", ReplaceWith("getStack(i)"))
 fun Inventory.getStackInSlot(i: Int) = getStack(i)
