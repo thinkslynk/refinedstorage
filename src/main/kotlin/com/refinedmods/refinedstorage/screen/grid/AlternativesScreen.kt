@@ -29,7 +29,7 @@ import java.util.function.Consumer
 import reborncore.client.gui.builder.widget.tooltip.ToolTip
 
 class AlternativesScreen private constructor(private val parent: Screen, player: PlayerEntity, title: Text):
-        BaseScreen<AlternativesScreenHandler>(AlternativesScreenHandler(player), player, title) {
+        BaseScreen<AlternativesScreenHandler>(AlternativesScreenHandler(0, player), player, title) {
     private val scrollbar: ScrollbarWidget = ScrollbarWidget(this, 155, 20, 12, 89)
     private val lines: MutableList<Line> = ArrayList()
     private var type = 0

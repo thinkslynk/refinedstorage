@@ -1,5 +1,3 @@
-@file:Suppress("DuplicatedCode")
-
 package com.refinedmods.refinedstorage.gui.screenhandlers
 
 import com.refinedmods.refinedstorage.api.util.IComparer
@@ -8,52 +6,53 @@ import com.refinedmods.refinedstorage.container.slot.filter.FilterSlot
 import com.refinedmods.refinedstorage.container.slot.filter.FluidFilterSlot
 import com.refinedmods.refinedstorage.container.slot.legacy.LegacyDisabledSlot
 import com.refinedmods.refinedstorage.container.slot.legacy.LegacyFilterSlot
-import com.refinedmods.refinedstorage.container.transfer.TransferManager
 import com.refinedmods.refinedstorage.data.BaseBlockEntityData
-import com.refinedmods.refinedstorage.tile.BaseTile
-import com.refinedmods.refinedstorage.tile.data.TileDataWatcher
-import io.github.cottonmc.cotton.gui.SyncedGuiDescription
+import com.refinedmods.refinedstorage.extensions.getCustomLogger
 import java.util.*
 import net.minecraft.entity.player.PlayerEntity
+import net.minecraft.entity.player.PlayerInventory
 import net.minecraft.item.ItemStack
-import net.minecraft.screen.ScreenHandlerContext
+import net.minecraft.screen.ScreenHandler
 import net.minecraft.screen.ScreenHandlerType
 import net.minecraft.screen.slot.Slot
 import net.minecraft.screen.slot.SlotActionType
 import net.minecraft.server.network.ServerPlayerEntity
-import net.minecraft.util.math.BlockPos
-import net.minecraft.world.World
 import reborncore.common.fluid.container.FluidInstance
 
 abstract class BaseScreenHandler(
-        type: ScreenHandlerType<*>,
-        val entityData: BaseBlockEntityData,
-        val player: PlayerEntity,
-        windowId: Int
-) : SyncedGuiDescription(type, windowId, player.inventory) {
+    windowId: Int,
+    val player: PlayerEntity,
+    private val entityData: BaseBlockEntityData? = null,
+    type: ScreenHandlerType<*>
+) : ScreenHandler(type, windowId) {
 
+    val playerInventory: PlayerInventory = player.inventory
     val fluidSlots: MutableList<FluidFilterSlot> = mutableListOf()
     private val fluids: MutableList<FluidInstance> = ArrayList()
+
+    companion object{
+        protected val log = getCustomLogger(BaseScreenHandler::class)
+    }
 
     protected fun addPlayerInventory(xInventory: Int, yInventory: Int) {
         val disabledSlotNumber = disabledSlotNumber
         var id = 9
-        (0..2).forEach { y ->
-            (0..8).forEach { x ->
+        (0 until 3).forEach { y ->
+            (0 until 9).forEach { x ->
                 when (id) {
-                    disabledSlotNumber -> addSlot(LegacyDisabledSlot(player.inventory, id, xInventory + x * 18, yInventory + y * 18))
-                    else -> addSlot(Slot(player.inventory, id, xInventory + x * 18, yInventory + y * 18))
+                    disabledSlotNumber -> addSlot(LegacyDisabledSlot(playerInventory, id, xInventory + x * 18, yInventory + y * 18))
+                    else -> addSlot(Slot(playerInventory, id, xInventory + x * 18, yInventory + y * 18))
                 }
                 id++
             }
         }
 
-        (0..8).forEach { i ->
+        (0 until 9).forEach { i ->
             val x = xInventory + i * 18
             val y = yInventory + 4 + 3 * 18
             when (i) {
-                disabledSlotNumber -> addSlot(LegacyDisabledSlot(player.inventory, i, x, y))
-                else -> addSlot(Slot(player.inventory, i, x, y))
+                disabledSlotNumber -> addSlot(LegacyDisabledSlot(playerInventory, i, x, y))
+                else -> addSlot(Slot(playerInventory, i, x, y))
             }
         }
     }
@@ -76,15 +75,15 @@ abstract class BaseScreenHandler(
                     slot.isSizeAllowed -> {
                         when {
                             clickType == SlotActionType.QUICK_MOVE -> slot.setStack(ItemStack.EMPTY)
-                            !player.inventory.getStack(id).isEmpty -> slot.setStack(player.inventory.getStack(id).copy())
+                            !playerInventory.cursorStack.isEmpty -> slot.setStack(playerInventory.cursorStack.copy())
                         }
                     }
 
-                    player.inventory.getStack(id).isEmpty -> slot.setStack(ItemStack.EMPTY)
-                    slot.canInsert(player.inventory.getStack(id)) -> slot.setStack(player.inventory.getStack(id).copy())
+                    slot.canInsert(playerInventory.cursorStack) -> slot.setStack(playerInventory.cursorStack.copy())
+                    playerInventory.getStack(id).isEmpty -> slot.setStack(ItemStack.EMPTY)
                 }
 
-                return player.inventory.getStack(id)
+                return playerInventory.getStack(id)
             }
 
             // Filter slots
@@ -93,23 +92,23 @@ abstract class BaseScreenHandler(
                     slot.isSizeAllowed -> {
                         when {
                             clickType == SlotActionType.QUICK_MOVE -> slot.onContainerClicked(ItemStack.EMPTY)
-                            !player.inventory.getStack(id).isEmpty -> slot.onContainerClicked(player.inventory.getStack(id))
+                            !playerInventory.cursorStack.isEmpty -> slot.onContainerClicked(playerInventory.cursorStack)
                         }
                     }
-                    player.inventory.getStack(id).isEmpty -> (slot as FluidFilterSlot?)!!.onContainerClicked(ItemStack.EMPTY)
-                    else -> slot.onContainerClicked(player.inventory.getStack(id))
+                    playerInventory.cursorStack.isEmpty -> (slot as FluidFilterSlot?)!!.onContainerClicked(ItemStack.EMPTY)
+                    else -> slot.onContainerClicked(playerInventory.cursorStack)
                 }
-                return player.inventory.getStack(id)
+                return playerInventory.cursorStack
             }
 
             // Legacy filter slots
             is LegacyFilterSlot -> {
                 when {
-                    player.inventory.getStack(id).isEmpty -> slot.setStack(ItemStack.EMPTY)
-                    slot.canInsert(player.inventory.getStack(id)) -> slot.setStack(player.inventory.getStack(id).copy())
+                    playerInventory.cursorStack.isEmpty -> slot.setStack(ItemStack.EMPTY)
+                    slot.canInsert(playerInventory.cursorStack) -> slot.setStack(playerInventory.cursorStack.copy())
                 }
 
-                return player.inventory.getStack(id)
+                return playerInventory.cursorStack
             }
 
             // Legacy disable slots
@@ -120,13 +119,9 @@ abstract class BaseScreenHandler(
 
     }
 
-//    open fun transferStackInSlot(player: PlayerEntity, slotIndex: Int): ItemStack = transferManager.transfer(slotIndex)
-
-    fun canInteractWith(player: PlayerEntity): Boolean = isTileStillThere
-
     private val isTileStillThere: Boolean
         get() {
-            val entity = world.getBlockEntity(entityData.blockPos) ?: return false
+            val entity = entityData?.let{ player.world.getBlockEntity(it.blockPos) } ?: return false
             return !entity.isRemoved
         }
 
@@ -149,12 +144,6 @@ abstract class BaseScreenHandler(
     override fun sendContentUpdates() {
         super.sendContentUpdates()
 
-        // Prevent sending changes about a tile that doesn't exist anymore.
-        // This prevents crashes when sending network node data (network node would crash because it no longer exists and we're querying it from the various tile data parameters).
-        if (isTileStillThere) {
-//            listener?.detectAndSendChanges()
-        }
-
         if (player is ServerPlayerEntity) {
             for (i in fluidSlots.indices) {
                 val slot = fluidSlots[i]
@@ -167,10 +156,5 @@ abstract class BaseScreenHandler(
                 }
             }
         }
-    }
-
-    override fun close(player: PlayerEntity) {
-        super.close(player)
-//        listener?.onClosed()
     }
 }

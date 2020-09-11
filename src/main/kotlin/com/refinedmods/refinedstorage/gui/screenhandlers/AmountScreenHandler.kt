@@ -9,11 +9,10 @@ import net.minecraft.item.ItemStack
 import reborncore.common.util.InventoryItem
 
 class AmountScreenHandler(
+    windowId: Int=0,
     player: PlayerEntity,
-    entityData: BaseBlockEntityData,
-    stack: ItemStack?=null,
-    windowId: Int=0
-) : BaseScreenHandler(RSGui.AMOUNT, entityData, player, windowId) {
+    stack: ItemStack?=null
+) : BaseScreenHandler(windowId, player, type=RSGui.AMOUNT) {
     init {
         val inventory = if (stack != null) InventoryItem.getItemInvetory(stack, 1) else SimpleInventory(1)
         addSlot(DisabledSlot(inventory, 0, 89, 48))

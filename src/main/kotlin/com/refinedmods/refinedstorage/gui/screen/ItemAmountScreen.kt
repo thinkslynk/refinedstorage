@@ -21,7 +21,7 @@ class ItemAmountScreen(
         private val alternativesScreenFactory: Function<Screen, Screen>?
 ) : AmountSpecifyingScreen<AmountScreenHandler>(
     parent,
-    AmountScreenHandler(player, stack),
+    AmountScreenHandler(0, player, stack),
     if (alternativesScreenFactory != null) 194 else 172,
     99, player, TranslatableText("gui.refinedstorage.item_amount")
 ) {

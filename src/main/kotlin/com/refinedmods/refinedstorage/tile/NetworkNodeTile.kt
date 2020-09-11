@@ -3,7 +3,6 @@ package com.refinedmods.refinedstorage.tile
 import com.refinedmods.refinedstorage.api.network.node.INetworkNodeProxy
 import com.refinedmods.refinedstorage.api.util.Action
 import com.refinedmods.refinedstorage.apiimpl.API
-import com.refinedmods.refinedstorage.apiimpl.API.Companion.instance
 import com.refinedmods.refinedstorage.apiimpl.network.node.NetworkNode
 import com.refinedmods.refinedstorage.extensions.getCustomLogger
 import com.refinedmods.refinedstorage.tile.config.IRedstoneConfigurable
@@ -23,25 +22,42 @@ abstract class NetworkNodeTile<N : NetworkNode>(tileType: BlockEntityType<*>?):
         IRedstoneConfigurable
 {
     override val node: N by lazy {
-        createNode(world!!, pos)
+        val ret = if(!world!!.isClient) {
+            API.getNetworkNodeManager(world as ServerWorld).getCachedNode(pos) as N?
+        } else null
+
+        ret ?: createNode(world!!, pos)
     }
     override var markedForRemoval: Boolean = false
     override var redstoneMode: RedstoneMode
-        get() {
-            return node.redstoneMode
-        }
-        set(value) {
-            node.redstoneMode = value
-        }
+        get() = node.redstoneMode
+        set(value) { node.redstoneMode = value }
+
+    companion object {
+        protected val log = getCustomLogger(NetworkNodeTile::class)
+        @JvmField val REDSTONE_MODE: TileDataParameter<Int, NetworkNodeTile<*>> = createParameter()
+    }
+
+    init {
+        dataManager.addWatchedParameter(REDSTONE_MODE)
+    }
+
+    abstract fun createNode(world: World, pos: BlockPos): N
+    override fun toTag(tag: CompoundTag): CompoundTag = CompoundTag()
+
 
     override fun markRemoved() {
         super.markRemoved()
-        if (!world!!.isClient) {
-            markedForRemoval = true
-            API.getNetworkNodeManager(world as ServerWorld).removeNode(pos)
 
-            node.network?.let {
-                it.nodeGraph.invalidate(Action.PERFORM, it.world, it.position)
+        markedForRemoval = true
+
+        world?.let {
+            if (!it.isClient) {
+                API.getNetworkNodeManager(it as ServerWorld).removeNode(pos)
+
+                node.network?.let { network ->
+                    network.nodeGraph.invalidate(Action.PERFORM, it, network.position)
+                }
             }
         }
     }
@@ -52,24 +68,13 @@ abstract class NetworkNodeTile<N : NetworkNode>(tileType: BlockEntityType<*>?):
     }
 
     fun register() {
-        if (!world!!.isClient) {
-            instance()
-                    .getNetworkNodeManager(world as ServerWorld)
-                    .setNode(pos, node)
+        world?.let{
+            if (!it.isClient) {
+                log.info("Registering...")
+                val manager = API.getNetworkNodeManager(it as ServerWorld)
+                manager.setNode(pos, node)
+                manager.markDirty()
+            }
         }
-    }
-
-    abstract fun createNode(world: World, pos: BlockPos): N
-    override fun toTag(tag: CompoundTag): CompoundTag = CompoundTag()
-
-    companion object {
-        val log = getCustomLogger(NetworkNodeTile::class)
-
-        @JvmField
-        val REDSTONE_MODE: TileDataParameter<Int, NetworkNodeTile<*>> = createParameter()
-    }
-
-    init {
-        dataManager.addWatchedParameter(REDSTONE_MODE)
     }
 }

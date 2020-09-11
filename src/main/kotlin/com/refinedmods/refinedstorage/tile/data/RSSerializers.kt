@@ -1,6 +1,11 @@
+@file:Suppress("MemberVisibilityCanBePrivate")
+
 package com.refinedmods.refinedstorage.tile.data
 
 import com.refinedmods.refinedstorage.api.storage.AccessType
+import com.refinedmods.refinedstorage.data.ConstructorGuiData.Companion.CONSTRUCTOR_GUI_DATA_SERIALIZER
+import com.refinedmods.refinedstorage.extensions.getStacks
+import com.refinedmods.refinedstorage.inventory.item.BaseItemHandler
 import com.refinedmods.refinedstorage.tile.ClientNode
 import com.refinedmods.refinedstorage.util.AccessTypeUtils
 import net.minecraft.entity.data.TrackedDataHandler
@@ -8,16 +13,23 @@ import net.minecraft.entity.data.TrackedDataHandlerRegistry
 import net.minecraft.network.PacketByteBuf
 import net.minecraft.util.Identifier
 import java.util.*
+import net.minecraft.inventory.Inventory
+import net.minecraft.inventory.SimpleInventory
 
 object RSSerializers {
     fun registerAll() {
         listOf(
-                CLIENT_NODE_SERIALIZER,
-                ACCESS_TYPE_SERIALIZER,
-                LONG_SERIALIZER,
-                DOUBLE_SERIALIZER,
-                OPTIONAL_RESOURCE_LOCATION_SERIALIZER,
-                LIST_OF_SET_SERIALIZER
+            // Things here
+            CLIENT_NODE_SERIALIZER,
+            ACCESS_TYPE_SERIALIZER,
+            LONG_SERIALIZER,
+            DOUBLE_SERIALIZER,
+            OPTIONAL_RESOURCE_LOCATION_SERIALIZER,
+            LIST_OF_SET_SERIALIZER,
+            INVENTORY_SERIALIZER,
+
+            // Things in the data/ folder
+            CONSTRUCTOR_GUI_DATA_SERIALIZER
         ).forEach{
             TrackedDataHandlerRegistry.register(it)
         }
@@ -110,7 +122,7 @@ object RSSerializers {
 
         override fun read(buf: PacketByteBuf): Optional<Identifier> {
             return if (!buf.readBoolean()) {
-                Optional.empty<Identifier>()
+                Optional.empty()
             } else Optional.of(buf.readIdentifier())
         }
 
@@ -147,5 +159,32 @@ object RSSerializers {
         override fun copy(v: List<Set<Identifier>>): List<Set<Identifier>> {
             return v
         }
+    }
+
+    val INVENTORY_SERIALIZER = object: TrackedDataHandler<Inventory> {
+        override fun write(data: PacketByteBuf, o: Inventory) {
+            val stacks = o.getStacks()
+            data.writeInt(o.size())
+            data.writeInt(stacks.size)
+            stacks.forEach { data.writeItemStack(it) }
+        }
+
+        override fun read(data: PacketByteBuf): Inventory {
+            val size = data.readInt()
+            val count = data.readInt()
+            val inventory = BaseItemHandler(size)
+            (0 until count).forEach { inventory.setStack(it, data.readItemStack()) }
+
+            return inventory
+        }
+
+        override fun copy(o: Inventory): Inventory {
+            val stacks = o.getStacks()
+            val inventory = BaseItemHandler(stacks.size)
+            stacks.forEachIndexed {i, it -> inventory.setStack(i, it) }
+
+            return inventory
+        }
+
     }
 }

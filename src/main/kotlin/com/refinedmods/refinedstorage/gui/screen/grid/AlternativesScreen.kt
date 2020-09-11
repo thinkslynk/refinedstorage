@@ -12,7 +12,6 @@ import com.refinedmods.refinedstorage.gui.widget.CheckboxWidget
 import com.refinedmods.refinedstorage.gui.widget.ScrollbarWidget
 import com.refinedmods.refinedstorage.tile.config.IType
 import com.refinedmods.refinedstorage.util.RenderUtils
-import io.github.cottonmc.cotton.gui.widget.TooltipBuilder
 import net.minecraft.client.MinecraftClient
 import net.minecraft.client.gui.DrawableHelper
 import net.minecraft.client.gui.screen.Screen
@@ -29,12 +28,10 @@ import reborncore.common.fluid.FluidUtil
 import reborncore.common.fluid.container.FluidInstance
 import java.util.*
 import java.util.function.Consumer
-import net.minecraft.client.render.block.FluidRenderer
 import reborncore.client.gui.builder.widget.tooltip.ToolTip
-import reborncore.common.fluid.FluidSettings
 
 class AlternativesScreen private constructor(private val parent: Screen, player: PlayerEntity, title: Text):
-        BaseScreen<AlternativesScreenHandler>(AlternativesScreenHandler(player, 0), player, title) {
+        BaseScreen<AlternativesScreenHandler>(AlternativesScreenHandler(0, player), player, title) {
     private val scrollbar: ScrollbarWidget = ScrollbarWidget(this, 155, 20, 12, 89)
     private val lines: MutableList<Line> = ArrayList()
     private var type = 0

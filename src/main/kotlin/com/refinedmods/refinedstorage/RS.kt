@@ -37,6 +37,7 @@ class RS: ModInitializer {
         RSSerializers.registerAll()
 
         NetworkHandler.register()
+        RSNodeFactories.register()
 
         ServerTickEvents.END_WORLD_TICK.register(NetworkListener())
 

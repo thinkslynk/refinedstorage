@@ -6,7 +6,7 @@ import net.minecraft.entity.player.PlayerEntity
 import net.minecraft.screen.ScreenHandlerContext
 
 class AlternativesScreenHandler(
+    windowId: Int = 0,
     player: PlayerEntity,
-    entityData: BaseBlockEntityData,
-    windowId: Int = 0
-) : BaseScreenHandler(RSGui.ALTERNATIVES, entityData, player, windowId)
+    entityData: BaseBlockEntityData? = null
+) : BaseScreenHandler(windowId, player, entityData, RSGui.ALTERNATIVES)

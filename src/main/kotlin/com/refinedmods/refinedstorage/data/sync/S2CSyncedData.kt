@@ -1,7 +1,7 @@
 package com.refinedmods.refinedstorage.data.sync
 
 import com.refinedmods.refinedstorage.data.sync.Syncable.Companion.byteBuffers
-import io.netty.buffer.PooledByteBufAllocator
+import com.refinedmods.refinedstorage.extensions.getCustomLogger
 import java.lang.ref.WeakReference
 import net.fabricmc.fabric.api.network.PacketContext
 import net.minecraft.entity.player.PlayerEntity
@@ -19,6 +19,10 @@ open class S2CSyncedData<T>(
     private val players: Collection<PlayerEntity> = emptyList()
 ) : Syncable<T>, SimpleObserver where T: Trackable<T>, T:SimpleObservable{
     override val observers: HashSet<WeakReference<SimpleObserver>> = hashSetOf()
+
+    companion object{
+        protected val log = getCustomLogger(S2CSyncedData::class)
+    }
 
     init {
         internalData.observers.add(getReference())
@@ -56,16 +60,16 @@ open class S2CSyncedData<T>(
         }
 
     override fun send() {
+        log.info("Sending ${internalData.javaClass.simpleName} to player") // TODO Enable debug logging
         if(isClient) return
         val byteBuffer = byteBuffers.buffer()
-        try {
-            val buf = PacketByteBuf(byteBuffer)
-            internalData.getSerializer().write(buf, internalData)
-            players.forEach { getServerRegistry().sendToPlayer(it, identifier, buf) }
-        } finally { byteBuffer.release() }
+        val buf = PacketByteBuf(byteBuffer)
+        internalData.getSerializer().write(buf, internalData)
+        players.forEach { getServerRegistry().sendToPlayer(it, identifier, buf) }
     }
 
     override fun accept(ctx: PacketContext, buf: PacketByteBuf) {
+        log.info("Receiving ${internalData.javaClass.simpleName} as player") // TODO Enable debug logging
         internalData = internalData.getSerializer().read(buf)
         if(observers.isNotEmpty()) {
             notifyObservers()

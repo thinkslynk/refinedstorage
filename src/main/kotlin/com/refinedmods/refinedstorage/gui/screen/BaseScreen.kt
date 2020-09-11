@@ -3,7 +3,6 @@ package com.refinedmods.refinedstorage.gui.screen
 import com.mojang.blaze3d.systems.RenderSystem
 import com.refinedmods.refinedstorage.RS
 import com.refinedmods.refinedstorage.apiimpl.API.quantityFormatter
-import com.refinedmods.refinedstorage.config.ClientConfig
 import com.refinedmods.refinedstorage.container.slot.BaseSlot
 import com.refinedmods.refinedstorage.container.slot.filter.FilterSlot
 import com.refinedmods.refinedstorage.container.slot.filter.FluidFilterSlot
@@ -13,19 +12,18 @@ import com.refinedmods.refinedstorage.gui.widget.CheckboxWidget
 import com.refinedmods.refinedstorage.gui.widget.sidebutton.SideButton
 import com.refinedmods.refinedstorage.render.RenderSettings
 import com.refinedmods.refinedstorage.util.RenderUtils
-import io.github.cottonmc.cotton.gui.SyncedGuiDescription
-import io.github.cottonmc.cotton.gui.client.CottonInventoryScreen
 import java.util.*
 import java.util.function.Consumer
 import java.util.function.Function
-import java.util.stream.Collectors
 import net.minecraft.client.MinecraftClient
 import net.minecraft.client.gui.screen.Screen
+import net.minecraft.client.gui.screen.ingame.HandledScreen
 import net.minecraft.client.gui.widget.ButtonWidget
 import net.minecraft.client.util.math.MatrixStack
 import net.minecraft.entity.data.TrackedDataHandlerRegistry
 import net.minecraft.entity.player.PlayerEntity
 import net.minecraft.item.ItemStack
+import net.minecraft.screen.ScreenHandler
 import net.minecraft.screen.slot.Slot
 import net.minecraft.screen.slot.SlotActionType
 import net.minecraft.text.Text
@@ -37,11 +35,11 @@ import reborncore.client.gui.builder.widget.tooltip.ToolTip
 import reborncore.common.fluid.FluidUtil
 import reborncore.common.fluid.container.FluidInstance
 
-abstract class BaseScreen<T : SyncedGuiDescription>(
+abstract class BaseScreen<T : ScreenHandler>(
     container: T,
     player: PlayerEntity,
     title: Text
-) : CottonInventoryScreen<T>(container, player, title) {
+): HandledScreen<T>(container, player.inventory, title) {
     private var sideButtonY = 0
 
     fun getX(): Int = x
@@ -52,6 +50,7 @@ abstract class BaseScreen<T : SyncedGuiDescription>(
         onPreInit()
         super.init()
 
+        playerInventory.player.mainHandStack
         // TODO Crafting Tweaks
 //        if (CraftingTweaksIntegration.isLoaded) {
 //            buttons.removeIf({ b -> !isCraftingTweaksClass(b.getClass()) })
@@ -200,10 +199,13 @@ abstract class BaseScreen<T : SyncedGuiDescription>(
     }
 
 
-    override fun onMouseClick(slot: Slot, slotId: Int, mouseButton: Int, type: SlotActionType) {
+    override fun onMouseClick(slot: Slot?, slotId: Int, mouseButton: Int, type: SlotActionType) {
         val player = MinecraftClient.getInstance().player!!
         val valid = type != SlotActionType.QUICK_MOVE &&
-                player.inventory?.getStack(slotId)?.isEmpty ?: true &&
+                slotId >= 0 &&
+                slotId < playerInventory.size() &&
+                playerInventory.getStack(slotId)?.isEmpty ?: true &&
+                slot != null &&
                 slot is BaseSlot &&
                 slot.isEnabled &&
                 slot.isSizeAllowed

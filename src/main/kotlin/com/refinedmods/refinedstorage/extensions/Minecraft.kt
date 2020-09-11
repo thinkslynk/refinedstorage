@@ -1,11 +1,10 @@
 package com.refinedmods.refinedstorage.extensions
 
 import com.refinedmods.refinedstorage.render.RenderSettings
-import net.fabricmc.fabric.api.renderer.v1.Renderer
 import net.minecraft.client.font.TextRenderer
 import net.minecraft.client.util.math.MatrixStack
 import net.minecraft.inventory.Inventory
-import net.minecraft.item.BlockItem
+import net.minecraft.inventory.SimpleInventory
 import net.minecraft.item.ItemStack
 import net.minecraft.text.Text
 import net.minecraft.util.math.BlockPos
@@ -24,10 +23,14 @@ fun ItemStack.safeSubtract(size: Int) {
 }
 
 fun Inventory.getStacks(): Collection<ItemStack> =
-        (0..this.size()).map { this.getStack(it) }
+        if(this.isEmpty) emptyList() else (0 until this.size()).map { this.getStack(it) }
 
 fun Inventory.drop(world: World, pos: BlockPos) {
     // TODO figure out how to drop an inventory at a position...
+}
+
+fun Inventory.toSimpleInventory(): SimpleInventory {
+    return SimpleInventory(*getStacks().toTypedArray())
 }
 
 fun TextRenderer.draw(matrices: MatrixStack, text: Text, x: Float, y: Float) {

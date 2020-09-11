@@ -2,19 +2,19 @@ package com.refinedmods.refinedstorage.gui.screen
 
 import com.refinedmods.refinedstorage.RS
 import com.refinedmods.refinedstorage.render.RenderSettings
-import io.github.cottonmc.cotton.gui.SyncedGuiDescription
 import kotlin.math.min
 import net.minecraft.client.MinecraftClient
 import net.minecraft.client.gui.widget.ButtonWidget
 import net.minecraft.client.gui.widget.TextFieldWidget
 import net.minecraft.client.util.math.MatrixStack
 import net.minecraft.entity.player.PlayerEntity
+import net.minecraft.screen.ScreenHandler
 import net.minecraft.text.Text
 import net.minecraft.text.TranslatableText
 import org.apache.commons.lang3.tuple.Pair
 import org.lwjgl.glfw.GLFW
 
-abstract class AmountSpecifyingScreen<T : SyncedGuiDescription>(
+abstract class AmountSpecifyingScreen<T : ScreenHandler>(
     val parent: BaseScreen<T>,
     container: T,
     private val xSize: Int,

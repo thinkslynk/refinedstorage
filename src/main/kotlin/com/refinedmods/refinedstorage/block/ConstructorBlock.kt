@@ -26,6 +26,7 @@ import net.minecraft.util.shape.VoxelShapes
 import net.minecraft.world.BlockView
 import net.minecraft.world.World
 import java.util.function.Function
+import net.fabricmc.fabric.api.screenhandler.v1.ExtendedScreenHandlerFactory
 
 @RegisterBlock(RS.ID, ConstructorBlock.ID)
 @RegisterBlockItem(RS.ID, ConstructorBlock.ID, "CURED_STORAGE")
@@ -70,7 +71,7 @@ class ConstructorBlock:
         }
     }
 
-    override fun createScreenHandlerFactory(state: BlockState, world: World, pos: BlockPos): NamedScreenHandlerFactory {
+    override fun createScreenHandlerFactory(state: BlockState, world: World, pos: BlockPos): ExtendedScreenHandlerFactory {
         return world.getBlockEntity(pos) as ConstructorTile
     }
 

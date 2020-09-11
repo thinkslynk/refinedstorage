@@ -1,6 +1,7 @@
 package com.refinedmods.refinedstorage.data.sync
 
 import com.refinedmods.refinedstorage.data.sync.Syncable.Companion.byteBuffers
+import com.refinedmods.refinedstorage.extensions.getCustomLogger
 import java.lang.ref.WeakReference
 import net.fabricmc.fabric.api.network.PacketContext
 import net.minecraft.entity.player.PlayerEntity
@@ -21,6 +22,10 @@ open class BiSyncedData<T>(
     protected val player: PlayerEntity
 ) : Syncable<T>, SimpleObserver where T: Trackable<T>, T: SimpleObservable {
     override val observers: HashSet<WeakReference<SimpleObserver>> = hashSetOf()
+
+    companion object{
+        protected val log = getCustomLogger(BiSyncedData::class)
+    }
 
     init {
         internalData.observers.add(getReference())
@@ -59,14 +64,14 @@ open class BiSyncedData<T>(
 
     override fun send() {
         val byteBuffer = byteBuffers.buffer()
-        try {
+//        try {
             val buf = PacketByteBuf(byteBuffer)
             internalData.getSerializer().write(buf, internalData)
             when(isClient) {
                 true -> getClientRegistry().sendToServer(identifier, buf)
                 false -> getServerRegistry().sendToPlayer(player, identifier, buf)
             }
-        } finally { byteBuffer.release() }
+//        } finally { byteBuffer.release() }
     }
 
     override fun accept(ctx: PacketContext, buf: PacketByteBuf) {

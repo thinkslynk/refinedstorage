@@ -93,7 +93,7 @@ abstract class NetworkNode(
 //    }
 
     override fun markDirty() {
-        if (!world.isClient) {
+        if (!world.isClient && !API.isLoading) {
             API.getNetworkNodeManager(world as ServerWorld).markDirty()
         }
     }
@@ -199,7 +199,7 @@ abstract class NetworkNode(
             if (field == null) {
                 val state = world.getBlockState(pos)
                 if (state.block is BaseBlock) {
-                    direction = state.get((state.block as BaseBlock).direction.property)
+                    field = state.get((state.block as BaseBlock).direction.property)
                 }
             }
             return field
