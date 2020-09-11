@@ -1,8 +1,10 @@
 package com.refinedmods.refinedstorage
 
 import com.refinedmods.refinedstorage.gui.screen.ConstructorScreen
+import com.refinedmods.refinedstorage.gui.screen.DestructorScreen
 import com.refinedmods.refinedstorage.gui.screen.FilterScreen
 import com.refinedmods.refinedstorage.gui.screenhandlers.ConstructorScreenHandler
+import com.refinedmods.refinedstorage.gui.screenhandlers.DestructorScreenHandler
 import com.refinedmods.refinedstorage.gui.screenhandlers.FilterScreenHandler
 import com.refinedmods.refinedstorage.network.NetworkHandler
 import com.thinkslynk.fabric.generated.BlockItemRegistryGenerated
@@ -53,6 +55,11 @@ class RSClient : ClientModInitializer {
         ScreenRegistry.register<ConstructorScreenHandler, ConstructorScreen>(RSGui.CONSTRUCTOR) {
             gui, inventory, title ->
             ConstructorScreen(gui, inventory.player, title)
+        }
+
+        ScreenRegistry.register<DestructorScreenHandler, DestructorScreen>(RSGui.DESTRUCTOR) {
+                gui, inventory, title ->
+            DestructorScreen(gui, inventory.player, title)
         }
     }
 

@@ -1,9 +1,11 @@
 package com.refinedmods.refinedstorage
 
 import com.refinedmods.refinedstorage.block.ConstructorBlock
+import com.refinedmods.refinedstorage.block.DestructorBlock
 import com.refinedmods.refinedstorage.gui.screenhandlers.AlternativesScreenHandler
 import com.refinedmods.refinedstorage.gui.screenhandlers.AmountScreenHandler
 import com.refinedmods.refinedstorage.gui.screenhandlers.ConstructorScreenHandler
+import com.refinedmods.refinedstorage.gui.screenhandlers.DestructorScreenHandler
 import com.refinedmods.refinedstorage.gui.screenhandlers.FilterScreenHandler
 import net.fabricmc.fabric.api.screenhandler.v1.ScreenHandlerRegistry
 import net.minecraft.item.ItemStack
@@ -28,6 +30,11 @@ object RSGui {
     val CONSTRUCTOR = ScreenHandlerRegistry.registerExtended(Identifier(RS.ID, ConstructorBlock.ID))
     { windowId, playerInventory, buf->
         ConstructorScreenHandler(windowId, playerInventory.player, buf)
+    }
+
+    val DESTRUCTOR = ScreenHandlerRegistry.registerExtended(Identifier(RS.ID, DestructorBlock.ID))
+    { windowId, playerInventory, buf->
+        DestructorScreenHandler(windowId, playerInventory.player, buf)
     }
 
 }
