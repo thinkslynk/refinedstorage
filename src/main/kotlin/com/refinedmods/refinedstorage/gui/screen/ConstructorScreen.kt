@@ -19,7 +19,6 @@ class ConstructorScreen(
 ) : BaseScreen<ConstructorScreenHandler>(gui, player, title) {
 
         override fun onPostInit(x: Int, y: Int) {
-                this.x -= 60
                 addSideButton(RedstoneModeSideButton(this, NetworkNodeTile.REDSTONE_MODE))
                 addSideButton(TypeSideButton(this, ConstructorTile.TYPE))
                 addSideButton(ExactModeSideButton(this, ConstructorTile.COMPARE))

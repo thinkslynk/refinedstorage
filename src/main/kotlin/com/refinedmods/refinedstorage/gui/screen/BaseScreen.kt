@@ -281,7 +281,6 @@ abstract class BaseScreen<T : ScreenHandler>(
         onPress: ButtonWidget.PressAction?
     ): ButtonWidget  {
         val button = ButtonWidget(x, y, w, h, text, onPress)
-        button.active
         button.active = enabled
         button.visible = visible
         addButton(button)
