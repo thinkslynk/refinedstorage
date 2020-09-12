@@ -25,11 +25,10 @@ class FilterSlot(
     }
 
     override fun canInsert(stack: ItemStack): Boolean {
-        val superCan = super.canInsert(stack)
-        val isBlockItem = stack.item is BlockItem
-
-        return if (superCan) {
-            if (isBlockAllowed) { isBlockItem } else true
+        return if (super.canInsert(stack)) {
+            if (isBlockAllowed) {
+                stack.item is BlockItem
+            } else true
         } else false
     }
 

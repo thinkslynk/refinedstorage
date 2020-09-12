@@ -13,6 +13,11 @@ import java.util.*
  */
 interface INetworkNode {
     /**
+     * @return if true, assume this is no longer valid / relevant
+     */
+    var markedForRemoval: Boolean
+
+    /**
      * @return the energy usage of this node
      */
     val energyUsage: Double

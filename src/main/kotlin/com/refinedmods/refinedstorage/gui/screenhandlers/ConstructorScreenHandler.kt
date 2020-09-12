@@ -36,7 +36,7 @@ class ConstructorScreenHandler(
             syncedData.load(it)
         }
 
-        (0 until 4).forEach {
+        repeat(4) {
             addSlot(Slot(syncedData.data.upgrades, it, 187, 6 + it * 18))
         }
 
