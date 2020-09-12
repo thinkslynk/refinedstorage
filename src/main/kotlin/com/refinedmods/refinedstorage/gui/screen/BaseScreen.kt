@@ -123,7 +123,7 @@ abstract class BaseScreen<T : ScreenHandler>(
             .forEach { it.renderToolTip(matrixStack, rX, rY) }
 
         screenHandler.slots.filter { it is FluidFilterSlot && it.isEnabled }
-            .map { it as FluidFilterSlot }
+let{it as List<FluidFilterSlot>}
             .forEach { slot ->
                 val stack = slot.fluidInventory.getFluid(slot.id)
                 if (!stack.isEmpty && RenderUtils.inBounds(slot.x, slot.y, 17, 17, rX.toDouble(), rY.toDouble())) {
