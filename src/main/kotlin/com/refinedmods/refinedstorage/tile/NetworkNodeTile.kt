@@ -3,25 +3,23 @@ package com.refinedmods.refinedstorage.tile
 import com.refinedmods.refinedstorage.api.network.node.INetworkNodeProxy
 import com.refinedmods.refinedstorage.api.util.Action
 import com.refinedmods.refinedstorage.apiimpl.API
-import com.refinedmods.refinedstorage.apiimpl.API.Companion.instance
 import com.refinedmods.refinedstorage.apiimpl.network.node.NetworkNode
 import com.refinedmods.refinedstorage.extensions.getCustomLogger
+import com.refinedmods.refinedstorage.extensions.isServer
 import com.refinedmods.refinedstorage.tile.config.IRedstoneConfigurable
 import com.refinedmods.refinedstorage.tile.config.RedstoneMode
 import com.refinedmods.refinedstorage.tile.config.RedstoneMode.Companion.createParameter
 import com.refinedmods.refinedstorage.tile.data.TileDataParameter
 import net.minecraft.block.entity.BlockEntityType
 import net.minecraft.nbt.CompoundTag
-import net.minecraft.server.world.ServerWorld
 import net.minecraft.util.math.BlockPos
 import net.minecraft.world.World
 
 @Suppress("UnstableApiUsage")
-abstract class NetworkNodeTile<N : NetworkNode>(tileType: BlockEntityType<*>?):
-        BaseTile(tileType),
-        INetworkNodeProxy<N>,
-        IRedstoneConfigurable
-{
+abstract class NetworkNodeTile<N : NetworkNode>(tileType: BlockEntityType<*>?) :
+    BaseTile(tileType),
+    INetworkNodeProxy<N>,
+    IRedstoneConfigurable {
     override val node: N by lazy {
         createNode(world!!, pos)
     }
@@ -36,9 +34,10 @@ abstract class NetworkNodeTile<N : NetworkNode>(tileType: BlockEntityType<*>?):
 
     override fun markRemoved() {
         super.markRemoved()
-        if (!world!!.isClient) {
+        val world = world!!
+        if (world.isServer()) {
             markedForRemoval = true
-            API.getNetworkNodeManager(world as ServerWorld).removeNode(pos)
+            API.getNetworkNodeManager(world).removeNode(pos)
 
             node.network?.let {
                 it.nodeGraph.invalidate(Action.PERFORM, it.world, it.position)
@@ -52,10 +51,9 @@ abstract class NetworkNodeTile<N : NetworkNode>(tileType: BlockEntityType<*>?):
     }
 
     fun register() {
-        if (!world!!.isClient) {
-            instance()
-                    .getNetworkNodeManager(world as ServerWorld)
-                    .setNode(pos, node)
+        val world = world!!
+        if (world.isServer()) {
+            API.getNetworkNodeManager(world).setNode(pos, node)
         }
     }
 

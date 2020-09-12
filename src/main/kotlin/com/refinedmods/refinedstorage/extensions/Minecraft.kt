@@ -2,8 +2,10 @@ package com.refinedmods.refinedstorage.extensions
 
 import net.minecraft.inventory.Inventory
 import net.minecraft.item.ItemStack
+import net.minecraft.server.world.ServerWorld
 import net.minecraft.util.math.BlockPos
 import net.minecraft.world.World
+import kotlin.contracts.contract
 
 
 fun ItemStack.safeAdd(size: Int) {
@@ -24,6 +26,12 @@ fun Inventory.drop(world: World, pos: BlockPos) {
     // TODO figure out how to drop an inventory at a position...
 }
 
+fun World.isServer(): Boolean{
+    contract {
+        returns(true) implies (this@isServer is ServerWorld)
+    }
+    return !this.isClient
+}
 
 @Deprecated("migration", ReplaceWith("Constants.NBT.LIST_TAG", "com.refinedmods.refinedstorage.extensions.Constants"))
 const val LIST_TAG_TYPE = Constants.NBT.LIST_TAG

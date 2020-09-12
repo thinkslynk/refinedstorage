@@ -5,6 +5,7 @@ import com.refinedmods.refinedstorage.api.storage.disk.IStorageDiskProvider
 import com.refinedmods.refinedstorage.api.storage.disk.StorageDiskSyncData
 import com.refinedmods.refinedstorage.apiimpl.API
 import com.refinedmods.refinedstorage.apiimpl.storage.ItemStorageType
+import com.refinedmods.refinedstorage.extensions.isServer
 import com.refinedmods.refinedstorage.render.Styles
 import com.thinkslynk.fabric.generated.ItemRegistryGenerated
 import com.thinkslynk.fabric.generated.MyItemGroups
@@ -14,7 +15,6 @@ import net.minecraft.entity.player.PlayerEntity
 import net.minecraft.item.Item
 import net.minecraft.item.ItemStack
 import net.minecraft.nbt.CompoundTag
-import net.minecraft.server.world.ServerWorld
 import net.minecraft.text.LiteralText
 import net.minecraft.text.Text
 import net.minecraft.text.TranslatableText
@@ -37,9 +37,8 @@ open class StorageDiskItem(private val type: ItemStorageType) : Item(
         selected: Boolean
     ) {
         super.inventoryTick(stack, world, entity, slot, selected)
-        if (!world.isClient && !stack.hasTag()) {
+        if (world.isServer() && !stack.hasTag()) {
             val id = UUID.randomUUID()
-            world as ServerWorld
             val manager = API.getStorageDiskManager(world)
             manager[id] = API.createDefaultItemDisk(world, getCapacity(stack))
             manager.markForSaving()
@@ -85,8 +84,7 @@ open class StorageDiskItem(private val type: ItemStorageType) : Item(
 
     override fun use(world: World, player: PlayerEntity, hand: Hand): TypedActionResult<ItemStack> {
         val diskStack: ItemStack = player.getStackInHand(hand)
-        if (!world.isClient && player.isSneaking && type != ItemStorageType.CREATIVE) {
-            world as ServerWorld
+        if (world.isServer() && player.isSneaking && type != ItemStorageType.CREATIVE) {
             val disk = API.getStorageDiskManager(world).getByStack(diskStack)
             if (disk != null && disk.getStored() == 0) {
                 val storagePart = ItemStack(StoragePartItem.getByType(type), diskStack.count)
