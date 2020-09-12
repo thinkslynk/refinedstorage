@@ -28,7 +28,7 @@ abstract class NetworkNodeTile<N : NetworkNode>(tileType: BlockEntityType<*>?):
 
         ret ?: createNode(world!!, pos)
     }
-    override var markedForRemoval: Boolean = false
+    override var markedForRemoval: Boolean = false // TODO Remove after updating references to check node
     override var redstoneMode: RedstoneMode
         get() = node.redstoneMode
         set(value) { node.redstoneMode = value }
@@ -50,6 +50,7 @@ abstract class NetworkNodeTile<N : NetworkNode>(tileType: BlockEntityType<*>?):
         super.markRemoved()
 
         markedForRemoval = true
+        node.markedForRemoval = true
 
         world?.let {
             if (!it.isClient) {

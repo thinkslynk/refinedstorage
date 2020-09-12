@@ -2,7 +2,6 @@ package com.refinedmods.refinedstorage.gui.screenhandlers
 
 import com.refinedmods.refinedstorage.RSGui
 import com.refinedmods.refinedstorage.container.slot.DisabledSlot
-import com.refinedmods.refinedstorage.data.BaseBlockEntityData
 import net.minecraft.entity.player.PlayerEntity
 import net.minecraft.inventory.SimpleInventory
 import net.minecraft.item.ItemStack

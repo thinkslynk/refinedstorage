@@ -25,7 +25,6 @@ import net.minecraft.world.BlockView
 import net.minecraft.world.World
 import net.minecraft.world.WorldAccess
 import java.util.function.Function
-import net.minecraft.entity.player.PlayerEntity
 
 @RegisterBlock(RS.ID, CableBlock.ID)
 @RegisterBlockItem(RS.ID, CableBlock.ID, "CURED_STORAGE")

@@ -1,6 +1,5 @@
 package com.refinedmods.refinedstorage.gui.screen
 
-import com.refinedmods.refinedstorage.container.AmountContainer
 import com.refinedmods.refinedstorage.gui.screenhandlers.AmountScreenHandler
 import net.minecraft.client.MinecraftClient
 import net.minecraft.client.gui.screen.Screen
@@ -9,7 +8,6 @@ import net.minecraft.entity.player.PlayerEntity
 import net.minecraft.item.ItemStack
 import net.minecraft.text.Text
 import net.minecraft.text.TranslatableText
-import org.apache.commons.lang3.tuple.Pair
 import java.util.function.Function
 
 class ItemAmountScreen(
@@ -42,7 +40,7 @@ class ItemAmountScreen(
         get() {
             return if (alternativesScreenFactory == null) {
                 super.okCancelPos
-            } else Pair.of(114, 22)
+            } else 114 to 22
         }
 
     override val defaultAmount: Int

@@ -84,8 +84,8 @@ class NetworkNodeManager(
 //        }
 
         // Use cache if it exists
-        if(nodes.contains(pos)) {
-            return nodes[pos]
+        nodes[pos]?.let {
+            return if(it.markedForRemoval) null else it
         }
 
         return when (val entity = world.getBlockEntity(pos)) {

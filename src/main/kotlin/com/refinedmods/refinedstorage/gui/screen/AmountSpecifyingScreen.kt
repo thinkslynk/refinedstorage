@@ -2,6 +2,7 @@ package com.refinedmods.refinedstorage.gui.screen
 
 import com.refinedmods.refinedstorage.RS
 import com.refinedmods.refinedstorage.render.RenderSettings
+import kotlin.math.max
 import kotlin.math.min
 import net.minecraft.client.MinecraftClient
 import net.minecraft.client.gui.widget.ButtonWidget
@@ -11,7 +12,6 @@ import net.minecraft.entity.player.PlayerEntity
 import net.minecraft.screen.ScreenHandler
 import net.minecraft.text.Text
 import net.minecraft.text.TranslatableText
-import org.apache.commons.lang3.tuple.Pair
 import org.lwjgl.glfw.GLFW
 
 abstract class AmountSpecifyingScreen<T : ScreenHandler>(
@@ -31,8 +31,8 @@ abstract class AmountSpecifyingScreen<T : ScreenHandler>(
     protected abstract val defaultAmount: Int
     protected abstract fun canAmountGoNegative(): Boolean
     protected abstract val maxAmount: Int
-    protected open val amountPos: Pair<Int, Int> = Pair.of(7 + 2, 50 + 1)
-    protected open val okCancelPos: Pair<Int, Int> = Pair.of(114, 33)
+    protected open val amountPos: Pair<Int, Int> = 7 + 2 to 50 + 1
+    protected open val okCancelPos: Pair<Int, Int> = 114 to 33
     protected open val okCancelButtonWidth: Int = 50
 
     init {
@@ -41,17 +41,17 @@ abstract class AmountSpecifyingScreen<T : ScreenHandler>(
     }
 
     override fun onPostInit(x: Int, y: Int) {
-        okButton = addButton(x + okCancelPos.left, y + okCancelPos.right, okCancelButtonWidth, 20, okButtonText,
+        okButton = addButton(x + okCancelPos.first, y + okCancelPos.second, okCancelButtonWidth, 20, okButtonText,
             enabled = true,
             visible = true,
             onPress = ButtonWidget.PressAction { onOkButtonPressed(hasShiftDown()) })
-        cancelButton = addButton(x + okCancelPos.left, y + okCancelPos.right + 24, okCancelButtonWidth, 20, TranslatableText("gui.cancel"),
+        cancelButton = addButton(x + okCancelPos.first, y + okCancelPos.second + 24, okCancelButtonWidth, 20, TranslatableText("gui.cancel"),
             enabled = true,
             visible = true,
             onPress = ButtonWidget.PressAction { close() })
 
 
-        TextFieldWidget(textRenderer, x + amountPos.left, y + amountPos.right, 69 - 6, textRenderer.fontHeight, Text.of("")).run {
+        TextFieldWidget(textRenderer, x + amountPos.first, y + amountPos.second, 69 - 6, textRenderer.fontHeight, Text.of("")).run {
             amountField = this
 //            this.setEnableBackgroundDrawing(false) // TODO How to change background drawing?
             this.isVisible = true
@@ -68,7 +68,7 @@ abstract class AmountSpecifyingScreen<T : ScreenHandler>(
         val increments = increments
         var xx = 7
         val width = 30
-        (0..2).forEach { i ->
+        repeat(3) { i ->
             val increment = increments[i]
             var text: Text = Text.of("+$increment")
             if (text.string == "+1000") {
@@ -81,7 +81,7 @@ abstract class AmountSpecifyingScreen<T : ScreenHandler>(
             xx += width + 3
         }
         xx = 7
-        (0..2).forEach { i ->
+        repeat(3) { i ->
             val increment = increments[i]
             var text: Text = Text.of("-$increment")
             if (text.string == "-1000") {
@@ -114,7 +114,7 @@ abstract class AmountSpecifyingScreen<T : ScreenHandler>(
         val newAmount = if (canAmountGoNegative())
             oldAmount + increment
         else
-            1.coerceAtLeast((if (oldAmount == 1 && increment != 1) 0 else oldAmount) + increment)
+            max(1, (if (oldAmount == 1 && increment != 1) 0 else oldAmount) + increment)
 
         amountField.text = min(newAmount, maxAmount).toString()
     }

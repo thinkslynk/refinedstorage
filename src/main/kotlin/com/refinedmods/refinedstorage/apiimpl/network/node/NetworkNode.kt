@@ -40,6 +40,7 @@ abstract class NetworkNode(
         private const val VERSION = 1
     }
 
+    override var markedForRemoval = false
     override var network: INetwork? = null
     
     @JvmField

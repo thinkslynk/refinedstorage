@@ -64,14 +64,12 @@ open class BiSyncedData<T>(
 
     override fun send() {
         val byteBuffer = byteBuffers.buffer()
-//        try {
-            val buf = PacketByteBuf(byteBuffer)
-            internalData.getSerializer().write(buf, internalData)
-            when(isClient) {
-                true -> getClientRegistry().sendToServer(identifier, buf)
-                false -> getServerRegistry().sendToPlayer(player, identifier, buf)
-            }
-//        } finally { byteBuffer.release() }
+        val buf = PacketByteBuf(byteBuffer)
+        internalData.getSerializer().write(buf, internalData)
+        when(isClient) {
+            true -> getClientRegistry().sendToServer(identifier, buf)
+            false -> getServerRegistry().sendToPlayer(player, identifier, buf)
+        }
     }
 
     override fun accept(ctx: PacketContext, buf: PacketByteBuf) {

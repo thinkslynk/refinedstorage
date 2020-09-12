@@ -29,7 +29,6 @@ class ConstructorScreenHandler(
         syncedData.unregister()
     }
 
-    // TODO OLD
     init {
         syncedData.register()
 
@@ -37,7 +36,7 @@ class ConstructorScreenHandler(
             syncedData.load(it)
         }
 
-        (0 until 4).forEach {
+        repeat(4) {
             addSlot(Slot(syncedData.data.upgrades, it, 187, 6 + it * 18))
         }
 
@@ -49,39 +48,5 @@ class ConstructorScreenHandler(
 //                .setEnableHandler(Supplier { data.iType == IType.FLUIDS }))
         addPlayerInventory(8, 55)
     }
-
-//    init {
-//        val upgrades = node?.upgrades ?: SimpleInventory(4)
-//        val filter = node?.itemFilters ?: SimpleInventory(1)
-//        val fluidFilter = node?.fluidFilters ?: FluidInventory(0)
-//
-//        val root = WBox(Axis.HORIZONTAL)
-//        setRootPanel(root)
-//
-//        val left = WBox(Axis.VERTICAL)
-//
-//        // Item to construct and player inventory
-//        val invPanel = createPlayerInventoryPanel()
-//        val filterSlot = WItemSlot.of(filter, 0, 1, 1)
-//        val center = WBox(Axis.VERTICAL)
-//        center.spacing = SECTION_PADDING
-//        center.horizontalAlignment = HorizontalAlignment.CENTER
-//        center.add(filterSlot)
-//        center.add(invPanel)
-//
-//        val right = WItemSlot.of(upgrades, 0, 1, upgrades.size())
-//
-//        // Compose
-//        root.add(left)
-//        root.add(center)
-//        root.add(right)
-//
-//        root.validate(this)
-//
-//        transferManager.addBiTransfer(player.inventory, upgrades)
-//        transferManager.addFilterTransfer(player.inventory, filter, fluidFilter, Supplier {
-//            node?.type ?: ConstructorTile.TYPE.value
-//        })
-//    }
 
 }

@@ -37,8 +37,8 @@ abstract class BaseScreenHandler(
     protected fun addPlayerInventory(xInventory: Int, yInventory: Int) {
         val disabledSlotNumber = disabledSlotNumber
         var id = 9
-        (0 until 3).forEach { y ->
-            (0 until 9).forEach { x ->
+        repeat(3) { y ->
+            repeat(9) { x ->
                 when (id) {
                     disabledSlotNumber -> addSlot(LegacyDisabledSlot(playerInventory, id, xInventory + x * 18, yInventory + y * 18))
                     else -> addSlot(Slot(playerInventory, id, xInventory + x * 18, yInventory + y * 18))
@@ -47,7 +47,7 @@ abstract class BaseScreenHandler(
             }
         }
 
-        (0 until 9).forEach { i ->
+        repeat(9) { i ->
             val x = xInventory + i * 18
             val y = yInventory + 4 + 3 * 18
             when (i) {
