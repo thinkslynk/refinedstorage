@@ -17,8 +17,7 @@ abstract class BaseTile(tileType: BlockEntityType<*>?):
         return tag
     }
 
-    val unsafeWorld: World
-        get() = world!!
+    val unsafeWorld: World by lazy {world!!}
 
     open fun readUpdate(tag: CompoundTag) {}
     val updateTag: CompoundTag
