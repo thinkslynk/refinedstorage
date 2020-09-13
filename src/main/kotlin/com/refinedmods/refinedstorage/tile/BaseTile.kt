@@ -6,6 +6,7 @@ import net.minecraft.block.entity.BlockEntity
 import net.minecraft.block.entity.BlockEntityType
 import net.minecraft.nbt.CompoundTag
 import net.minecraft.network.packet.s2c.play.BlockEntityUpdateS2CPacket
+import net.minecraft.world.World
 import reborncore.common.network.NetworkManager
 
 abstract class BaseTile(tileType: BlockEntityType<*>?):
@@ -15,6 +16,9 @@ abstract class BaseTile(tileType: BlockEntityType<*>?):
     open fun writeUpdate(tag: CompoundTag): CompoundTag {
         return tag
     }
+
+    val unsafeWorld: World
+        get() = world!!
 
     open fun readUpdate(tag: CompoundTag) {}
     val updateTag: CompoundTag
