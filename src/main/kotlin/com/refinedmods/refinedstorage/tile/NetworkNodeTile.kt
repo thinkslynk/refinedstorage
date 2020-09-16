@@ -5,7 +5,7 @@ import com.refinedmods.refinedstorage.api.util.Action
 import com.refinedmods.refinedstorage.apiimpl.API
 import com.refinedmods.refinedstorage.apiimpl.network.node.NetworkNode
 import com.refinedmods.refinedstorage.extensions.getCustomLogger
-import com.refinedmods.refinedstorage.extensions.isServer
+import com.refinedmods.refinedstorage.extensions.onServer
 import com.refinedmods.refinedstorage.tile.config.IRedstoneConfigurable
 import com.refinedmods.refinedstorage.tile.config.RedstoneMode
 import com.refinedmods.refinedstorage.tile.config.RedstoneMode.Companion.createParameter
@@ -34,8 +34,7 @@ abstract class NetworkNodeTile<N : NetworkNode>(tileType: BlockEntityType<*>?) :
 
     override fun markRemoved() {
         super.markRemoved()
-        val world = world!!
-        if (world.isServer()) {
+        onServer{world->
             markedForRemoval = true
             API.getNetworkNodeManager(world).removeNode(pos)
 
@@ -51,8 +50,7 @@ abstract class NetworkNodeTile<N : NetworkNode>(tileType: BlockEntityType<*>?) :
     }
 
     fun register() {
-        val world = world!!
-        if (world.isServer()) {
+        onServer{world->
             API.getNetworkNodeManager(world).setNode(pos, node)
         }
     }

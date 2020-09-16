@@ -9,7 +9,7 @@ import com.refinedmods.refinedstorage.apiimpl.network.Network
 import com.refinedmods.refinedstorage.apiimpl.network.node.RootNetworkNode
 import com.refinedmods.refinedstorage.block.ControllerBlock
 import com.refinedmods.refinedstorage.block.ControllerBlock.EnergyType
-import com.refinedmods.refinedstorage.extensions.isServer
+import com.refinedmods.refinedstorage.extensions.onServer
 import com.refinedmods.refinedstorage.tile.config.IRedstoneConfigurable
 import com.refinedmods.refinedstorage.tile.config.RedstoneMode
 import com.refinedmods.refinedstorage.tile.config.RedstoneMode.Companion.createParameter
@@ -52,12 +52,11 @@ open class ControllerTile(type: NetworkType, entity: BlockEntityType<*>?):
 
     val network: INetwork
         get() {
-            val world = world!!
-            if (world.isServer()) {
+            onServer{world->
                 return API.getNetworkManager(world).getNetwork(pos)
                     ?: throw IllegalStateException("No network present at $pos")
             }
-            val net = dummyNetwork ?: Network(world, pos, type)
+            val net = dummyNetwork ?: Network(world!!, pos, type)
             dummyNetwork = net
             return net
         }
@@ -66,8 +65,7 @@ open class ControllerTile(type: NetworkType, entity: BlockEntityType<*>?):
 
     override fun cancelRemoval() {
         super.cancelRemoval()
-        val world = world!!
-        if (world.isServer()) {
+        onServer{world->
             val manager = API.getNetworkManager(world)
             if (manager.getNetwork(pos) == null) {
                 manager.setNetwork(pos, Network(world, pos, type))
@@ -77,8 +75,7 @@ open class ControllerTile(type: NetworkType, entity: BlockEntityType<*>?):
 
     override fun markRemoved() {
         super.markRemoved()
-        val world = world!!
-        if (world.isServer()) {
+        onServer{world->
             val manager = API.getNetworkManager(world)
             val network = manager.getNetwork(pos)
 
