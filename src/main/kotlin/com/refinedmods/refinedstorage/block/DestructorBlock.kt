@@ -1,9 +1,11 @@
 package com.refinedmods.refinedstorage.block
 
-//import com.refinedmods.refinedstorage.tile.DestructorTile
 import com.refinedmods.refinedstorage.RS
 import com.refinedmods.refinedstorage.block.shape.ShapeCache.getOrCreate
+import com.refinedmods.refinedstorage.tile.DestructorTile
 import com.refinedmods.refinedstorage.util.BlockUtils
+import com.refinedmods.refinedstorage.util.CollisionUtils
+import com.refinedmods.refinedstorage.util.NetworkUtils
 import com.thinkslynk.fabric.annotations.registry.RegisterBlock
 import com.thinkslynk.fabric.annotations.registry.RegisterBlockItem
 import net.minecraft.block.Block
@@ -21,12 +23,15 @@ import net.minecraft.util.shape.VoxelShapes
 import net.minecraft.world.BlockView
 import net.minecraft.world.World
 import java.util.function.Function
+import net.fabricmc.fabric.api.screenhandler.v1.ExtendedScreenHandlerFactory
+import net.minecraft.block.BlockEntityProvider
+import net.minecraft.block.entity.BlockEntity
 
 @RegisterBlock(RS.ID, DestructorBlock.ID)
 @RegisterBlockItem(RS.ID, DestructorBlock.ID, "CURED_STORAGE")
 class DestructorBlock:
-        CableBlock(BlockUtils.DEFAULT_GLASS_PROPERTIES)
-//        BlockEntityProvider
+    CableBlock(BlockUtils.DEFAULT_GLASS_PROPERTIES),
+    BlockEntityProvider
 {
     override val direction: BlockDirection
         get() = BlockDirection.ANY
@@ -40,11 +45,8 @@ class DestructorBlock:
         builder.add(CONNECTED)
     }
 
-//    override fun createBlockEntity(world: BlockView): BlockEntity {
-//        return NoOpBlockEntity()
-//        // TODO BlockEntities
-////        return DestructorTile()
-//    }
+    override fun createBlockEntity(world: BlockView) = DestructorTile()
+
 
     override fun getOutlineShape(state: BlockState, world: BlockView, pos: BlockPos, context: ShapeContext): VoxelShape {
         return getOrCreate(state, Function { s: BlockState ->
@@ -68,22 +70,18 @@ class DestructorBlock:
     }
 
     override fun onUse(state: BlockState, world: World, pos: BlockPos, player: PlayerEntity, hand: Hand, hit: BlockHitResult): ActionResult {
-        // TODO Port Gui
-//        return if (!world.isClient && CollisionUtils.isInBounds(getHeadShape(state), pos, hit.getHitVec())) {
-//            NetworkUtils.attemptModify(world, pos, hit.getFace(), player) {
-//                NetworkHooks.openGui(
-//                        player as ServerPlayerEntity?,
-//                        PositionalTileContainerProvider<DestructorTile>(
-//                                TranslationTextComponent("gui.refinedstorage.destructor"),
-//                                { tile: DestructorTile?, windowId: Int, inventory: PlayerInventory?, p: PlayerEntity? -> DestructorContainer(tile, player, windowId) },
-//                                pos
-//                        ),
-//                        pos
-//                )
-//            }
-//        } else ActionResult.SUCCESS
+        return if (!world.isClient && CollisionUtils.isInBounds(getHeadShape(state), pos, hit.pos)) {
+            log.info("Destructor block used...")
+            NetworkUtils.attemptModify(world, pos, hit.side, player, Runnable {
+                log.info("Destructor block opening screen...")
+                player.openHandledScreen(state.createScreenHandlerFactory(world, pos))
+                log.info("Destructor block after opening screen...")
+            })
+        } else ActionResult.SUCCESS
+    }
 
-        return ActionResult.SUCCESS
+    override fun createScreenHandlerFactory(state: BlockState, world: World, pos: BlockPos): ExtendedScreenHandlerFactory {
+        return world.getBlockEntity(pos) as DestructorTile
     }
 
     companion object {

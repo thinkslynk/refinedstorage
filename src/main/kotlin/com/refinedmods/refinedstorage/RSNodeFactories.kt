@@ -4,6 +4,7 @@ import com.refinedmods.refinedstorage.api.network.node.INetworkNode
 import com.refinedmods.refinedstorage.api.network.node.INetworkNodeFactory
 import com.refinedmods.refinedstorage.apiimpl.API
 import com.refinedmods.refinedstorage.apiimpl.network.node.ConstructorNetworkNode
+import com.refinedmods.refinedstorage.apiimpl.network.node.DestructorNetworkNode
 import com.refinedmods.refinedstorage.apiimpl.network.node.NetworkNode
 import com.refinedmods.refinedstorage.extensions.CompoundNBT
 import net.minecraft.nbt.CompoundTag
@@ -111,13 +112,13 @@ object RSNodeFactories {
 //        API.instance().getNetworkNodeRegistry().add(
 //            StorageMonitorNetworkNode.ID,
 //            { tag, world, pos -> readAndReturn(tag, StorageMonitorNetworkNode(world, pos)) })
-        API.networkNodeRegistry.add(
-            ConstructorNetworkNode.ID
-        ) { tag, world, pos ->
+        API.networkNodeRegistry.add( ConstructorNetworkNode.ID ) { tag, world, pos ->
             readAndReturn(tag, ConstructorNetworkNode(world, pos))
         }
-//        API.instance().getNetworkNodeRegistry()
-//            .add(DestructorNetworkNode.ID, { tag, world, pos -> readAndReturn(tag, DestructorNetworkNode(world, pos)) })
+        API.networkNodeRegistry.add( DestructorNetworkNode.ID ) { tag, world, pos ->
+            readAndReturn(tag, DestructorNetworkNode(world, pos))
+        }
+
 //        API.instance().getNetworkNodeRegistry().add(
 //            DiskManipulatorNetworkNode.ID,
 //            { tag, world, pos -> readAndReturn(tag, DiskManipulatorNetworkNode(world, pos)) })

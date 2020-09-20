@@ -34,15 +34,15 @@ import java.util.*
 class DestructorNetworkNode(world: World, pos: BlockPos) : NetworkNode(world, pos), IComparable, IWhitelistBlacklist, IType {
     override val itemFilters: BaseItemHandler = BaseItemHandler(9).addListener(NetworkNodeInventoryListener(this))
     override val fluidFilters: FluidInventory = FluidInventory(9).addListener(NetworkNodeFluidInventoryListener(this))
-    private val upgrades: UpgradeItemHandler = UpgradeItemHandler(4)
-            // TODO Upgrades
-//            UpgradeItemHandler(4, UpgradeItem.Type.SPEED, UpgradeItem.Type.SILK_TOUCH, UpgradeItem.Type.FORTUNE_1, UpgradeItem.Type.FORTUNE_2, UpgradeItem.Type.FORTUNE_3)
+    val upgrades: UpgradeItemHandler = UpgradeItemHandler(4)
+            // TODO UpgradeItemHandler(4, UpgradeItem.Type.SPEED, UpgradeItem.Type.SILK_TOUCH, UpgradeItem.Type.FORTUNE_1, UpgradeItem.Type.FORTUNE_2, UpgradeItem.Type.FORTUNE_3)
             .addListener(NetworkNodeInventoryListener(this))
             .addListener(object : InventoryListener<BaseItemHandler> {
                 override fun onChanged(handler: BaseItemHandler, slot: Int, reading: Boolean) {
                     tool = createTool()
                 }
             }) as UpgradeItemHandler
+    override val drops: Inventory = upgrades
     override var compare: Int = IComparer.COMPARE_NBT
         set(v) {
             field = v
@@ -78,21 +78,28 @@ class DestructorNetworkNode(world: World, pos: BlockPos) : NetworkNode(world, po
     }
 
     private fun pickupItems() {
-        val front: BlockPos = pos.offset(direction)
-        val droppedItems: List<Entity> = ArrayList()
-        val chunk: WorldChunk = world.getWorldChunk(front)
+        network?.let{ network ->
+            val front: BlockPos = pos.offset(direction)
+            val droppedItems: List<Entity> = ArrayList()
+            val chunk: WorldChunk = world.getWorldChunk(front)
 
-        chunk.collectOtherEntities(null, Box(front), droppedItems, null)
-        for (entity in droppedItems) {
-            if (entity is ItemEntity) {
-                val droppedItem: ItemStack = entity.stack
-                if (IWhitelistBlacklist.acceptsItem(itemFilters, mode, compare, droppedItem) &&
-                        network!!.insertItem(droppedItem, droppedItem.count, Action.SIMULATE).isEmpty) {
-                    network!!.insertItemTracked(droppedItem.copy(), droppedItem.count)
-                    entity.remove()
-                    break
+            chunk.collectOtherEntities(null, Box(front), droppedItems, null)
+            val entity = droppedItems
+                .asSequence()
+                .filter { it is ItemEntity }
+                .map { it as ItemEntity }
+                .firstOrNull {
+                    val droppedItem: ItemStack = it.stack
+                    IWhitelistBlacklist.acceptsItem(itemFilters, mode, compare, droppedItem) &&
+                            network.insertItem(droppedItem, droppedItem.count, Action.SIMULATE).isEmpty
                 }
+
+            entity?.let {
+                val copy = it.stack
+                network.insertItemTracked(copy, copy.count)
+                it.remove()
             }
+
         }
     }
 
@@ -113,7 +120,7 @@ class DestructorNetworkNode(world: World, pos: BlockPos) : NetworkNode(world, po
                     WorldUtils.getFakePlayer(world, owner),
                     tool
             )
-            for (drop in drops) {
+            drops.forEach { drop ->
                 // how do we know network isn't null?
                 if (!network!!.insertItem(drop, drop.count, Action.SIMULATE).isEmpty) {
                     return
@@ -233,9 +240,6 @@ class DestructorNetworkNode(world: World, pos: BlockPos) : NetworkNode(world, po
             fluidFilters.readFromNbt(tag.getCompound(NBT_FLUID_FILTERS))
         }
     }
-
-    override val drops: Inventory
-        get() = upgrades
 
     companion object {
         @kotlin.jvm.JvmField
