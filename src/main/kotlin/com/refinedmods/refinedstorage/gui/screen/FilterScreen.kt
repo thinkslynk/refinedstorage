@@ -1,26 +1,28 @@
-package com.refinedmods.refinedstorage.screen
+@file:Suppress("DuplicatedCode")
+
+package com.refinedmods.refinedstorage.gui.screen
 
 import com.refinedmods.refinedstorage.RS
 import com.refinedmods.refinedstorage.api.util.IComparer
 import com.refinedmods.refinedstorage.api.util.IFilter
-import com.refinedmods.refinedstorage.container.FilterContainer
+import com.refinedmods.refinedstorage.gui.screenhandlers.FilterScreenHandler
 import com.refinedmods.refinedstorage.render.RenderSettings
-import com.refinedmods.refinedstorage.screen.widget.CheckboxWidget
-import com.refinedmods.refinedstorage.screen.widget.sidebutton.FilterTypeSideButton
+import com.refinedmods.refinedstorage.gui.widget.CheckboxWidget
+import com.refinedmods.refinedstorage.gui.widget.sidebutton.FilterTypeSideButton
+import java.util.function.Consumer
 import net.minecraft.client.MinecraftClient
 import net.minecraft.client.gui.widget.ButtonWidget
 import net.minecraft.client.gui.widget.TextFieldWidget
 import net.minecraft.client.resource.language.I18n
 import net.minecraft.client.util.math.MatrixStack
-import net.minecraft.entity.player.PlayerInventory
+import net.minecraft.entity.player.PlayerEntity
 import net.minecraft.item.ItemStack
 import net.minecraft.text.Text
 import net.minecraft.text.TranslatableText
 import org.lwjgl.glfw.GLFW
-import java.util.function.Consumer
 
-class FilterScreen(container: FilterContainer, inventory: PlayerInventory, title: Text):
-        BaseScreen<FilterContainer>(container, 176, 231, inventory, title)
+class FilterScreen(container: FilterScreenHandler, player: PlayerEntity, title: Text):
+        BaseScreen<FilterScreenHandler>(container, player, title)
 {
     private val stack: ItemStack = container.stack
     // TODO remove defaults and use init{}
@@ -85,12 +87,12 @@ class FilterScreen(container: FilterContainer, inventory: PlayerInventory, title
     override fun tick(x: Int, y: Int) {}
     override fun renderBackground(matrixStack: MatrixStack, x: Int, y: Int, mouseX: Int, mouseY: Int) {
         bindTexture(RS.ID, "gui/filter.png")
-        drawTexture(matrixStack, x, y, 0, 0, xSize, ySize)
+        drawTexture(matrixStack, x, y, 0, 0, 176, 231)
     }
 
     override fun renderForeground(matrixStack: MatrixStack, mouseX: Int, mouseY: Int) {
-        renderString(matrixStack, 7, 7, title.string)
-        renderString(matrixStack, 7, 137, I18n.translate("container.inventory"))
+        textRenderer.draw(matrixStack, title, 7f, 7f, RenderSettings.INSTANCE.secondaryColor)
+        textRenderer.draw(matrixStack, I18n.translate("container.inventory"), 7f, 7f, RenderSettings.INSTANCE.secondaryColor)
     }
 
     fun getType(): Int {

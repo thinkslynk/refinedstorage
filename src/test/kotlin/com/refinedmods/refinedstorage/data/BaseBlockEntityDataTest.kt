@@ -20,9 +20,9 @@ class BaseBlockEntityDataTest {
         }
 
         val data = BaseBlockEntityData(
-            blockPos = BlockPos(1, 2, 3),
-            direction = Direction.EAST
+            blockPos = BlockPos(1, 2, 3)
         )
+
 
         // Test Block position updates
         data.observers.add(WeakReference(observer))

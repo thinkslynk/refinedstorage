@@ -1,7 +1,7 @@
-package com.refinedmods.refinedstorage.screen.widget.sidebutton
+package com.refinedmods.refinedstorage.gui.widget.sidebutton
 
 import com.refinedmods.refinedstorage.api.network.grid.IGrid
-import com.refinedmods.refinedstorage.screen.BaseScreen
+import com.refinedmods.refinedstorage.gui.screen.BaseScreen
 import net.minecraft.client.resource.language.I18n
 import net.minecraft.client.util.math.MatrixStack
 import net.minecraft.util.Formatting

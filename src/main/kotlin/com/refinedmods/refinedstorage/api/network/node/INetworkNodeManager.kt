@@ -12,6 +12,14 @@ interface INetworkNodeManager {
      * @param pos the position of the node
      * @return the network node at the given position, or null if no network node was found
      */
+    fun getCachedNode(pos: BlockPos): INetworkNode?
+
+    /**
+     * Gets a network node from the registry at a given position.
+     *
+     * @param pos the position of the node
+     * @return the network node at the given position, or null if no network node was found
+     */
     fun getNode(pos: BlockPos): INetworkNode?
 
     /**

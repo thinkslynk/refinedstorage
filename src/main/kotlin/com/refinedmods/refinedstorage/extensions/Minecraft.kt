@@ -1,8 +1,13 @@
 package com.refinedmods.refinedstorage.extensions
 
+import com.refinedmods.refinedstorage.render.RenderSettings
+import net.minecraft.client.font.TextRenderer
+import net.minecraft.client.util.math.MatrixStack
 import net.minecraft.block.entity.BlockEntity
 import net.minecraft.inventory.Inventory
+import net.minecraft.inventory.SimpleInventory
 import net.minecraft.item.ItemStack
+import net.minecraft.text.Text
 import net.minecraft.server.world.ServerWorld
 import net.minecraft.util.math.BlockPos
 import net.minecraft.world.World
@@ -21,12 +26,22 @@ fun ItemStack.safeSubtract(size: Int) {
 }
 
 fun Inventory.getStacks(): Collection<ItemStack> =
-    (0..this.size()).map { this.getStack(it) }
+    if(this.isEmpty) emptyList() else (0 until this.size()).map { this.getStack(it) }
 
 fun Inventory.drop(world: World, pos: BlockPos) {
     // TODO figure out how to drop an inventory at a position...
 }
 
+fun Inventory.toSimpleInventory(): SimpleInventory {
+    return SimpleInventory(*getStacks().toTypedArray())
+}
+
+fun TextRenderer.draw(matrices: MatrixStack, text: Text, x: Float, y: Float) {
+    this.draw(matrices, text, x, y, RenderSettings.INSTANCE.secondaryColor)
+}
+
+fun TextRenderer.draw(matrices: MatrixStack, text: String, x: Float, y: Float) {
+    this.draw(matrices, text, x, y, RenderSettings.INSTANCE.secondaryColor)
 fun World.isServer(): Boolean {
     contract {
         returns(true) implies (this@isServer is ServerWorld)

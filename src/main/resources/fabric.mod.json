@@ -30,6 +30,9 @@
     "cardinal-components-block": [
       "com.refinedmods.refinedstorage.RSComponents"
     ],
+    "rei_plugins": [
+      "com.refinedmods.refinedstorage.integration.rei.RSReiPlugin"
+    ],
     "modmenu": [
       "com.refinedmods.refinedstorage.integration.modmenu.ModMenuIntegration"
     ]

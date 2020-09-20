@@ -3,8 +3,8 @@ package com.refinedmods.refinedstorage.util
 import com.mojang.blaze3d.systems.RenderSystem
 import com.refinedmods.refinedstorage.api.util.IComparer
 import com.refinedmods.refinedstorage.apiimpl.API.Companion.instance
+import com.refinedmods.refinedstorage.gui.screen.BaseScreen
 import com.refinedmods.refinedstorage.render.Styles
-import com.refinedmods.refinedstorage.screen.BaseScreen
 import net.minecraft.client.MinecraftClient
 import net.minecraft.client.font.TextRenderer
 import net.minecraft.client.item.TooltipContext

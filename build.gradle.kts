@@ -40,8 +40,11 @@ repositories {
     jcenter()
     maven("https://jitpack.io")
     maven("http://maven.fabricmc.net/")
-    maven("https://server.bbkr.space/artifactory/libs-release")
-    maven("https://aperlambda.github.io/maven")
+
+    // CottonMC Dependencies
+
+    // Cardinal Components
+    maven("https://dl.bintray.com/ladysnake/libs")
 }
 
 dependencies {
@@ -58,10 +61,12 @@ dependencies {
     val clothConfig: String by project
     val autoconfig1u: String by project
     val modMenu: String by project
+    val rebornCore: String by project
 
     // Runtime mod Versions
     val reiVersion: String by project
     val databreakerVersion: String by project
+    val techReborn: String by project
 
     // Unit Test Versions
     val junitVersion: String by project
@@ -84,7 +89,7 @@ dependencies {
 
     // GUI Library
     // https://github.com/CottonMC/LibGui/wiki/Getting-Started-with-GUIs
-    modImplementation("io.github.cottonmc:LibGui:$libGui")
+//    modImplementation("github.com.CottonMC:LibGui:$libGui")
 
     // ClothConfig and autoconfig1u
     modApi("me.shedaniel.cloth:config-2:$clothConfig") {
@@ -100,17 +105,18 @@ dependencies {
     modImplementation("io.github.prospector:modmenu:$modMenu")
 
     // JEI style mod
+    modCompileOnly("me.shedaniel:RoughlyEnoughItems-api:$reiVersion")
     modRuntime("me.shedaniel:RoughlyEnoughItems:$reiVersion")
 
     // Tech Reborn Testing
-    modRuntime("TechReborn:TechReborn-1.16:+")
+    modRuntime("TechReborn:TechReborn-1.16:$techReborn")
 
     // Databreaker
     modRuntime ("com.github.SuperCoder7979:databreaker:$databreakerVersion") {
         exclude(module="fabric-loader")
     }
 
-    val rcVersion = "RebornCore:RebornCore-1.16:+"
+    val rcVersion = "RebornCore:RebornCore-1.16:$rebornCore"
     modApi (rcVersion) {
         exclude("net.fabricmc.fabric-api")
     }

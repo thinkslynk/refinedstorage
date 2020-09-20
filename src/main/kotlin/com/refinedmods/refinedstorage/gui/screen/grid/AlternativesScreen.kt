@@ -1,11 +1,13 @@
-package com.refinedmods.refinedstorage.screen.grid
+@file:Suppress("DuplicatedCode")
+
+package com.refinedmods.refinedstorage.gui.screen.grid
 
 import com.mojang.blaze3d.systems.RenderSystem
 import com.refinedmods.refinedstorage.RS
-import com.refinedmods.refinedstorage.container.AlternativesContainer
 import com.refinedmods.refinedstorage.extensions.draw
 import com.refinedmods.refinedstorage.gui.screen.BaseScreen
 import com.refinedmods.refinedstorage.gui.screenhandlers.AlternativesScreenHandler
+import com.refinedmods.refinedstorage.render.RenderSettings
 import com.refinedmods.refinedstorage.gui.widget.CheckboxWidget
 import com.refinedmods.refinedstorage.gui.widget.ScrollbarWidget
 import com.refinedmods.refinedstorage.tile.config.IType
@@ -118,7 +120,7 @@ class AlternativesScreen private constructor(private val parent: Screen, player:
     }
 
     override fun renderForeground(matrixStack: MatrixStack, mouseX: Int, mouseY: Int) {
-        textRenderer.draw(matrixStack, title, 7f, 7f)
+        textRenderer.draw(matrixStack, title, 7f, 7f, RenderSettings.INSTANCE.secondaryColor)
         var x = 8
         var y = 20
         for (i in lines.indices) {
@@ -202,8 +204,8 @@ class AlternativesScreen private constructor(private val parent: Screen, player:
     private inner class ItemLine(private val item: ItemStack) : Line {
         override fun render(matrixStack: MatrixStack, x: Int, y: Int) {
             RenderSystem.color4f(1f, 1f, 1f, 1f)
-            renderItem(matrixStack, x + 3, y + 2, item)
-            textRenderer.draw(matrixStack, item.name, x + 23f, y + 7f)
+            renderItem(matrixStack, x + 3, y + 2, item, false, null, 0)
+            textRenderer.draw(matrixStack, item.name.string, x + 23f, y + 7f)
         }
     }
 
@@ -213,7 +215,7 @@ class AlternativesScreen private constructor(private val parent: Screen, player:
             // TODO Draw fluid
 //            FluidConfigGui.draw(matrixStack)
 //            FluidRenderer.INSTANCE.render(matrixStack, x + 3, y + 2, fluid)
-            textRenderer.draw(matrixStack, FluidUtil.getFluidName(fluid.fluid), x + 23f, y + 7f)
+            textRenderer.draw(matrixStack, FluidUtil.getFluidName(fluid.fluid), x + 4f + 19f, y + 7f)
         }
 
     }
@@ -251,8 +253,9 @@ class AlternativesScreen private constructor(private val parent: Screen, player:
             var rX = x
             for (item in items) {
                 if (RenderUtils.inBounds(rX+ 3, y, 16, 16, mx.toDouble(), my.toDouble())) {
-                    ToolTip(*RenderUtils.getTooltipFromItem(item).toTypedArray())
-                        .draw(matrixStack, textRenderer, mx, my)
+                    ToolTip(
+                        *RenderUtils.getTooltipFromItem(item).toTypedArray()
+                    ).draw(matrixStack, textRenderer, mx, my) // TODO figure out what the use the stack for in their render function
                 }
                 rX += 17
             }
@@ -278,8 +281,9 @@ class AlternativesScreen private constructor(private val parent: Screen, player:
             var rX = x
             for (fluid in fluids) {
                 if (RenderUtils.inBounds(rX + 3, y, 16, 16, mx.toDouble(), my.toDouble())) {
-                    ToolTip(Text.of(FluidUtil.getFluidName(fluid.fluid)))
-                        .draw(matrixStack, textRenderer, mx, my)
+                    ToolTip(
+                        Text.of(FluidUtil.getFluidName(fluid.fluid))
+                    ).draw(matrixStack, textRenderer, mx, my)
                 }
                 rX += 17
             }

@@ -20,11 +20,9 @@ class C2SSyncedData<T>(
     override fun send() {
         if(!isClient) return
         val byteBuffer = byteBuffers.buffer()
-        try {
-            val buf = PacketByteBuf(byteBuffer)
-            internalData.getSerializer().write(buf, internalData)
-            getClientRegistry().sendToServer(identifier, buf)
-        } finally { byteBuffer.release() }
+        val buf = PacketByteBuf(byteBuffer)
+        internalData.getSerializer().write(buf, internalData)
+        getClientRegistry().sendToServer(identifier, buf)
     }
 
     override fun register() {

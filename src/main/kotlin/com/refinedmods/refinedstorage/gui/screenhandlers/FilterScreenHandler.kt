@@ -1,15 +1,26 @@
-package com.refinedmods.refinedstorage.container
+package com.refinedmods.refinedstorage.gui.screenhandlers
 
 import com.refinedmods.refinedstorage.RS
 import com.refinedmods.refinedstorage.RSGui
+import com.refinedmods.refinedstorage.container.BaseContainer
+import com.refinedmods.refinedstorage.container.slot.filter.FilterSlot
+import com.refinedmods.refinedstorage.container.slot.filter.FluidFilterSlot
+import com.refinedmods.refinedstorage.data.BaseBlockEntityData
+import com.refinedmods.refinedstorage.inventory.fluid.FluidInventory
+import com.refinedmods.refinedstorage.tile.config.IType
 import net.minecraft.entity.player.PlayerEntity
 import net.minecraft.item.ItemStack
 import net.minecraft.screen.ScreenHandlerContext
 
-class FilterContainer(player: PlayerEntity, val stack: ItemStack, windowId: Int):
-        BaseContainer(RSGui.FILTER, ScreenHandlerContext.EMPTY, player, windowId) {
-    protected override val disabledSlotNumber: Int
-        protected get() = player.inventory.selectedSlot
+class FilterScreenHandler(
+    windowId: Int,
+    player: PlayerEntity,
+    entityData: BaseBlockEntityData? = null,
+    val stack: ItemStack
+):
+        BaseScreenHandler(windowId, player, entityData, RSGui.FILTER) {
+
+    override val disabledSlotNumber: Int = player.inventory.selectedSlot
 
     init {
         // TODO Filter

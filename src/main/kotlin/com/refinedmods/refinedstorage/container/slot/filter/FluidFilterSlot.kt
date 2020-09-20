@@ -22,7 +22,7 @@ open class FluidFilterSlot @JvmOverloads constructor(val fluidInventory: FluidIn
         return false
     }
 
-    val isSizeAllowed: Boolean
+    override val isSizeAllowed: Boolean
         get() = flags and FILTER_ALLOW_SIZE == FILTER_ALLOW_SIZE
     val isAlternativesAllowed: Boolean
         get() = flags and FILTER_ALLOW_ALTERNATIVES == FILTER_ALLOW_ALTERNATIVES

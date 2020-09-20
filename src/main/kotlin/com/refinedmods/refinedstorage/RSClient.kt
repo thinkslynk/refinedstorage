@@ -1,10 +1,10 @@
 package com.refinedmods.refinedstorage
 
+import com.refinedmods.refinedstorage.gui.screen.ConstructorScreen
+import com.refinedmods.refinedstorage.gui.screen.FilterScreen
+import com.refinedmods.refinedstorage.gui.screenhandlers.ConstructorScreenHandler
+import com.refinedmods.refinedstorage.gui.screenhandlers.FilterScreenHandler
 import com.refinedmods.refinedstorage.network.NetworkHandler
-import com.refinedmods.refinedstorage.container.ConstructorScreenHandler
-import com.refinedmods.refinedstorage.container.FilterContainer
-import com.refinedmods.refinedstorage.screen.ConstructorScreen
-import com.refinedmods.refinedstorage.screen.FilterScreen
 import com.thinkslynk.fabric.generated.BlockItemRegistryGenerated
 import com.thinkslynk.fabric.generated.BlockRegistryGenerated
 import net.fabricmc.api.ClientModInitializer
@@ -45,14 +45,14 @@ class RSClient : ClientModInitializer {
                 BlockItemRegistryGenerated.DESTRUCTOR_BLOCK
         )
 
-        ScreenRegistry.register<FilterContainer, FilterScreen>(RS.FILTER_SCREEN_HANDLER) {
+        ScreenRegistry.register<FilterScreenHandler, FilterScreen>(RSGui.FILTER) {
             gui, inventory, title ->
-            FilterScreen(gui, inventory, title)
+            FilterScreen(gui, inventory.player, title)
         }
 
-        ScreenRegistry.register<ConstructorScreenHandler, ConstructorScreen>(RS.CONSTRUCTOR_SCREEN_HANDLER) {
+        ScreenRegistry.register<ConstructorScreenHandler, ConstructorScreen>(RSGui.CONSTRUCTOR) {
             gui, inventory, title ->
-            ConstructorScreen(gui, inventory, title)
+            ConstructorScreen(gui, inventory.player, title)
         }
     }
 

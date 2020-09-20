@@ -1,4 +1,4 @@
-package com.refinedmods.refinedstorage.screen.widget
+package com.refinedmods.refinedstorage.gui.widget
 
 import com.mojang.blaze3d.platform.GlStateManager
 import com.mojang.blaze3d.systems.RenderSystem
@@ -10,7 +10,7 @@ import net.minecraft.text.Text
 import net.minecraft.util.Identifier
 import java.util.function.Consumer
 
-class CheckboxWidget(x: Int, y: Int, text: Text, isChecked: Boolean, private val onPress: Consumer<com.refinedmods.refinedstorage.screen.widget.CheckboxWidget>) : CheckboxWidget(
+class CheckboxWidget(x: Int, y: Int, text: Text, isChecked: Boolean, private val onPress: Consumer<com.refinedmods.refinedstorage.gui.widget.CheckboxWidget>) : CheckboxWidget(
         x,
         y,
         MinecraftClient.getInstance().textRenderer.getWidth(text.string) + BOX_WIDTH,

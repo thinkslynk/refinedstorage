@@ -40,6 +40,7 @@ abstract class NetworkNode(
         private const val VERSION = 1
     }
 
+    override var markedForRemoval = false
     override var network: INetwork? = null
     
     @JvmField
@@ -93,7 +94,7 @@ abstract class NetworkNode(
 //    }
 
     override fun markDirty() {
-        if (world.isServer()) {
+        if (!world.isServer() && !API.isLoading) {
             API.getNetworkNodeManager(world).markDirty()
         }
     }
@@ -199,7 +200,7 @@ abstract class NetworkNode(
             if (field == null) {
                 val state = world.getBlockState(pos)
                 if (state.block is BaseBlock) {
-                    direction = state.get((state.block as BaseBlock).direction.property)
+                    field = state.get((state.block as BaseBlock).direction.property)
                 }
             }
             return field
