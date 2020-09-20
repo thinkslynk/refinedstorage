@@ -7,13 +7,13 @@ import com.refinedmods.refinedstorage.apiimpl.API
 import com.refinedmods.refinedstorage.block.BaseBlock
 import com.refinedmods.refinedstorage.block.BlockDirection
 import com.refinedmods.refinedstorage.block.NetworkNodeBlock
+import com.refinedmods.refinedstorage.extensions.isServer
 import com.refinedmods.refinedstorage.tile.config.RedstoneMode
 import net.minecraft.block.entity.BlockEntity
 import net.minecraft.inventory.Inventory
 import net.minecraft.item.Item
 import net.minecraft.item.ItemStack
 import net.minecraft.nbt.CompoundTag
-import net.minecraft.server.world.ServerWorld
 import net.minecraft.util.math.BlockPos
 import net.minecraft.util.math.Direction
 import net.minecraft.world.World
@@ -31,8 +31,8 @@ abstract class NetworkNode(
         // new instances of network nodes will be created when the world refreshes (causing this field to be different too).
         // However, network nodes in the network graph *AREN'T* recreated when the world refreshes, causing the graph to have the incorrect instance, and even worse,
         // having multiple different instances of the same network node.
-        override val world: World,
-        override val pos: BlockPos
+        final override val world: World,
+        final override val pos: BlockPos
 ) : INetworkNode, INetworkNodeVisitor {
     companion object {
         private const val NBT_OWNER = "Owner"
@@ -94,8 +94,8 @@ abstract class NetworkNode(
 //    }
 
     override fun markDirty() {
-        if (!world.isClient && !API.isLoading) {
-            API.getNetworkNodeManager(world as ServerWorld).markDirty()
+        if (!world.isServer() && !API.isLoading) {
+            API.getNetworkNodeManager(world).markDirty()
         }
     }
 

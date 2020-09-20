@@ -3,7 +3,6 @@ package com.refinedmods.refinedstorage.apiimpl.network.node
 import com.refinedmods.refinedstorage.RS
 import com.refinedmods.refinedstorage.api.util.Action
 import com.refinedmods.refinedstorage.api.util.IComparer
-import com.refinedmods.refinedstorage.config.ServerConfig
 import com.refinedmods.refinedstorage.inventory.fluid.FluidInventory
 import com.refinedmods.refinedstorage.inventory.item.BaseItemHandler
 import com.refinedmods.refinedstorage.inventory.item.UpgradeItemHandler
@@ -108,13 +107,14 @@ class DestructorNetworkNode(world: World, pos: BlockPos) : NetworkNode(world, po
                 frontBlockState.getHardness(world, front) != -1.0f) {
             val drops: List<ItemStack> = Block.getDroppedStacks(
                     frontBlockState,
-                    world as ServerWorld,
+                    world as ServerWorld, // Is this only called on a server?
                     front,
                     world.getBlockEntity(front),
                     WorldUtils.getFakePlayer(world, owner),
                     tool
             )
             for (drop in drops) {
+                // how do we know network isn't null?
                 if (!network!!.insertItem(drop, drop.count, Action.SIMULATE).isEmpty) {
                     return
                 }

@@ -195,5 +195,9 @@ val sourcesJar by tasks.registering(Jar::class) {
 }
 
 tasks.withType<org.jetbrains.kotlin.gradle.tasks.KotlinCompile>().configureEach {
-    kotlinOptions.jvmTarget = "1.8"
+    kotlinOptions{
+        jvmTarget = "1.8"
+        @Suppress("SuspiciousCollectionReassignment")
+        freeCompilerArgs += listOf("-Xopt-in=kotlin.contracts.ExperimentalContracts")
+    }
 }

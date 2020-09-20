@@ -9,6 +9,7 @@ import com.refinedmods.refinedstorage.apiimpl.network.Network
 import com.refinedmods.refinedstorage.apiimpl.network.node.RootNetworkNode
 import com.refinedmods.refinedstorage.block.ControllerBlock
 import com.refinedmods.refinedstorage.block.ControllerBlock.EnergyType
+import com.refinedmods.refinedstorage.extensions.onServer
 import com.refinedmods.refinedstorage.tile.config.IRedstoneConfigurable
 import com.refinedmods.refinedstorage.tile.config.RedstoneMode
 import com.refinedmods.refinedstorage.tile.config.RedstoneMode.Companion.createParameter
@@ -19,7 +20,6 @@ import com.thinkslynk.fabric.annotations.registry.RegisterBlockEntity
 import com.thinkslynk.fabric.generated.BlockEntityRegistryGenerated
 import net.minecraft.block.entity.BlockEntityType
 import net.minecraft.nbt.CompoundTag
-import net.minecraft.server.world.ServerWorld
 import team.reborn.energy.EnergySide
 import team.reborn.energy.EnergyStorage
 import team.reborn.energy.EnergyTier
@@ -31,7 +31,6 @@ open class ControllerTile(type: NetworkType, entity: BlockEntityType<*>?):
         IRedstoneConfigurable,
         EnergyStorage
 {
-
     private val type: NetworkType
     var removedNetwork: INetwork? = null
         private set
@@ -53,33 +52,31 @@ open class ControllerTile(type: NetworkType, entity: BlockEntityType<*>?):
 
     val network: INetwork
         get() {
-            if (world!!.isClient) {
-                val net = dummyNetwork ?: Network(world!!, pos, type)
-                dummyNetwork = net
-                return net
-            }
-            return API.getNetworkManager(world as ServerWorld).getNetwork(pos)
+            onServer{world->
+                return API.getNetworkManager(world).getNetwork(pos)
                     ?: throw IllegalStateException("No network present at $pos")
+            }
+            val net = dummyNetwork ?: Network(world!!, pos, type)
+            dummyNetwork = net
+            return net
         }
 
 
 
     override fun cancelRemoval() {
         super.cancelRemoval()
-
-        if (!world!!.isClient) {
-            val manager = API.getNetworkManager(world as ServerWorld)
+        onServer{world->
+            val manager = API.getNetworkManager(world)
             if (manager.getNetwork(pos) == null) {
-                manager.setNetwork(pos, Network(world!!, pos, type))
+                manager.setNetwork(pos, Network(world, pos, type))
             }
         }
     }
 
     override fun markRemoved() {
         super.markRemoved()
-        if (!world!!.isClient) {
-            val manager = API.getNetworkManager(world as ServerWorld)
-
+        onServer{world->
+            val manager = API.getNetworkManager(world)
             val network = manager.getNetwork(pos)
 
             removedNetwork = network

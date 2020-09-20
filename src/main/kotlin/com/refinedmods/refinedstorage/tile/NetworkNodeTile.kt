@@ -5,22 +5,21 @@ import com.refinedmods.refinedstorage.api.util.Action
 import com.refinedmods.refinedstorage.apiimpl.API
 import com.refinedmods.refinedstorage.apiimpl.network.node.NetworkNode
 import com.refinedmods.refinedstorage.extensions.getCustomLogger
+import com.refinedmods.refinedstorage.extensions.onServer
 import com.refinedmods.refinedstorage.tile.config.IRedstoneConfigurable
 import com.refinedmods.refinedstorage.tile.config.RedstoneMode
 import com.refinedmods.refinedstorage.tile.config.RedstoneMode.Companion.createParameter
 import com.refinedmods.refinedstorage.tile.data.TileDataParameter
 import net.minecraft.block.entity.BlockEntityType
 import net.minecraft.nbt.CompoundTag
-import net.minecraft.server.world.ServerWorld
 import net.minecraft.util.math.BlockPos
 import net.minecraft.world.World
 
 @Suppress("UnstableApiUsage")
-abstract class NetworkNodeTile<N : NetworkNode>(tileType: BlockEntityType<*>?):
-        BaseTile(tileType),
-        INetworkNodeProxy<N>,
-        IRedstoneConfigurable
-{
+abstract class NetworkNodeTile<N : NetworkNode>(tileType: BlockEntityType<*>?) :
+    BaseTile(tileType),
+    INetworkNodeProxy<N>,
+    IRedstoneConfigurable {
     override val node: N by lazy {
         val ret = if(!world!!.isClient) {
             API.getNetworkNodeManager(world as ServerWorld).getCachedNode(pos) as N?
@@ -49,6 +48,10 @@ abstract class NetworkNodeTile<N : NetworkNode>(tileType: BlockEntityType<*>?):
     override fun markRemoved() {
         super.markRemoved()
 
+        onServer{world->
+            markedForRemoval = true
+            API.getNetworkNodeManager(world).removeNode(pos)
+
         markedForRemoval = true
         node.markedForRemoval = true
 
@@ -69,13 +72,12 @@ abstract class NetworkNodeTile<N : NetworkNode>(tileType: BlockEntityType<*>?):
     }
 
     fun register() {
-        world?.let{
-            if (!it.isClient) {
-                log.info("Registering...")
-                val manager = API.getNetworkNodeManager(it as ServerWorld)
-                manager.setNode(pos, node)
-                manager.markDirty()
-            }
+
+        onServer{world->
+            log.info("Registering...")
+            val manager = API.getNetworkNodeManager(world)
+            manager.setNode(pos, node)
+            manager.markDirty()
         }
     }
 }
