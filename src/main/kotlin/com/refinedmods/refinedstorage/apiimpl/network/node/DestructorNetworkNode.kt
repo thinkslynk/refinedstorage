@@ -114,13 +114,14 @@ class DestructorNetworkNode(world: World, pos: BlockPos) : NetworkNode(world, po
                 frontBlockState.getHardness(world, front) != -1.0f) {
             val drops: List<ItemStack> = Block.getDroppedStacks(
                     frontBlockState,
-                    world as ServerWorld,
+                    world as ServerWorld, // Is this only called on a server?
                     front,
                     world.getBlockEntity(front),
                     WorldUtils.getFakePlayer(world, owner),
                     tool
             )
             drops.forEach { drop ->
+                // how do we know network isn't null?
                 if (!network!!.insertItem(drop, drop.count, Action.SIMULATE).isEmpty) {
                     return
                 }

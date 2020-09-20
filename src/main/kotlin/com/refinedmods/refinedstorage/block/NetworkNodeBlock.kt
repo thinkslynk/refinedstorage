@@ -5,6 +5,7 @@ import com.refinedmods.refinedstorage.api.network.security.Permission
 import com.refinedmods.refinedstorage.api.util.Action
 import com.refinedmods.refinedstorage.apiimpl.API
 import com.refinedmods.refinedstorage.apiimpl.network.node.NetworkNode
+import com.refinedmods.refinedstorage.extensions.isServer
 import com.refinedmods.refinedstorage.util.NetworkUtils
 import com.refinedmods.refinedstorage.util.WorldUtils
 import net.minecraft.block.Block
@@ -12,7 +13,6 @@ import net.minecraft.block.BlockState
 import net.minecraft.entity.LivingEntity
 import net.minecraft.entity.player.PlayerEntity
 import net.minecraft.item.ItemStack
-import net.minecraft.server.world.ServerWorld
 import net.minecraft.state.property.BooleanProperty
 import net.minecraft.util.math.BlockPos
 import net.minecraft.util.math.Direction
@@ -28,8 +28,8 @@ abstract class NetworkNodeBlock(
     // TODO Network
     override fun neighborUpdate(state: BlockState, world: World, pos: BlockPos, block: Block, fromPos: BlockPos, notify: Boolean) {
         super.neighborUpdate(state, world, pos, block, fromPos, notify)
-        if (!world.isClient) {
-            val node = API.getNetworkNodeManager(world as ServerWorld).getNode(pos)
+        if (world.isServer()) {
+            val node = API.getNetworkNodeManager(world).getNode(pos)
             if (node is NetworkNode) {
                 node.setRedstonePowered(world.isReceivingRedstonePower(pos))
             }
